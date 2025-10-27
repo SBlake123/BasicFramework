@@ -150,10 +150,6 @@ public abstract class MonoSingleton<T> : MonoBehaviour, ISingleton where T : Mon
         return true;
     }
 
-    UniTask ISingleton.InitializeSingleton()
-    {
-        throw new System.NotImplementedException();
-    }
     #endregion
 
 }
