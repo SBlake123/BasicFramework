@@ -6,15 +6,10 @@ using UnityEngine;
 
 public enum LobbySceneIdx
 {
-    NEWMAIN,
-    STAGESELECT, //or NEWSTAGESELECT
-    ATTENDENCE,
-    POSTMAIN,
-    SHOP,
-    BUYHP,
+    MAIN,
+    GAMESTART,
     OPTION,
-    SOCIAL,
-    NOTICE
+    EXIT
 }
 
 public enum LobbySceneState
@@ -53,7 +48,12 @@ public class LobbySceneManager : StateBaseScene
     //로비 구성
     public override async UniTask ChangeState(int _state)
     {
-        throw new System.NotImplementedException();
+        if (lobbySceneState != (LobbySceneState)_state)
+        {
+            lobbySceneState = (LobbySceneState)_state;
+
+            await OnStateChange();
+        }
     }
 
     public override async UniTask OnStateChange()
