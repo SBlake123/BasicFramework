@@ -13,8 +13,8 @@ public class PlayerInputKeyCode
 
 public class Player_001_Input : MonoBehaviour
 {
-    PlayerInputKeyCode playerInputKeyCode;
-    float moveSpeed = 1f;
+    PlayerInputKeyCode playerInputKeyCode = new PlayerInputKeyCode();
+    float moveSpeed = 5f;
     bool nowEvading;
     // Update is called once per frame
     void Update()
@@ -52,8 +52,8 @@ public class Player_001_Input : MonoBehaviour
             if (CanInputAction())
             {
                 Vector3 moveDirection = Vector3.zero;
-                if (Input.GetKey(playerInputKeyCode.playerUp)) moveDirection += Vector3.forward;
-                if (Input.GetKey(playerInputKeyCode.playerDown)) moveDirection += Vector3.back;
+                if (Input.GetKey(playerInputKeyCode.playerUp)) moveDirection += Vector3.up;
+                if (Input.GetKey(playerInputKeyCode.playerDown)) moveDirection += Vector3.down;
                 if (Input.GetKey(playerInputKeyCode.playerLeft)) moveDirection += Vector3.left;
                 if (Input.GetKey(playerInputKeyCode.playerRight)) moveDirection += Vector3.right;
 
