@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class PlayerInputKeyCode
 {
-    public KeyCode playerUp = KeyCode.W;
-    public KeyCode playerDown = KeyCode.S;
-    public KeyCode playerLeft = KeyCode.A;
-    public KeyCode playerRight = KeyCode.D;
+    public KeyCode playerUp = KeyCode.UpArrow;
+    public KeyCode playerDown = KeyCode.DownArrow;
+    public KeyCode playerLeft = KeyCode.LeftArrow;
+    public KeyCode playerRight = KeyCode.RightArrow;
     public KeyCode playerEvade = KeyCode.Space;
+    public KeyCode playerAttack = KeyCode.Z;
 }
 
-public class Player_001_Input : MonoBehaviour
+public partial class Player : MonoBehaviour
 {
     PlayerInputKeyCode playerInputKeyCode = new PlayerInputKeyCode();
     float moveSpeed = 5f;
     bool nowEvading;
     // Update is called once per frame
-    void Update()
-    {
-        PlayerActionCheck();
-    }
+
 
     //이동, 이동중 액션 시 이동 못 함 같은 경우? 멈췄을때는 멈추기
 
@@ -38,6 +36,18 @@ public class Player_001_Input : MonoBehaviour
     {
         PlayerEvade();
         PlayerMove();
+        PlayerAttack();
+        void PlayerAttack()
+        {
+            if (CanInputAction())
+            {
+                if (Input.GetKey(playerInputKeyCode.playerAttack))
+                {
+                    playerSkinBase.Attack();
+                };
+            }
+            
+        }
 
         void PlayerEvade()
         {
@@ -66,5 +76,5 @@ public class Player_001_Input : MonoBehaviour
         }
     }
 
-    
+
 }
