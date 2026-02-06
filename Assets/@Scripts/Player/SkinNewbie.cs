@@ -6,7 +6,7 @@ public class SkinNewbie : PlayerSkinBase
 {
     public new void Idle()
     {
-        mainImg.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.IDLE];
+        anim.Play(GSkinSprName.IDLE);
         Debug.Log("NEW IDLE");
     }
 

@@ -9,18 +9,23 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
 {
     public Image mainImg;
 
+    public Animator anim;
+    
     public Sprite[] skinSpriteArr;
 
     public Dictionary<string, Sprite> skinSpriteDic = new Dictionary<string, Sprite>();
 
     public void Idle()
     {
-        mainImg.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.IDLE];
+        anim.Play(GSkinSprName.IDLE);
     }
 
     public void Attack()
     {
+        Debug.Log("ATTACK");
+
         mainImg.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.ATTACK];
+        anim.Play(GSkinSprName.ATTACK);
     }
 
     public void Hit()

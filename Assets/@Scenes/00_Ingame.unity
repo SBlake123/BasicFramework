@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 589092892}
   - component: {fileID: 589092891}
   - component: {fileID: 589092893}
+  - component: {fileID: 589092894}
   m_Layer: 5
   m_Name: SkinNewbie
   m_TagString: Untagged
@@ -369,6 +370,28 @@ MonoBehaviour:
   - {fileID: -7808734593389313954, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
   - {fileID: 4837840602407752856, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
   - {fileID: -5877259873991932285, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
+  anim: {fileID: 589092894}
+--- !u!95 &589092894
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589092888}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 764b35bea00d269409f61163fb032354, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
