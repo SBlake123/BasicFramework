@@ -301,15 +301,15 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 589092888}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1779710928}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 100}
   m_Pivot: {x: 0, y: 0.5}
@@ -363,14 +363,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76988276f20049f41ad6dc55d54db7ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainRect: {fileID: 589092889}
   mainImg: {fileID: 589092891}
+  anim: {fileID: 589092894}
   skinSpriteArr:
   - {fileID: -3154150011874791226, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
   - {fileID: -3387478527075654864, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
   - {fileID: -7808734593389313954, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
   - {fileID: 4837840602407752856, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
   - {fileID: -5877259873991932285, guid: 1612e0af019f8094094c62e8938fce94, type: 3}
-  anim: {fileID: 589092894}
 --- !u!95 &589092894
 Animator:
   serializedVersion: 5
@@ -530,6 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cae30cf60978b147bb19de224d08ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

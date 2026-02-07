@@ -12,7 +12,7 @@ public partial class Player : MonoBehaviour
 
     }
 
-    void Update()
-    {
-    }
+    //void Update()
+    //{
+    //}
 }

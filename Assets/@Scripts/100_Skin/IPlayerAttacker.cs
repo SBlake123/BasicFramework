@@ -4,12 +4,12 @@ using UnityEngine;
 
 public interface IPlayerAttacker
 {
-    void Attack();
+    void PlayAttack();
 
-    void Idle();
+    void PlayIdle();
 
-    void Hit();
+    void PlayHit();
 
-    void Die();
+    void PlayDie();
 
 }
