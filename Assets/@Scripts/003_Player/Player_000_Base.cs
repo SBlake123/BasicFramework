@@ -9,7 +9,7 @@ public partial class Player : MonoBehaviour
     {
         PlayerInit().Forget();
         PlayerActionCheck().Forget();
-
+        PlayerExternalReactionCheck().Forget();
     }
 
     //void Update()

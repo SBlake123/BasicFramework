@@ -51,6 +51,7 @@ public partial class Player : MonoBehaviour
                     await player.ChangeState(PlayerState.ATTACK);
                     return;
                 }
+
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
         }
@@ -74,7 +75,9 @@ public partial class Player : MonoBehaviour
         {
             player.isHit = true;
             player.playerSkinBase.PlayHit();
-            await UniTask.Delay(500, cancellationToken: token);
+            await UniTask.Delay(500);
+            
+            player.PlayerExternalReactionCheck().Forget();
             await player.ChangeState(PlayerState.IDLE);
         }
 
@@ -113,7 +116,20 @@ public partial class Player : MonoBehaviour
             await UniTask.Yield(PlayerLoopTiming.Update, stateCts.Token);
         }
     }
-    
+
+    public async UniTask PlayerExternalReactionCheck()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                await ChangeState(PlayerState.HIT);
+            }
+            await UniTask.Yield(PlayerLoopTiming.Update);
+        }
+    }
+
+
     void AllStateBoolFalse()
     {
         isAttack = false;

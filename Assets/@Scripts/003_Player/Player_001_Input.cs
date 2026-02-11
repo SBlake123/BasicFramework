@@ -34,7 +34,7 @@ public partial class Player : MonoBehaviour
     {
         var canInputAction = true;
 
-        if (nowEvading) canInputAction = false;
+        if (nowEvading || isHit) canInputAction = false;
 
         return canInputAction;
     }
