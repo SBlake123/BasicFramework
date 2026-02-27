@@ -27,7 +27,7 @@ public partial class Player : MonoBehaviour
         { PlayerState.HIT, new HitState() },
         { PlayerState.DIE, new DieState() }
     };
-
+  
     bool isAttack = false;
     bool isHit = false;
 
@@ -66,6 +66,8 @@ public partial class Player : MonoBehaviour
             player.playerSkinBase.PlayAttack();
             await UniTask.Delay(500, cancellationToken: token);
             await player.ChangeState(PlayerState.IDLE);
+
+
         }
     }
 
