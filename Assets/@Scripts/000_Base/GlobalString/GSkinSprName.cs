@@ -11,6 +11,6 @@ public static class GSkinSprName
     public static readonly string HIT = "Hit";
 
     public static readonly string HIT_RED = "Hit Red";
-
+     
     public static readonly string DIE = "Die";
 }
