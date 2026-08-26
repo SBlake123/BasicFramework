@@ -10,9 +10,17 @@ public class LogoSceneManager : MonoSingleton<LogoSceneManager>
 
     private void Start()
     {
-        
+        LogoSceneStart().Forget();
     }
 
+    private async UniTask LogoSceneStart()
+    {
+        SoundManager.Instance.SoundInit();
+        await UniTask.Delay(2000);
+        loadingPercentTMP.text = $"{100}%";
+        await UniTask.Delay(2000);
+        await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
+    }
 
     //게임에 필요한 친구들 다 로딩 되었는가?
     //SoundMAnager
