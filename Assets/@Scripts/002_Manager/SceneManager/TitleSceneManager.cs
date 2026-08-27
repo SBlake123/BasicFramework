@@ -7,23 +7,64 @@ using UnityEngine;
 
 public class TitleSceneManager : MonoSingleton<TitleSceneManager>
 {
-    //public 
+    public List<RectTransform> skyRect = new List<RectTransform>();
+    public List<RectTransform> groundRect = new List<RectTransform>();
 
-    // Start is called before the first frame update
+    float skyRectMoveValue = 0.3f;
+    float groundRectMoveValue = -0.2f; 
+
     void Start()
     {
-        TitleSceneSetting().Forget();
+        Debug.Log("TitleSceneManager Start");
+        TitleSceneSetting();
     }
 
-    private async UniTask TitleSceneSetting()
+    private void TitleSceneSetting()
     {
-
+        BackgroundSetting().Forget();
     }
 
 
     private async UniTask BackgroundSetting()
     {
-        //중앙 기준점으로 자기 길이 반 이상 나갔을 때 위치 바꾸기
+        SkyRectPlay().Forget();
+        //GroundRectPlay().Forget();
+
+        async UniTask SkyRectPlay()
+        {
+            Vector2 skyRectMoveVec = new Vector2(skyRectMoveValue, 0);
+
+            while (true)
+            {
+                for (int i = 0; i < skyRect.Count; i++)
+                {
+                    skyRect[i].anchoredPosition = skyRect[i].anchoredPosition + skyRectMoveVec;
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+
+                //await UniTask.Delay(1000);
+            }
+
+        }
+
+        async UniTask GroundRectPlay()
+        {
+            Vector2 groundRectMoveVec = new Vector2(groundRectMoveValue, 0);
+
+            while (true)
+            {
+                for(int i = 0; i < groundRect.Count; i++)
+                {
+                    groundRect[i].anchoredPosition = groundRect[i].anchoredPosition + groundRectMoveVec;
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+
+
+                //await UniTask.Delay(1000);
+            }
+        }
     }
  
 }
