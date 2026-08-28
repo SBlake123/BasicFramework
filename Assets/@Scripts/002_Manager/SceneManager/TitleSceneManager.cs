@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class TitleSceneManager : MonoSingleton<TitleSceneManager>
 {
@@ -11,7 +13,9 @@ public class TitleSceneManager : MonoSingleton<TitleSceneManager>
     public List<RectTransform> groundRect = new List<RectTransform>();
 
     float skyRectMoveValue = 0.3f;
-    float groundRectMoveValue = -0.2f; 
+    float groundRectMoveValue = -0.2f;
+
+    public Image screenBlur;
 
     void Start()
     {
@@ -21,9 +25,26 @@ public class TitleSceneManager : MonoSingleton<TitleSceneManager>
 
     private void TitleSceneSetting()
     {
+        ScreenBlurInit();
         BackgroundSetting().Forget();
+        ScreenBlurFadeOut();
     }
 
+    private void ScreenBlurInit()
+    {
+        screenBlur.gameObject.SetActive(true);
+        Color color = screenBlur.color;
+        color.a = 1f;
+        screenBlur.color = color;
+    }
+
+    private void ScreenBlurFadeOut()
+    {
+        screenBlur.DOFade(0f, 2f).OnComplete(() =>
+        {
+            screenBlur.gameObject.SetActive(false);
+        });
+    }
 
     private async UniTask BackgroundSetting()
     {
@@ -41,7 +62,7 @@ public class TitleSceneManager : MonoSingleton<TitleSceneManager>
                     skyRect[i].anchoredPosition = skyRect[i].anchoredPosition + skyRectMoveVec;
                 }
 
-                await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, destroyCancellationToken);
 
                 //await UniTask.Delay(1000);
             }
@@ -59,7 +80,7 @@ public class TitleSceneManager : MonoSingleton<TitleSceneManager>
                     groundRect[i].anchoredPosition = groundRect[i].anchoredPosition + groundRectMoveVec;
                 }
 
-                await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, destroyCancellationToken);
 
 
                 //await UniTask.Delay(1000);

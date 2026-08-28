@@ -7,8 +7,8 @@ using Unity.VisualScripting;
 
 public class AniClick : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public float standardScale { get; set; } = 0.6f;
-    public float expendingScale { get; set; } = 0.66f;
+    public float standardScale { get; set; } = 1.5f;
+    public float expendingScale { get; set; } = 1.4f;
 
     public void OnPointerClick(PointerEventData eventData)
     {
