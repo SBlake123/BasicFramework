@@ -75,12 +75,6 @@ public class LanguageManager : Singleton<LanguageManager>
         {
             if (saveDic.ContainsKey(item.idx)) continue;
 
-            if (item.idx == 92054)
-            {
-                LanguageScript _lang = item as LanguageScript;
-                Debug.Log(_lang.kr);
-            }
-
             saveDic.Add(item.idx, item);
         }
     }
