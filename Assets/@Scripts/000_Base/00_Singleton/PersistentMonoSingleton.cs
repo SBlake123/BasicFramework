@@ -3,16 +3,21 @@ using UnityEngine;
 
 public class PersistentMonoSingleton<T> : MonoSingleton<T> where T : MonoSingleton<T>
 {
-    #region Protected Methods
-
-    protected override async UniTask OnInitializing()
+    protected override async UniTask Initialize()
     {
-        base.OnInitializing();
         if (Application.isPlaying)
         {
             DontDestroyOnLoad(gameObject);
         }
     }
 
-    #endregion
+    //#region Protected Methods
+
+    //protected override async UniTask OnInitializing()
+    //{
+    //    base.OnInitializing();
+
+    //}
+
+    //#endregion
 }

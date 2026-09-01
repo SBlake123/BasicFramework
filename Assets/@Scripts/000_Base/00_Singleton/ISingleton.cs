@@ -4,5 +4,5 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface ISingleton
 {
-    public void ClearSingleton();
+    //public void ClearSingleton();
 }

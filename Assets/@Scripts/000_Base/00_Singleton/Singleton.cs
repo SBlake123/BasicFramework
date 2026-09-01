@@ -59,24 +59,29 @@ public abstract class Singleton<T> : ISingleton where T : Singleton<T>, new()
 
     #region Public Methods
 
-    public virtual void ClearSingleton() { }
-
-    public static void CreateInstance()
+    protected virtual async UniTask Initialize()
     {
-        DestroyInstance();
-        instance = Instance;
+
     }
 
-    public static void DestroyInstance()
-    {
-        if (instance == null)
-        {
-            return;
-        }
+    //public virtual void ClearSingleton() { }
 
-        instance.ClearSingleton();
-        instance = default(T);
-    }
+    //public static void CreateInstance()
+    //{
+    //    DestroyInstance();
+    //    instance = Instance;
+    //}
+
+    //public static void DestroyInstance()
+    //{
+    //    if (instance == null)
+    //    {
+    //        return;
+    //    }
+
+    //    instance.ClearSingleton();
+    //    instance = default(T);
+    //}
 
     #endregion
 

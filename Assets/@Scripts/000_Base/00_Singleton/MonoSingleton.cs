@@ -107,6 +107,12 @@ public abstract class MonoSingleton<T> : MonoBehaviour, ISingleton where T : Mon
 
     }
 
+    protected virtual async UniTask Initialize()
+    {
+
+    }
+
+
     #endregion
 
     #region Public Methods
@@ -123,33 +129,6 @@ public abstract class MonoSingleton<T> : MonoBehaviour, ISingleton where T : Mon
         this.initializationStatus = SingletonStatus.Initialized;
         await OnInitialized();
     }
-
-    public virtual void ClearSingleton() { }
-
-    public static void CreateInstance()
-    {
-        DestroyInstance();
-        instance = Instance;
-    }
-
-    public static void DestroyInstance()
-    {
-        if (instance == null)
-        {
-            return;
-        }
-
-        instance.ClearSingleton();
-        instance = default(T);
-    }
-
-    public static bool GetReference()
-    {
-        if (ReferenceEquals(instance, null)) return false;
-
-        return true;
-    }
-
     #endregion
 
 }

@@ -52,12 +52,19 @@ public class LanguageManager : Singleton<LanguageManager>
     public Dictionary<int, LanguageScript> languageScriptDic { get; set; } = new Dictionary<int, LanguageScript>();
     public Dictionary<int, WordInfo> wordInfoDic { get; set; } = new Dictionary<int, WordInfo>();
 
-    protected async UniTask OnInitializing()
+    public async UniTask OnInitialize()
     {
-        await LanguageScriptDicLoad("contents", languageScriptDic);
-        await LanguageScriptDicLoad("returnCode", languageScriptDic);
-        await LanguageScriptDicLoad("ui", languageScriptDic);
-        await LanguageScriptDicLoad("word", wordInfoDic);
+        await Initialize();
+    }
+
+    protected override async UniTask Initialize()
+    {
+        await UniTask.WhenAll(
+                LanguageScriptDicLoad("contents", languageScriptDic),
+                LanguageScriptDicLoad("returnCode", languageScriptDic),
+                LanguageScriptDicLoad("ui", languageScriptDic),
+                LanguageScriptDicLoad("word", wordInfoDic)
+            );
     }
 
     public LanguageType GetCurrentLanguageType()
@@ -163,5 +170,6 @@ public class LanguageManager : Singleton<LanguageManager>
             return value.ToString();
         }
     }
+
 }
 
