@@ -60,10 +60,10 @@ public class LanguageManager : Singleton<LanguageManager>
     protected override async UniTask Initialize()
     {
         await UniTask.WhenAll(
-                LanguageScriptDicLoad("contents", languageScriptDic),
-                LanguageScriptDicLoad("returnCode", languageScriptDic),
-                LanguageScriptDicLoad("ui", languageScriptDic),
-                LanguageScriptDicLoad("word", wordInfoDic)
+                //LanguageScriptDicLoad("contents", languageScriptDic),
+                //LanguageScriptDicLoad("returnCode", languageScriptDic),
+                //LanguageScriptDicLoad("ui", languageScriptDic),
+                //LanguageScriptDicLoad("word", wordInfoDic)
             );
     }
 

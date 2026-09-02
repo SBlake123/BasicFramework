@@ -95,8 +95,8 @@ public class ResourceManager : Singleton<ResourceManager>
 
                 _downSizeStr = $"{((downloadSize / (1024 * 1024)) + _randomFloat):F1}MB";
 
-                gPopUpManager.setPopUpCode(false, LanguageManager.Instance.GetLangScript(90013, LanguageManager.Instance.languageScriptDic), "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
-                gPopUpManager.AddMethodToBtn(async () =>
+               // gPopUpManager.setPopUpCode(false, LanguageManager.Instance.GetLangScript(90013, LanguageManager.Instance.languageScriptDic), "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
+                PopupManager.AddMethodToBtn(async () =>
                 {
                     long downloadBytes = 0L;
                     foreach (var item in labels)
@@ -117,11 +117,11 @@ public class ResourceManager : Singleton<ResourceManager>
                                 loadPercent = $"{((float)loadSize / downloadSize * 100f):F0}%";
                                 if (((float)loadSize / downloadSize) < 0.06f)
                                 {
-                                    GameManager.Instance.loadingGaugeValue = 0f;
+                                    //GameManager.Instance.loadingGaugeValue = 0f;
                                 }
                                 else
                                 {
-                                    GameManager.Instance.loadingGaugeValue = ((float)loadSize / downloadSize);
+                                    //GameManager.Instance.loadingGaugeValue = ((float)loadSize / downloadSize);
 
                                 }
                                 //Debug.Log($"{downStatus.DownloadedBytes}/{downStatus.TotalBytes}");
@@ -195,8 +195,8 @@ public class ResourceManager : Singleton<ResourceManager>
 
                 if (downloadSize > 0)
                 {
-                    gPopUpManager.setPopUpCode(false, LanguageManager.Instance.GetLangScript(90013, LanguageManager.Instance.languageScriptDic), "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
-                    gPopUpManager.AddMethodToBtn(async () =>
+                   // gPopUpManager.setPopUpCode(false, LanguageManager.Instance.GetLangScript(90013, LanguageManager.Instance.languageScriptDic), "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
+                    PopupManager.AddMethodToBtn(async () =>
                     {
                         long downloadBytes = 0L;
                         foreach (var item in labels)
@@ -217,11 +217,11 @@ public class ResourceManager : Singleton<ResourceManager>
                                     loadPercent = $"{((float)loadSize / downloadSize * 100f):F0}%";
                                     if (((float)loadSize / downloadSize) < 0.06f)
                                     {
-                                        GameManager.Instance.loadingGaugeValue = 0f;
+                                        //GameManager.Instance.loadingGaugeValue = 0f;
                                     }
                                     else
                                     {
-                                        GameManager.Instance.loadingGaugeValue = ((float)loadSize / downloadSize);
+                                      //  GameManager.Instance.loadingGaugeValue = ((float)loadSize / downloadSize);
 
                                     }
 
@@ -258,118 +258,6 @@ public class ResourceManager : Singleton<ResourceManager>
 
         await UniTask.WaitUntil(() => _downloadComplete == true);
 
-
-        Addressables.CheckForCatalogUpdates(true).Completed += async handle =>
-        {
-            if (handle.Result.Count > 0)
-            {
-                await Addressables.UpdateCatalogs();
-
-                bool _getDownloadSizeDone = false;
-
-                Addressables.InitializeAsync().Completed += async handle =>
-                {
-                    await getDownloadSize(handle);
-                    _getDownloadSizeDone = true;
-                };
-
-                await UniTask.WaitUntil(() => _getDownloadSizeDone == true);
-
-                async UniTask getDownloadSize(AsyncOperationHandle<IResourceLocator> obj)
-                {
-                    if (obj.Status == AsyncOperationStatus.Succeeded)
-                    {
-                        foreach (var locator in Addressables.ResourceLocators)
-                        {
-                            if (locator.Keys != null)
-                            {
-                                Addressables.GetDownloadSizeAsync(locator.Keys).Completed += async handle =>
-                                {
-                                    if (handle.Status == AsyncOperationStatus.Succeeded)
-                                    {
-                                        downloadSize += handle.Result;
-                                    }
-                                    else
-                                    {
-
-                                    }
-
-                                    await UniTask.WaitForSeconds(1f);
-                                };
-                            }
-                        }
-                    }
-
-                    await UniTask.WaitForSeconds(1f);
-                }
-
-                string _downSizeStr = $"{downloadSize / (1024 * 1024)}MB";
-
-                gPopUpManager.setPopUpCode(false, LanguageManager.Instance.GetLangScript(90013, LanguageManager.Instance.languageScriptDic), "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr));
-                gPopUpManager.AddMethodToBtn(() =>
-                {
-                    gPopUpManager.setPopUpClose();
-
-                    Addressables.InitializeAsync().Completed += async handle =>
-                    {
-                        await InitializationDone(handle);
-                    };
-
-                    async UniTask InitializationDone(AsyncOperationHandle<IResourceLocator> obj)
-                    {
-                        if (obj.Status == AsyncOperationStatus.Succeeded)
-                        {
-                            foreach (var locator in Addressables.ResourceLocators)
-                            {
-                                foreach (string key in locator.Keys)
-                                {
-                                    Addressables.GetDownloadSizeAsync(key).Completed += handle =>
-                                    {
-                                        if (handle.Status == AsyncOperationStatus.Succeeded) downloadSize += handle.Result;
-                                    };
-
-                                    totalCount++;
-                                }
-                            }
-
-                            foreach (var locator in Addressables.ResourceLocators)
-                            {
-                                foreach (string key in locator.Keys)
-                                {
-                                    try
-                                    {
-                                        var handle = Addressables.DownloadDependenciesAsync(key);
-
-                                        while (!handle.IsDone)
-                                        {
-                                            var downStatus = handle.GetDownloadStatus();
-                                            Debug.Log($"{downStatus.DownloadedBytes}/{downStatus.TotalBytes}");
-                                            Debug.Log($"{downStatus.Percent * 100f} %");
-
-                                            await UniTask.Yield();
-                                        }
-
-                                        Addressables.Release(handle);
-                                    }
-
-                                    catch
-                                    {
-                                        Debug.Log($"FailKey = {key}");
-                                        Debug.LogError("Status is failed");
-                                        loadCount++;
-
-                                        callback?.Invoke(loadCount, totalCount);
-                                    }
-                                }
-
-                            }
-                        }
-
-                        await UniTask.WaitForSeconds(1f);
-                    }
-                });
-            }
-        };
         await UniTask.WaitForSeconds(1f);
     }
 

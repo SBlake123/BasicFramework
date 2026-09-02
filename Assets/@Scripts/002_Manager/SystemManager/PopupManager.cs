@@ -1,8 +1,3 @@
-/// [스크립트 명세]-----------------------------------------------------------------------------------------------------------------------
-///  팝업 UI를 처리하는 매니저
-///  로고 씬에서 GameObject 컴포넌트에 등록
-/// --------------------------------------------------------------------------------------------------------------------------------------
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +7,7 @@ using LitJson;
 using System;
 using Cysharp.Threading.Tasks;
 
-public class gPopUpManager : MonoBehaviour
+public class PopupManager : PersistentMonoSingleton<PopupManager>
 {
     public GameObject panelPopUp;
     private static Button popup1Btn;
@@ -58,24 +53,6 @@ public class gPopUpManager : MonoBehaviour
         INPUT_KEY,    //백 키 누름
         CLOSE,        //닫기
         THREEBTNPOPUP //3버튼팝업
-    }
-
-
-    // Awake is called before the first frame update
-    void Awake()
-    {
-        var obj = FindObjectsOfType<gPopUpManager>();
-        if (obj.Length <= 1)
-        {
-            gBase.setEnKey();
-            DontDestroyOnLoad(gameObject);
-            initBtn();
-            initManager();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
     }
 
     // Update is called once per frame
@@ -189,7 +166,7 @@ public class gPopUpManager : MonoBehaviour
             strBody = body;
             if (string.Equals(strBody, "NULL", StringComparison.OrdinalIgnoreCase) == true)
             {
-                strBody = gText.getBaseText((int)ENUM_BASE.UNKNOWN_ERROR);
+                //strBody = gText.getBaseText((int)ENUM_BASE.UNKNOWN_ERROR);
             }
             if (bChoose == true)
             {
@@ -364,9 +341,9 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         panelPopUp.transform.Find("PopUp3").gameObject.SetActive(false);
         panelPopUp.SetActive(true);
 
-        gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
-        gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
-        gText.setText(body.transform.Find("Btn").transform.Find("Text").gameObject, strYes);
+        //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
+        //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
+        //gText.setText(body.transform.Find("Btn").transform.Find("Text").gameObject, strYes);
 
         body.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
         body.GetComponent<ContentSizeFitter>().SetLayoutVertical();
@@ -383,10 +360,10 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
 
         panelPopUp.SetActive(true);
 
-        gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
-        gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
-        gText.setText(body.transform.Find("BtnParent").transform.Find("BtnYes").transform.Find("Text").gameObject, strYes);
-        gText.setText(body.transform.Find("BtnParent").transform.Find("BtnNo").transform.Find("Text").gameObject, strNo);
+        //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
+        //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
+        //gText.setText(body.transform.Find("BtnParent").transform.Find("BtnYes").transform.Find("Text").gameObject, strYes);
+        //gText.setText(body.transform.Find("BtnParent").transform.Find("BtnNo").transform.Find("Text").gameObject, strNo);
 
         body.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
         body.GetComponent<ContentSizeFitter>().SetLayoutVertical();
@@ -440,21 +417,31 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         //RemoveBtnListener();
         if (noAction == null)
         {
-            popup1Btn.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_NEGATIVE, SoundCategory.FX); 
-                yesAction.Invoke(); setPopUpClose(); });
-            popup1Back.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_NEGATIVE, SoundCategory.FX);
-                yesAction.Invoke(); setPopUpClose(); });
+            popup1Btn.onClick.AddListener(async () => {
+                nowState = (int)POPUP_STATE.SELECT;
+                yesAction.Invoke(); setPopUpClose();
+            });
+            popup1Back.onClick.AddListener(async () => {
+                nowState = (int)POPUP_STATE.SELECT;
+                yesAction.Invoke(); setPopUpClose();
+            });
             //백 키 액션 등록
             backKeyAction = yesAction;
         }
         else
         {
-            popup2BtnYes.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_POSITIVE, SoundCategory.FX);
-                                                                                       ; yesAction.Invoke(); setPopUpClose(); });
-            popup2BtnNo.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_NEGATIVE, SoundCategory.FX); 
-                noAction.Invoke(); setPopUpClose(); });
-            popup2Back.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_NEGATIVE, SoundCategory.FX);
-                noAction.Invoke(); setPopUpClose(); });
+            popup2BtnYes.onClick.AddListener(() => {
+                nowState = (int)POPUP_STATE.SELECT;
+                ; yesAction.Invoke(); setPopUpClose();
+            });
+            popup2BtnNo.onClick.AddListener(() => {
+                nowState = (int)POPUP_STATE.SELECT; 
+                noAction.Invoke(); setPopUpClose();
+            });
+            popup2Back.onClick.AddListener(() => {
+                nowState = (int)POPUP_STATE.SELECT; 
+                noAction.Invoke(); setPopUpClose();
+            });
             //백 키 액션 등록
             backKeyAction = noAction;
         }
@@ -494,9 +481,9 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
     {
         RemoveThreeBtnListener();
 
-        popup3Btn1.onClick.AddListener(async () => { await SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_POSITIVE, SoundCategory.FX); nowState = (int)POPUP_STATE.SELECT; firstAction.Invoke(); setPopUpClose(); });
-        popup3Btn2.onClick.AddListener(async () => { await SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_POSITIVE, SoundCategory.FX); nowState = (int)POPUP_STATE.SELECT; secondAction.Invoke(); setPopUpClose(); });
-        popup3Btn3.onClick.AddListener(async () => { await SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_POSITIVE, SoundCategory.FX); nowState = (int)POPUP_STATE.SELECT; thirdAction.Invoke(); setPopUpClose(); });
+        popup3Btn1.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; firstAction.Invoke(); setPopUpClose(); });
+        popup3Btn2.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; secondAction.Invoke(); setPopUpClose(); });
+        popup3Btn3.onClick.AddListener(() => { nowState = (int)POPUP_STATE.SELECT; thirdAction.Invoke(); setPopUpClose(); });
         //popup3Back.onClick.AddListener(async () => { await SoundManager.Instance.SetSound(GSoundScript.BUTTON_CLICK_NEGATIVE, SoundCategory.FX); nowState = (int)POPUP_STATE.SELECT; secondAction.Invoke(); setPopUpClose(); });
 
         //백 키 액션 등록
@@ -510,18 +497,14 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         panelPopUp.transform.Find("PopUp3").gameObject.SetActive(true);
         panelPopUp.SetActive(true);
 
-        gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
-        gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
+        //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
+        //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
 
         Transform btnParent = body.transform.Find("BtnParent");
 
-        gText.setText(btnParent.transform.Find("BtnFirst").transform.Find("Text").gameObject, strFirst);
-        gText.setText(btnParent.transform.Find("BtnSecond").transform.Find("Text").gameObject, strSecond);
-        gText.setText(btnParent.transform.Find("BtnThird").transform.Find("Text").gameObject, strThird);
-    }
-
-    public PopupState getPopupState()
-    {
-        return (PopupState)nowState;
+        //gText.setText(btnParent.transform.Find("BtnFirst").transform.Find("Text").gameObject, strFirst);
+        //gText.setText(btnParent.transform.Find("BtnSecond").transform.Find("Text").gameObject, strSecond);
+        //gText.setText(btnParent.transform.Find("BtnThird").transform.Find("Text").gameObject, strThird);
     }
 }
+
