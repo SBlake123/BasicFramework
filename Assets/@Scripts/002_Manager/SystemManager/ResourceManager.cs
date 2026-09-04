@@ -11,12 +11,8 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
-    List<string> labelNameList = new List<string> { "Sound", "Text", "Sprite" };
-
     public int loadCount { get; set; } = 0;
-
     public int totalCount { get; set; } = 0;
-
     long loadSize { get; set; } = 0L;
     public string loadPercent { get; set; } = "";
     long downloadSize { get; set; } = 0L;
@@ -46,7 +42,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         Addressables.CheckForCatalogUpdates().Completed += async handle =>
         {
-            if (handle.Result.Count > 0)
+            if (handle.Result.Count > 0) //업데이트 해야 하나?
             {
                 await Addressables.UpdateCatalogs();
 
@@ -111,21 +107,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
                             while (!downloadHandle.IsDone)
                             {
-                                var downStatus = downloadHandle.GetDownloadStatus();
-
-                                loadSize = downloadBytes + downStatus.DownloadedBytes;
-                                loadPercent = $"{((float)loadSize / downloadSize * 100f):F0}%";
-                                if (((float)loadSize / downloadSize) < 0.06f)
-                                {
-                                    //GameManager.Instance.loadingGaugeValue = 0f;
-                                }
-                                else
-                                {
-                                    //GameManager.Instance.loadingGaugeValue = ((float)loadSize / downloadSize);
-
-                                }
-                                //Debug.Log($"{downStatus.DownloadedBytes}/{downStatus.TotalBytes}");
-                                //Debug.Log($"{downStatus.Percent * 100f} %");
+                                //다운로드 남아있을 때 실행되어야 할 것들
 
                                 await UniTask.Yield();
                             }
@@ -149,7 +131,7 @@ public class ResourceManager : Singleton<ResourceManager>
                 });
             }
 
-            else
+            else //할 필요 없다
             {
                 bool _getDownloadSizeDone = false;
 
@@ -189,8 +171,7 @@ public class ResourceManager : Singleton<ResourceManager>
                     await UniTask.WaitForSeconds(1f);
                 }
 
-                float _randomFloat = UnityEngine.Random.Range(0, 9) / 10f;
-                _downSizeStr = $"{((downloadSize / (1024 * 1024)) + _randomFloat):F1}MB";
+                _downSizeStr = $"{(downloadSize / (1024 * 1024)):F1}MB";
 
 
                 if (downloadSize > 0)
@@ -252,9 +233,6 @@ public class ResourceManager : Singleton<ResourceManager>
                 }
             }
         };
-
-
-
 
         await UniTask.WaitUntil(() => _downloadComplete == true);
 

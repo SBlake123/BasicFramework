@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Object
+  m_EditorClassIdentifier: 
+  m_GroupName: Object
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 52d961dae9ede6c41bafe3d1b6c39544
+  m_SerializeEntries:
+  - m_GUID: 7040c2c0bae8afe42b2a5ab9a1740969
+    m_Address: Assets/@Resources/SoundDisk.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Object
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5c38f3bb54356b1468bbad192acb5b0d
+    m_Address: Assets/@Resources/SoundDisk 1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Object
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b702fbb7047ac5c4788f4738ffdf509b
+    m_Address: Assets/@Resources/SoundDisk 2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Object
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 41fc6d5c7d4c8214a9b2c3f38e6817ab, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 0ca063431cbbec845a13e4c251713fc9, type: 2}
+    - {fileID: 11400000, guid: b7032886f92e353438640f1fb0256fb6, type: 2}
