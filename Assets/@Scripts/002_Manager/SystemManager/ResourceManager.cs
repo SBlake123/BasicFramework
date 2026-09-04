@@ -31,6 +31,11 @@ public class ResourceManager : Singleton<ResourceManager>
         await Initialize();
     }
 
+    protected override async UniTask Initialize()
+    {
+
+    }
+
     private AsyncOperationHandle<List<string>> handle;
     public async UniTask LoadAssetCheck()
     {
@@ -95,8 +100,8 @@ public class ResourceManager : Singleton<ResourceManager>
 
                 _downSizeStr = $"{((downloadSize / (1024 * 1024)) + _randomFloat):F1}MB";
 
-               // gPopUpManager.setPopUpCode(false, LanguageManager.Instance.GetLangScript(90013, LanguageManager.Instance.languageScriptDic), "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
-                PopupManager.AddMethodToBtn(async () =>
+                PopupManager.Instance.setPopUpCode(false, "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
+                PopupManager.Instance.AddMethodToBtn(async () =>
                 {
                     long downloadBytes = 0L;
                     foreach (var item in labels)
@@ -195,8 +200,8 @@ public class ResourceManager : Singleton<ResourceManager>
 
                 if (downloadSize > 0)
                 {
-                   // gPopUpManager.setPopUpCode(false, LanguageManager.Instance.GetLangScript(90013, LanguageManager.Instance.languageScriptDic), "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
-                    PopupManager.AddMethodToBtn(async () =>
+                    PopupManager.Instance.setPopUpCode(false, "", "", LanguageManager.Instance.StrFormatForLangScript(99003, null, _downSizeStr.ToString()));
+                    PopupManager.Instance.AddMethodToBtn(async () =>
                     {
                         long downloadBytes = 0L;
                         foreach (var item in labels)

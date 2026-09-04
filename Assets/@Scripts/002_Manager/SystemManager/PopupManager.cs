@@ -9,12 +9,25 @@ using Cysharp.Threading.Tasks;
 
 public class PopupManager : PersistentMonoSingleton<PopupManager>
 {
+    [Header("Popup Object")]
+
     public GameObject panelPopUp;
-    private static Button popup1Btn;
-    private static Button popup2BtnYes;
-    private static Button popup2BtnNo;
-    private static Button popup1Back;
-    private static Button popup2Back;
+
+    public GameObject popup1;
+    public GameObject popup2;
+    public GameObject popup3;
+
+    [Header("Popup Button")]
+
+    public Button popup1Btn;
+    public Button popup2BtnYes;
+    public Button popup2BtnNo;
+    public Button popup1Back;
+    public Button popup2Back;
+    public Button popup3Btn1;
+    public Button popup3Btn2;
+    public Button popup3Btn3;
+    public Button popup3Back;
 
     private static int nowState = (int)POPUP_STATE.READY;    //현재 상태
     private static bool bChoosePopup;                        //false:1버튼 팝업 true:2버튼 팝업
@@ -27,18 +40,7 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
 
     //private static int returnSceneStateYes;
     //private static int returnSceneStateNo;
-    private static Action backKeyAction;
-
-    //241023 threeBtnPopup Add by Seunghwan
-    private static Button popup3Btn1;
-    private static Button popup3Btn2;
-    private static Button popup3Btn3;
-    private static Button popup3Back;
-
-    private static string strFirst;
-    private static string strSecond;
-    private static string strThird;
-
+    public Action backKeyAction;
 
 
     bool bInputHold = false;    //키 입력 시 1프레임 지연 처리를 위한 변수값 (이 값이 없으면 메인 모듈의 update와 중복 처리가 발생할 수 있다.)
@@ -104,23 +106,6 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
         }
     }
 
-    void initBtn()
-    {
-        GameObject _popup1 = panelPopUp.transform.Find("PopUp1").transform.Find("Body").gameObject;
-        GameObject _popup2 = panelPopUp.transform.Find("PopUp2").transform.Find("Body").transform.Find("BtnParent").gameObject;
-
-        popup1Btn = _popup1.transform.Find("Btn").GetComponent<Button>();
-        popup2BtnYes = _popup2.transform.Find("BtnYes").GetComponent<Button>();
-        popup2BtnNo = _popup2.transform.Find("BtnNo").GetComponent<Button>();
-        popup1Back = panelPopUp.transform.Find("PopUp1/Back").GetComponent<Button>();
-        popup2Back = panelPopUp.transform.Find("PopUp2/Back").GetComponent<Button>();
-
-        popup3Btn1 = panelPopUp.transform.Find("PopUp3/Body/BtnParent/BtnFirst").GetComponent<Button>();
-        popup3Btn2 = panelPopUp.transform.Find("PopUp3/Body/BtnParent/BtnSecond").GetComponent<Button>();
-        popup3Btn3 = panelPopUp.transform.Find("PopUp3/Body/BtnParent/BtnThird").GetComponent<Button>();
-        popup3Back = panelPopUp.transform.Find("PopUp3/Back").GetComponent<Button>();
-    }
-
     //매니저 초기화
     void initManager()
     {
@@ -156,7 +141,7 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
     */
 
     //팝업을 요청한다.
-    public static bool setPopUpCode(bool bChoose, string yesStr = "", string noStr = "", string header = "", string body = "")
+    public bool setPopUpCode(bool bChoose, string yesStr = "", string noStr = "", string header = "", string body = "")
     {
         bool reVal = false;
         if (nowState == (int)POPUP_STATE.READY)
@@ -305,7 +290,7 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
     }
 
 
-    public static void setPopUpClose()
+    public void setPopUpClose()
     {
         //if (nowState == (int)POPUP_STATE.SELECT)
         //{
@@ -412,7 +397,7 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         */
     }
 
-    public static void AddMethodToBtn(Action yesAction, Action noAction = null)
+    public void AddMethodToBtn(Action yesAction, Action noAction = null)
     {
         //RemoveBtnListener();
         if (noAction == null)
@@ -447,7 +432,7 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         }
     }
 
-    public static void RemoveBtnListener()
+    public void RemoveBtnListener()
     {
         popup1Btn.onClick.RemoveAllListeners();
         popup2BtnYes.onClick.RemoveAllListeners();
@@ -458,18 +443,15 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
 
     //Method Add by SeungHwan 241023
 
-    public static void setThreeBtnPopUp(string firstBtnStr = "", string secondBtnStr = "", string thirdBtnStr = "", string header = "", string body = "")
+    public void setThreeBtnPopUp(string firstBtnStr = "", string secondBtnStr = "", string thirdBtnStr = "", string header = "", string body = "")
     {
         strHeader = header;
         strBody = body;
-        strFirst = firstBtnStr;
-        strSecond = secondBtnStr;
-        strThird = thirdBtnStr;
 
         nowState = (int)POPUP_STATE.THREEBTNPOPUP;
     }
 
-    public static void RemoveThreeBtnListener()
+    public void RemoveThreeBtnListener()
     {
         popup3Btn1.onClick.RemoveAllListeners();
         popup3Btn2.onClick.RemoveAllListeners();
@@ -477,7 +459,7 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         popup3Back.onClick.RemoveAllListeners();
     }
 
-    public static void AddMethodToThreeBtn(Action firstAction, Action secondAction, Action thirdAction)
+    public void AddMethodToThreeBtn(Action firstAction, Action secondAction, Action thirdAction)
     {
         RemoveThreeBtnListener();
 

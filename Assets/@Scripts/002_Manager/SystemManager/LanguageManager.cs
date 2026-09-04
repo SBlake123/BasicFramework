@@ -59,6 +59,8 @@ public class LanguageManager : Singleton<LanguageManager>
 
     protected override async UniTask Initialize()
     {
+        //메소드 내용은 프로젝트마다 다르게 작성.
+
         await UniTask.WhenAll(
                 //LanguageScriptDicLoad("contents", languageScriptDic),
                 //LanguageScriptDicLoad("returnCode", languageScriptDic),
