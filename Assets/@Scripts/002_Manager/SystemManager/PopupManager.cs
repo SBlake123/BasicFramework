@@ -29,6 +29,11 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
     public Button popup3Btn3;
     public Button popup3Back;
 
+    [Header("Popup Body")]
+    public GameObject popupBody1;
+    public GameObject popupBody2;
+    public GameObject popupBody3;
+
     private static int nowState = (int)POPUP_STATE.READY;    //현재 상태
     private static bool bChoosePopup;                        //false:1버튼 팝업 true:2버튼 팝업
     //private static bool bSelect;                             //선택하였는가?
@@ -141,7 +146,7 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
     */
 
     //팝업을 요청한다.
-    public bool setPopUpCode(bool bChoose, string yesStr = "", string noStr = "", string header = "", string body = "")
+    public bool setPopUpCode(bool bChoose, string body = "", string yesStr = "", string noStr = "", string header = "")
     {
         bool reVal = false;
         if (nowState == (int)POPUP_STATE.READY)
@@ -320,29 +325,26 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
     //원버튼 팝업
     void showPopUp1()
     {
-        GameObject body = panelPopUp.transform.Find("PopUp1").transform.Find("Body").gameObject;
-        panelPopUp.transform.Find("PopUp1").gameObject.SetActive(true);
-        panelPopUp.transform.Find("PopUp2").gameObject.SetActive(false);
-        panelPopUp.transform.Find("PopUp3").gameObject.SetActive(false);
+        popup1.gameObject.SetActive(true);
+        popup2.gameObject.SetActive(false);
+        popup3.gameObject.SetActive(false);
         panelPopUp.SetActive(true);
 
         //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
         //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
         //gText.setText(body.transform.Find("Btn").transform.Find("Text").gameObject, strYes);
-
-        body.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
-        body.GetComponent<ContentSizeFitter>().SetLayoutVertical();
+        
+        popupBody1.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
+        popupBody1.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(body.GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(popupBody1.GetComponent<RectTransform>());
     }
     //투버튼 팝업
     void showPopUp2()
     {
-        GameObject body = panelPopUp.transform.Find("PopUp2").transform.Find("Body").gameObject;
-        panelPopUp.transform.Find("PopUp1").gameObject.SetActive(false);
-        panelPopUp.transform.Find("PopUp2").gameObject.SetActive(true);
-        panelPopUp.transform.Find("PopUp3").gameObject.SetActive(false);
-
+        popup1.gameObject.SetActive(false);
+        popup2.gameObject.SetActive(true);
+        popup3.gameObject.SetActive(false);
         panelPopUp.SetActive(true);
 
         //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
@@ -350,10 +352,10 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         //gText.setText(body.transform.Find("BtnParent").transform.Find("BtnYes").transform.Find("Text").gameObject, strYes);
         //gText.setText(body.transform.Find("BtnParent").transform.Find("BtnNo").transform.Find("Text").gameObject, strNo);
 
-        body.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
-        body.GetComponent<ContentSizeFitter>().SetLayoutVertical();
+        popupBody2.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
+        popupBody2.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(body.GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(popupBody2.GetComponent<RectTransform>());
     }
 
 
@@ -473,16 +475,18 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
     }
     void shopPopUp3()
     {
-        GameObject body = panelPopUp.transform.Find("PopUp3").transform.Find("Body").gameObject;
-        panelPopUp.transform.Find("PopUp1").gameObject.SetActive(false);
-        panelPopUp.transform.Find("PopUp2").gameObject.SetActive(false);
-        panelPopUp.transform.Find("PopUp3").gameObject.SetActive(true);
+        popup1.gameObject.SetActive(false);
+        popup2.gameObject.SetActive(false);
+        popup3.gameObject.SetActive(true);
         panelPopUp.SetActive(true);
 
         //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
         //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
 
-        Transform btnParent = body.transform.Find("BtnParent");
+        popupBody3.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
+        popupBody3.GetComponent<ContentSizeFitter>().SetLayoutVertical();
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(popupBody3.GetComponent<RectTransform>());
 
         //gText.setText(btnParent.transform.Find("BtnFirst").transform.Find("Text").gameObject, strFirst);
         //gText.setText(btnParent.transform.Find("BtnSecond").transform.Find("Text").gameObject, strSecond);

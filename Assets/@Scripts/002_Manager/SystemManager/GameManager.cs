@@ -82,8 +82,7 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
     public async UniTask EssentialFailed()
     {
-        //PopupManager.
-        //popupmanager »£√‚
+        PopupManager.Instance.setPopUpCode(false, "Error", "Yes");
     }
 
     public async UniTask KK()
