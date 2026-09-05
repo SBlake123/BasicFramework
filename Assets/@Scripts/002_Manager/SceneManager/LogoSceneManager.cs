@@ -27,12 +27,25 @@ public class LogoSceneManager : MonoSingleton<LogoSceneManager>
 
     private void Start()
     {
+        LoadingPerCheck().Forget();
         LogoSceneStart().Forget();
+    }
+
+    private async UniTask LoadingPerCheck()
+    {
+        while(true)
+        {
+            loadingPercentTMP.text = $"{GameManager.Instance.systemInitPer * 100:F0}%";
+            await UniTask.Yield();
+        }
     }
 
     private async UniTask LogoSceneStart()
     {
-
+       await GameManager.Instance.SystemInitialize(async () =>
+       {
+           await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
+       });
     }
 
     //게임에 필요한 친구들 다 로딩 되었는가?

@@ -29,7 +29,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
     protected override async UniTask Initialize()
     {
-
+        await LoadAssetCheck();
     }
 
     private AsyncOperationHandle<List<string>> handle;
@@ -41,9 +41,9 @@ public class ResourceManager : Singleton<ResourceManager>
 
         string _downSizeStr = "";
 
-        // await UniTask.WaitUntil(() => _getDownloadSizeDone == true);
+        Debug.Log("Check");
 
-        string[] labels = { "Sprite", "Text", "Sound", "GameObject" };
+        // await UniTask.WaitUntil(() => _getDownloadSizeDone == true);
 
         Addressables.CheckForCatalogUpdates().Completed += async handle =>
         {
@@ -100,7 +100,7 @@ public class ResourceManager : Singleton<ResourceManager>
                 PopupManager.Instance.AddMethodToBtn(async () =>
                 {
                     long downloadBytes = 0L;
-                    foreach (var item in labels)
+                    foreach (var item in GScriptAddress.labelNameArr)
                     {
                         var downLoadSize = await Addressables.GetDownloadSizeAsync(item);
 
@@ -185,7 +185,7 @@ public class ResourceManager : Singleton<ResourceManager>
                     PopupManager.Instance.AddMethodToBtn(async () =>
                     {
                         long downloadBytes = 0L;
-                        foreach (var item in labels)
+                        foreach (var item in GScriptAddress.labelNameArr)
                         {
                             var downLoadSize = await Addressables.GetDownloadSizeAsync(item);
 

@@ -9,6 +9,17 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 {
     private string savePath => Path.Combine(Application.persistentDataPath, "SaveData.dat");
 
+    public async UniTask OnInitialize()
+    {
+        await Initialize();
+    }
+
+    protected override async UniTask Initialize()
+    {
+        Load();
+        await UniTask.WaitForFixedUpdate();
+    }
+
     public void Save(string jsonString)
     {
         try
@@ -27,6 +38,8 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     public string Load()
     {
+        Debug.Log("Load");
+
         if (!File.Exists(savePath))
         {
             return null;

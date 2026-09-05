@@ -21,19 +21,19 @@ MonoBehaviour:
     m_Address: Assets/@Resources/SoundDisk.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Object
+    - GameObject
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5c38f3bb54356b1468bbad192acb5b0d
     m_Address: Assets/@Resources/SoundDisk 1.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Object
+    - GameObject
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b702fbb7047ac5c4788f4738ffdf509b
     m_Address: Assets/@Resources/SoundDisk 2.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Object
+    - GameObject
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 41fc6d5c7d4c8214a9b2c3f38e6817ab, type: 2}
