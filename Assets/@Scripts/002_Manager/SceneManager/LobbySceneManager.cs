@@ -22,7 +22,7 @@ public class LobbyPage : MonoBehaviour
     public LobbySceneManager lobbySceneManager { get; set; }
 }
 
-public class LobbySceneManager : MonoSingleton<LobbySceneManager>, StateBaseSceneManager
+public class LobbySceneManager : StateBaseSceneManager
 {
     private LobbySceneState lobbySceneState = LobbySceneState.NONE;
 
@@ -46,17 +46,15 @@ public class LobbySceneManager : MonoSingleton<LobbySceneManager>, StateBaseScen
         }
     }
 
-    public async UniTask SceneAllocate()
+    public override void SceneAllocate()
     {
         foreach (var item in pages)
         {
             item.lobbySceneManager = this;
         }
-
-        await UniTask.WaitForFixedUpdate();
     }
 
-    public async UniTask ChangeState(int _state)
+    public override async UniTask ChangeState(int _state)
     {
         if (lobbySceneState != (LobbySceneState)_state)
         {
@@ -66,7 +64,7 @@ public class LobbySceneManager : MonoSingleton<LobbySceneManager>, StateBaseScen
         }
     }
 
-    public async UniTask OnStateChange()
+    public override async UniTask OnStateChange()
     {
         screenGuard.SetActive(true);
 
@@ -79,5 +77,4 @@ public class LobbySceneManager : MonoSingleton<LobbySceneManager>, StateBaseScen
         await UniTask.WaitForFixedUpdate();
 
     }
-
 }

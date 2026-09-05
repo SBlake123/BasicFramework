@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface StateBaseSceneManager
+public abstract class StateBaseSceneManager  :MonoBehaviour 
 {
-    public abstract UniTask SceneAllocate();
+    public abstract void SceneAllocate();
 
     public abstract UniTask ChangeState(int _state);
 
