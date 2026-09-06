@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,4 +6,18 @@ using UnityEngine;
 public abstract class StateBasePage : MonoBehaviour
 {
     public StateBaseSceneManager stateBaseSceneManager { get; set; }
+
+    public GameObject pageMain;
+
+    private bool isFirstSetting = true;
+
+    public async UniTask Init()
+    {
+        if (!isFirstSetting) return;
+
+        await OnFirstSetting();
+        isFirstSetting = false;
+    }
+
+    protected abstract UniTask OnFirstSetting();
 }

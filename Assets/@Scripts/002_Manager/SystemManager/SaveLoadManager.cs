@@ -9,6 +9,10 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 {
     private string savePath => Path.Combine(Application.persistentDataPath, "SaveData.dat");
 
+
+    //세이브 하는 경우 -> 강제 종료, 종료하겠습니다, 죽었을 때, 상태변화 할 때,
+    public string saveJsonString { get; set; }
+
     public async UniTask OnInitialize()
     {
         await Initialize();
@@ -16,7 +20,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
 
     protected override async UniTask Initialize()
     {
-        Load();
         await UniTask.WaitForFixedUpdate();
     }
 

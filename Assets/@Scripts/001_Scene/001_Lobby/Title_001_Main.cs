@@ -15,17 +15,21 @@ public class Title_001_Main : StateBasePage
     float skyRectMoveValue = 0.3f;
     float groundRectMoveValue = -0.2f;
 
-    private bool isFirstSetting = true;
-
-    public async UniTask MainInit()
+    protected override async UniTask OnFirstSetting()
     {
-        if (isFirstSetting)
-        {
-            BackgroundSetting().Forget();
-            AddListenerToButton();
-            isFirstSetting = false;
-        }
+        BackgroundSetting().Forget();
+        AddListenerToButton();
+        Debug.Log("ON_INIT");
     }
+    //public async UniTask MainInit()
+    //{
+    //    if (isFirstSetting)
+    //    {
+    //        BackgroundSetting().Forget();
+    //        AddListenerToButton();
+    //        isFirstSetting = false;
+    //    }
+    //}
 
     public async UniTask Test()
     {

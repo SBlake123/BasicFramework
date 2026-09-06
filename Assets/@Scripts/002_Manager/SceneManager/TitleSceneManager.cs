@@ -99,23 +99,42 @@ public partial class TitleSceneManager : StateBaseSceneManager
         {
             case TitleSceneState.MAIN:
                 {
-                    Title_001_Main title_001_main = pages[(int)TitleSceneIdx.MAIN].GetComponent<Title_001_Main>();
-                    await title_001_main.MainInit();
+                    Title_001_Main title_001_Main = pages[(int)TitleSceneIdx.MAIN].GetComponent<Title_001_Main>();
+                    await title_001_Main.Init();
+                    title_001_Main.pageMain.SetActive(true);
+
+                    for (int i = 1; i < pages.Length; i++)
+                    {
+                        pages[i].pageMain.SetActive(false);
+                    }
 
                     break;
                 }
+
             case TitleSceneState.OPTION:
                 {
+                    Title_002_Option title_002_Option = pages[(int)TitleSceneIdx.OPTION].GetComponent<Title_002_Option>();
+                    await title_002_Option.Init();
+                    title_002_Option.pageMain.SetActive(true);
                     Debug.Log("OPTION");
                     break;
                 }
+
             case TitleSceneState.NEW_GAME:
                 {
+                    Title_003_NewGame title_003_NewGame = pages[(int)TitleSceneIdx.NEW_GAME].GetComponent<Title_003_NewGame>();
+                    await title_003_NewGame.Init();
+                    title_003_NewGame.pageMain.SetActive(true);
                     Debug.Log("NEW_GAME");
                     break;
                 }
+
             case TitleSceneState.CONTINUE:
                 {
+                    Title_004_Continue title_004_Continue = pages[(int)TitleSceneIdx.CONTINUE].GetComponent<Title_004_Continue>();
+                    await title_004_Continue.Init();
+                    await title_004_Continue.ContinueCheck();
+                    title_004_Continue.pageMain.SetActive(true);
                     Debug.Log("CONTINUE");
 
                     break;

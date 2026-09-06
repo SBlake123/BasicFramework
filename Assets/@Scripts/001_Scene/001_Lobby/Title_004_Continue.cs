@@ -6,12 +6,27 @@ using UnityEngine.UI;
 
 public class Title_004_Continue : StateBasePage
 {
-    private bool isFirstSetting = true;
-    public async UniTask ContinuePageInit()
+    protected override async UniTask OnFirstSetting()
     {
-        if (isFirstSetting)
+
+    }
+
+    public async UniTask ContinueCheck()
+    {
+        var saveData = SaveLoadManager.Instance.Load();
+
+        if (saveData != null)
         {
-            isFirstSetting = false;
+
         }
     }
+    //public async UniTask ContinuePageInit()
+    //{
+    //    if (isFirstSetting)
+    //    {
+    //        isFirstSetting = false;
+    //    }
+    //}
+
+
 }
