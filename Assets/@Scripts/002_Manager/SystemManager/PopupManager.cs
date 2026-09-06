@@ -12,18 +12,20 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
     [Header("Popup Object")]
 
     public GameObject panelPopUp;
-
     public GameObject popup1;
     public GameObject popup2;
     public GameObject popup3;
 
-    [Header("Popup Button")]
-
+    [Header("Popup1 Button")]
     public Button popup1Btn;
+    public Button popup1Back;
+
+    [Header("Popup2 Button")]
     public Button popup2BtnYes;
     public Button popup2BtnNo;
-    public Button popup1Back;
     public Button popup2Back;
+
+    [Header("Popup3 Button")]
     public Button popup3Btn1;
     public Button popup3Btn2;
     public Button popup3Btn3;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StateBaseSceneManager  :MonoBehaviour 
+public abstract class StateBaseSceneManager  : MonoBehaviour 
 {
     public abstract void SceneAllocate();
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StateBasePage
+public abstract class StateBasePage : MonoBehaviour
 {
-    public StateBaseSceneManager StateBaseSceneManager { get; set; }
+    public StateBaseSceneManager stateBaseSceneManager { get; set; }
 }

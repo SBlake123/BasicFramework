@@ -11,12 +11,9 @@ using System;
 public enum TitleSceneIdx
 {
     MAIN,
-    NOTICE,
-    ACCOUNTLIST,
-    ACCOUNTLINK,
-    SIGNIN,
-    LOGINPLATFORM,
-    OPTION
+    OPTION,
+    NEW_GAME,
+    CONTINUE
 }
 public enum TitleSceneState
 {
@@ -24,7 +21,8 @@ public enum TitleSceneState
     LOADING,
     MAIN,
     OPTION,
-    GOTOLOBBY,
+    NEW_GAME,
+    CONTINUE,
 
     APPQUIT = 998,
     GOTOTITLE = 999
@@ -34,16 +32,10 @@ public partial class TitleSceneManager : StateBaseSceneManager
 {
     private TitleSceneState titleSceneState = TitleSceneState.NONE;
 
-    public TitlePage[] pages;
+    public StateBasePage[] pages;
 
     public GameObject screenGuard;
     public Image screenBlur;
-
-    public List<RectTransform> skyRect = new List<RectTransform>();
-    public List<RectTransform> groundRect = new List<RectTransform>();
-
-    float skyRectMoveValue = 0.3f;
-    float groundRectMoveValue = -0.2f;
 
     void Start()
     {
@@ -53,12 +45,15 @@ public partial class TitleSceneManager : StateBaseSceneManager
 
     private async UniTask TitleSceneSetting()
     {
+        screenGuard.SetActive(true);
+
         ScreenBlurInit();
-        BackgroundSetting().Forget();
         BackKeySetting().Forget();
         SceneAllocate();
+        await ChangeState((int)TitleSceneState.MAIN);
         ScreenBlurFadeOut();
 
+        screenGuard.SetActive(false);
         await UniTask.WaitForFixedUpdate();
     }
 
@@ -82,7 +77,7 @@ public partial class TitleSceneManager : StateBaseSceneManager
     {
         foreach (var item in pages)
         {
-            item.StateBaseSceneManager = this;
+            item.stateBaseSceneManager = this;
         }
     }
 
@@ -102,7 +97,29 @@ public partial class TitleSceneManager : StateBaseSceneManager
 
         switch (titleSceneState)
         {
+            case TitleSceneState.MAIN:
+                {
+                    Title_001_Main title_001_main = pages[(int)TitleSceneIdx.MAIN].GetComponent<Title_001_Main>();
+                    await title_001_main.MainInit();
 
+                    break;
+                }
+            case TitleSceneState.OPTION:
+                {
+                    Debug.Log("OPTION");
+                    break;
+                }
+            case TitleSceneState.NEW_GAME:
+                {
+                    Debug.Log("NEW_GAME");
+                    break;
+                }
+            case TitleSceneState.CONTINUE:
+                {
+                    Debug.Log("CONTINUE");
+
+                    break;
+                }
         }
         if (screenGuard != null) screenGuard.SetActive(false);
 
@@ -125,47 +142,7 @@ public partial class TitleSceneManager : StateBaseSceneManager
         });
     }
 
-    private async UniTask BackgroundSetting()
-    {
-        SkyRectPlay().Forget();
-        //GroundRectPlay().Forget();
 
-        async UniTask SkyRectPlay()
-        {
-            Vector2 skyRectMoveVec = new Vector2(skyRectMoveValue, 0);
-
-            while (true)
-            {
-                for (int i = 0; i < skyRect.Count; i++)
-                {
-                    skyRect[i].anchoredPosition = skyRect[i].anchoredPosition + skyRectMoveVec;
-                }
-
-                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, destroyCancellationToken);
-
-                //await UniTask.Delay(1000);
-            }
-
-        }
-
-        async UniTask GroundRectPlay()
-        {
-            Vector2 groundRectMoveVec = new Vector2(groundRectMoveValue, 0);
-
-            while (true)
-            {
-                for(int i = 0; i < groundRect.Count; i++)
-                {
-                    groundRect[i].anchoredPosition = groundRect[i].anchoredPosition + groundRectMoveVec;
-                }
-
-                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, destroyCancellationToken);
-
-
-                //await UniTask.Delay(1000);
-            }
-        }
-    }
 
 
 }

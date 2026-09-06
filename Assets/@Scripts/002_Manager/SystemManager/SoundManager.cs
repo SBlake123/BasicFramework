@@ -22,6 +22,21 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
     public List<SoundDisk> bgmSoundList { get; set; } = new List<SoundDisk>();
     public List<SoundDisk> fxSoundList { get; set; } = new List<SoundDisk>();
 
+    public void SetVolume(SoundCategory category, float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        PlayerPrefs.SetFloat(category == SoundCategory.BGM ? "BGMVOL" : "FXVOL", volume);
+        // Include resource-loaded sounds, which are not all tracked in the lists.
+        Transform parent = category == SoundCategory.BGM ? bgmSoundParent : fxSoundParent;
+        if (parent != null)
+        {
+            foreach (var disk in parent.GetComponentsInChildren<SoundDisk>(true))
+                if (disk != null && disk.audioSource != null) disk.audioSource.volume = volume;
+        }
+        var disks = category == SoundCategory.BGM ? bgmSoundList : fxSoundList;
+        foreach (var disk in disks)
+            if (disk != null && disk.audioSource != null) disk.audioSource.volume = volume;
+    }
     public void SoundInit()
     {
         if (!PlayerPrefs.HasKey("FXVOL")) PlayerPrefs.SetFloat("FXVOL", 0.5f);

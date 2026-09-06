@@ -1,18 +1,17 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Title_004_Continue : MonoBehaviour
+public class Title_004_Continue : StateBasePage
 {
-    // Start is called before the first frame update
-    void Start()
+    private bool isFirstSetting = true;
+    public async UniTask ContinuePageInit()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (isFirstSetting)
+        {
+            isFirstSetting = false;
+        }
     }
 }

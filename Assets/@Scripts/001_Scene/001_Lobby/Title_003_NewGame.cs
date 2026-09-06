@@ -1,18 +1,18 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Title_003_NewGame : MonoBehaviour
+public class Title_003_NewGame : StateBasePage
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    private bool isFirstSetting = true;
+    public async UniTask NewGamePageInit()
     {
-        
+        if (isFirstSetting)
+        {
+            isFirstSetting = false;
+        }
     }
 }

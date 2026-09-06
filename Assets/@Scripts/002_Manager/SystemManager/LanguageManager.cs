@@ -48,7 +48,21 @@ public class WordInfo : ScriptClass
 
 public class LanguageManager : Singleton<LanguageManager>
 {
-    private LanguageType currentLanguage = LanguageType.KR;
+    private const string LanguageKey = "LANGUAGE";
+    private LanguageType currentLanguage = PlayerPrefs.GetInt(LanguageKey, (int)LanguageType.KR) == (int)LanguageType.EN
+        ? LanguageType.EN : LanguageType.KR;
+
+    public event Action<LanguageType> LanguageChanged;
+
+    public void SetLanguage(LanguageType language)
+    {
+        if (language != LanguageType.KR && language != LanguageType.EN) return;
+        PlayerPrefs.SetInt(LanguageKey, (int)language);
+        PlayerPrefs.Save();
+        if (currentLanguage == language) return;
+        currentLanguage = language;
+        LanguageChanged?.Invoke(language);
+    }
     public Dictionary<int, LanguageScript> languageScriptDic { get; set; } = new Dictionary<int, LanguageScript>();
     public Dictionary<int, WordInfo> wordInfoDic { get; set; } = new Dictionary<int, WordInfo>();
 
