@@ -17,7 +17,14 @@ public class Title_004_Continue : StateBasePage
 
         if (saveData != null)
         {
-
+            //로드 후 인게임 씬에 적용.
+            //GameManager -> IngameDataManager
+            //
+            stateBaseSceneManager.ChangeState((int)TitleSceneState.START_INGAME).Forget();
+        }
+        else
+        {
+            Debug.Log("DATA_NULL");
         }
     }
     //public async UniTask ContinuePageInit()

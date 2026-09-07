@@ -23,6 +23,7 @@ public enum TitleSceneState
     OPTION,
     NEW_GAME,
     CONTINUE,
+    START_INGAME,
 
     APPQUIT = 998,
     GOTOTITLE = 999
@@ -51,7 +52,7 @@ public partial class TitleSceneManager : StateBaseSceneManager
         BackKeySetting().Forget();
         SceneAllocate();
         await ChangeState((int)TitleSceneState.MAIN);
-        ScreenBlurFadeOut();
+        await ScreenBlurFadeOut();
 
         screenGuard.SetActive(false);
         await UniTask.WaitForFixedUpdate();
@@ -124,6 +125,7 @@ public partial class TitleSceneManager : StateBaseSceneManager
                 {
                     Title_003_NewGame title_003_NewGame = pages[(int)TitleSceneIdx.NEW_GAME].GetComponent<Title_003_NewGame>();
                     await title_003_NewGame.Init();
+                    await title_003_NewGame.NewGameStart();
                     title_003_NewGame.pageMain.SetActive(true);
                     Debug.Log("NEW_GAME");
                     break;
@@ -136,6 +138,16 @@ public partial class TitleSceneManager : StateBaseSceneManager
                     await title_004_Continue.ContinueCheck();
                     title_004_Continue.pageMain.SetActive(true);
                     Debug.Log("CONTINUE");
+
+                    break;
+                }
+            case TitleSceneState.START_INGAME:
+                {
+                    Debug.Log("START_INGAME");
+                    await ScreenBlurFadeIn();
+                    await SceneLoadManager.Instance.LoadScene(GSceneName.INGAME_SCENE);
+
+
 
                     break;
                 }
@@ -153,12 +165,29 @@ public partial class TitleSceneManager : StateBaseSceneManager
         screenBlur.color = color;
     }
 
-    private void ScreenBlurFadeOut()
+    private async UniTask ScreenBlurFadeIn()
     {
-        screenBlur.DOFade(0f, 2f).OnComplete(() =>
+        screenBlur.gameObject.SetActive(true);
+
+        Color color = screenBlur.color;
+        color.a = 0f;
+        screenBlur.color = color;
+
+        await screenBlur.DOFade(1f, 2f).AsyncWaitForCompletion();
+    }
+
+    private async UniTask ScreenBlurFadeOut()
+    {
+        screenBlur.gameObject.SetActive(true);
+
+        Color color = screenBlur.color;
+        color.a = 1f;
+        screenBlur.color = color;
+
+        await screenBlur.DOFade(0f, 2f).OnComplete(() =>
         {
             screenBlur.gameObject.SetActive(false);
-        });
+        }).AsyncWaitForCompletion();
     }
 
 

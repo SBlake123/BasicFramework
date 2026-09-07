@@ -68,7 +68,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour, ISingleton where T : Mon
             instance = this as T;
 
             // Initialize existing instance
-            //InitializeSingleton();
+            InitializeSingleton();
         }
         else
         {
@@ -117,17 +117,18 @@ public abstract class MonoSingleton<T> : MonoBehaviour, ISingleton where T : Mon
 
     #region Public Methods
 
-    public virtual async UniTask InitializeSingleton()
+    public virtual void InitializeSingleton()
     {
         if (this.initializationStatus != SingletonStatus.None)
         {
             return;
         }
-
+        
         this.initializationStatus = SingletonStatus.Initializing;
-        await OnInitializing();
+        Initialize();
+        OnInitializing();
         this.initializationStatus = SingletonStatus.Initialized;
-        await OnInitialized();
+        OnInitialized();
     }
     #endregion
 

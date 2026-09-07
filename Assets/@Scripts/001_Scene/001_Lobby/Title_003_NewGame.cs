@@ -11,6 +11,11 @@ public class Title_003_NewGame : StateBasePage
 
     }
 
+    public async UniTask NewGameStart()
+    {
+        stateBaseSceneManager.ChangeState((int)TitleSceneState.START_INGAME).Forget();
+    }
+
     //public async UniTask NewGamePageInit()
     //{
     //    if (isFirstSetting)

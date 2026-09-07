@@ -8,6 +8,7 @@ public class Title_001_Main : StateBasePage
 {
     public Button newGameButton;
     public Button continueGameButton;
+    public Button optionButton;
 
     public List<RectTransform> skyRect = new List<RectTransform>();
     public List<RectTransform> groundRect = new List<RectTransform>();
@@ -18,6 +19,7 @@ public class Title_001_Main : StateBasePage
     protected override async UniTask OnFirstSetting()
     {
         BackgroundSetting().Forget();
+        CanContinueCheck();
         AddListenerToButton();
         Debug.Log("ON_INIT");
     }
@@ -31,19 +33,39 @@ public class Title_001_Main : StateBasePage
     //    }
     //}
 
-    public async UniTask Test()
+    public void CanContinueCheck()
     {
-        await stateBaseSceneManager.ChangeState((int)TitleSceneState.NEW_GAME);
+        var saveData = SaveLoadManager.Instance.Load();
+
+        if (saveData == null)
+        {
+            //로드 후 인게임 씬에 적용.
+            //GameManager -> IngameDataManager
+            //
+            continueGameButton.gameObject.SetActive(false);
+        }
     }
 
-    public async UniTask Test2()
+    public void NewGameStart()
     {
-        await stateBaseSceneManager.ChangeState((int)TitleSceneState.CONTINUE);
+        stateBaseSceneManager.ChangeState((int)TitleSceneState.NEW_GAME).Forget();
     }
+
+    public void ContinueStart()
+    {
+        stateBaseSceneManager.ChangeState((int)TitleSceneState.CONTINUE).Forget();
+    }
+
+    public void OptionStart()
+    {
+        stateBaseSceneManager.ChangeState((int)TitleSceneState.OPTION).Forget();
+    }
+
     public void AddListenerToButton()
     {
-        newGameButton.onClick.AddListener(async () => await Test());
-        continueGameButton.onClick.AddListener(async () => await Test2());
+        newGameButton.onClick.AddListener(() => NewGameStart());
+        continueGameButton.onClick.AddListener(() => ContinueStart());
+        optionButton.onClick.AddListener(() => OptionStart());
     }
 
     private async UniTask BackgroundSetting()

@@ -5,6 +5,7 @@ public class PersistentMonoSingleton<T> : MonoSingleton<T> where T : MonoSinglet
 {
     protected override async UniTask Initialize()
     {
+        await base.Initialize();
         if (Application.isPlaying)
         {
             DontDestroyOnLoad(gameObject);
