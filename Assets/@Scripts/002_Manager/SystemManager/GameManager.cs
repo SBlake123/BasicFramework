@@ -27,7 +27,7 @@ public class GameManager : PersistentMonoSingleton<GameManager>
         }
     }
 
-    public async UniTask SystemInitialize(Func<UniTask> onInitialize)
+    public async UniTask SystemInitialize(Func<UniTask> onInitialize = null)
     {
         Application.targetFrameRate = 60;
 
