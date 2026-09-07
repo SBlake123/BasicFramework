@@ -8,7 +8,6 @@ public partial class Player : MonoBehaviour
     void Start()
     {
         PlayerInit().Forget();
-        PlayerActionCheck().Forget();
         PlayerExternalReactionCheck().Forget();
     }
 

@@ -10,20 +10,28 @@ using UnityEngine;
 public class IngameSessionManager : MonoBehaviour
 {
     [SerializeField] private Player player;
+    [SerializeField] private Canvas hudCanvas;
+    [SerializeField] private bool createVirtualJoystickInEditor;
     [SerializeField] private string mapId = "03_Ingame";
     [SerializeField, Min(1f)] private float checkpointIntervalSeconds = 30f;
+
+    private VirtualJoystick virtualJoystick;
 
     public bool IsRaidActive { get; private set; }
     public event Action<RaidSessionData> OnRaidCheckpointed;
     public event Action OnRaidExtracted;
     public event Action OnRaidFailed;
 
-    private void Awake()
+    public void SetPlayer(Player loadedPlayer)
     {
-        if (player == null)
-        {
-            player = FindObjectOfType<Player>();
-        }
+        player = loadedPlayer;
+        TryCreateAndConnectVirtualJoystick();
+    }
+
+    public void SetHudCanvas(Canvas loadedHudCanvas)
+    {
+        hudCanvas = loadedHudCanvas;
+        TryCreateAndConnectVirtualJoystick();
     }
 
     public void BeginRaid()
@@ -37,6 +45,7 @@ public class IngameSessionManager : MonoBehaviour
         PlayerDataManager.Instance.BeginRaid(mapId);
         IsRaidActive = true;
 
+        TryCreateAndConnectVirtualJoystick();
         CapturePlayerTransform();
         CheckpointLoop().Forget();
     }
@@ -122,5 +131,22 @@ public class IngameSessionManager : MonoBehaviour
         }
 
         PlayerDataManager.Instance.UpdateRaidPosition(player.transform.position);
+    }
+
+    private void TryCreateAndConnectVirtualJoystick()
+    {
+        bool canUseVirtualJoystick = Application.isMobilePlatform || createVirtualJoystickInEditor;
+
+        if (!canUseVirtualJoystick || player == null || hudCanvas == null)
+        {
+            return;
+        }
+
+        if (virtualJoystick == null)
+        {
+            virtualJoystick = VirtualJoystick.Create(hudCanvas.transform);
+        }
+
+        virtualJoystick.SetTarget(player);
     }
 }

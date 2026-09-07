@@ -496,9 +496,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 793968990}
+  - component: {fileID: 793968992}
   - component: {fileID: 793968991}
   m_Layer: 0
-  m_Name: IngameManager
+  m_Name: IngameSceneManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -528,10 +529,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 793968989}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cae30cf60978b147bb19de224d08ae5, type: 3}
+  m_Script: {fileID: 11500000, guid: 58371c9b3d90196489fa258c30b92021, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ingameSessionManager: {fileID: 793968992}
+--- !u!114 &793968992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793968989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bfd4eba3b401084db2c2dae986339e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  hudCanvas: {fileID: 0}
+  createVirtualJoystickInEditor: 0
+  mapId: 03_Ingame
+  checkpointIntervalSeconds: 30
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,6 +820,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSkinBase: {fileID: 589092893}
+  useVirtualJoystickInEditor: 0
 --- !u!50 &1386466722
 Rigidbody2D:
   serializedVersion: 4
@@ -1218,7 +1237,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 2000, y: 1500}
+  m_SizeDelta: {x: 20000, y: 10000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2083714217
 MonoBehaviour:

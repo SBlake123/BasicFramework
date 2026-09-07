@@ -17,7 +17,6 @@ public enum IngameSceneState
 /// Owns the high-level state of one in-game scene.
 /// UI pages, fades, and result screens can subscribe to OnStateChanged later.
 /// </summary>
-[RequireComponent(typeof(IngameSessionManager))]
 public class IngameSceneManager : StateBaseSceneManager
 {
     [SerializeField] private IngameSessionManager ingameSessionManager;
@@ -34,12 +33,8 @@ public class IngameSceneManager : StateBaseSceneManager
     {
         if (ingameSessionManager == null)
         {
-            ingameSessionManager = GetComponent<IngameSessionManager>();
-        }
-
-        if (ingameSessionManager == null)
-        {
-            ingameSessionManager = FindObjectOfType<IngameSessionManager>();
+            Debug.LogError("[IngameSceneManager] IngameSessionManager reference is not assigned.");
+            return;
         }
 
         await ChangeState((int)IngameSceneState.READY);

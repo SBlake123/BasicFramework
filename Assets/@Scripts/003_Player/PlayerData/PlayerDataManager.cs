@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 public class PlayerDataManager : Singleton<PlayerDataManager>
 {
-    private string SavePath => Path.Combine(Application.persistentDataPath, "SaveData.dat");
+    private string SavePath => Path.Combine(Application.persistentDataPath, "PlayerRaidData.dat");
 
     private PlayerSaveData saveData;
     private bool saveRequested;
