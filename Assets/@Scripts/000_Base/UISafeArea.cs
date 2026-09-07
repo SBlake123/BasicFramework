@@ -9,40 +9,40 @@ public class UISafeArea : MonoBehaviour
     int lastScreenWidth = 0;
 
     int lastScreenHeight = 0;
-    private void Awake()
-    {
-        rect = GetComponent<RectTransform>();
+//    private void Awake()
+//    {
+//        rect = GetComponent<RectTransform>();
 
-        OnScreenSizeChanged();
-    }
+//        OnScreenSizeChanged();
+//    }
 
-#if UNITY_EDITOR
-    void Update()
-    {
-        if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height)
-        {
-            lastScreenWidth = Screen.width;
-            lastScreenHeight = Screen.height;
-            OnScreenSizeChanged();
-        }
-    }
-#endif
+//#if UNITY_EDITOR
+//    void Update()
+//    {
+//        if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height)
+//        {
+//            lastScreenWidth = Screen.width;
+//            lastScreenHeight = Screen.height;
+//            OnScreenSizeChanged();
+//        }
+//    }
+//#endif
 
    
 
-    private void OnScreenSizeChanged()
-    {
-        rect.sizeDelta = Vector2.zero;
-        var safeArea = Screen.safeArea;
-        var minAnchor = safeArea.position;
-        var maxAnchor = minAnchor + safeArea.size;
+//    private void OnScreenSizeChanged()
+//    {
+//        rect.sizeDelta = Vector2.zero;
+//        var safeArea = Screen.safeArea;
+//        var minAnchor = safeArea.position;
+//        var maxAnchor = minAnchor + safeArea.size;
 
-        minAnchor.x /= Screen.width;
-        minAnchor.y /= Screen.height;
-        maxAnchor.x /= Screen.width;
-        maxAnchor.y /= Screen.height;
+//        minAnchor.x /= Screen.width;
+//        minAnchor.y /= Screen.height;
+//        maxAnchor.x /= Screen.width;
+//        maxAnchor.y /= Screen.height;
 
-        rect.anchorMin = minAnchor;
-        rect.anchorMax = maxAnchor;
-    }
+//        rect.anchorMin = minAnchor;
+//        rect.anchorMax = maxAnchor;
+//    }
 }

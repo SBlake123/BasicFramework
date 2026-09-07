@@ -4582,9 +4582,9 @@ MonoBehaviour:
   popup2: {fileID: 205171006}
   popup3: {fileID: 1926806502}
   popup1Btn: {fileID: 601753041}
+  popup1Back: {fileID: 742318204}
   popup2BtnYes: {fileID: 122485938}
   popup2BtnNo: {fileID: 1731531818}
-  popup1Back: {fileID: 742318204}
   popup2Back: {fileID: 1588360593}
   popup3Btn1: {fileID: 416285294}
   popup3Btn2: {fileID: 1312406807}
