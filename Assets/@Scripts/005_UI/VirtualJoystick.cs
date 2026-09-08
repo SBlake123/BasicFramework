@@ -7,6 +7,7 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     public RectTransform joystickRect;
     public RectTransform handleRect;
     private Player targetPlayer;
+    private int? activePointerId;
 
     //public static VirtualJoystick Create(Transform parent)
     //{
@@ -62,17 +63,35 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (activePointerId.HasValue || joystickRect == null || handleRect == null)
+        {
+            return;
+        }
+
+        if (!TryGetOffset(eventData, out Vector2 offset) ||
+            offset.sqrMagnitude > GetRadius() * GetRadius())
+        {
+            return;
+        }
+
+        activePointerId = eventData.pointerId;
         UpdateInput(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        UpdateInput(eventData);
+        if (activePointerId == eventData.pointerId)
+        {
+            UpdateInput(eventData);
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        ClearInput();
+        if (activePointerId == eventData.pointerId)
+        {
+            ClearInput();
+        }
     }
 
     private void OnDisable()
@@ -82,27 +101,49 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     private void UpdateInput(PointerEventData eventData)
     {
-        if (targetPlayer == null)
+        if (joystickRect == null || handleRect == null ||
+            !TryGetOffset(eventData, out Vector2 offset))
         {
             return;
         }
 
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        // Clamp the center independently of the visual image size.
+        Vector2 position = Vector2.ClampMagnitude(offset, JoystickMoveRadius());
+        Vector2 direction = position.normalized;
+
+        // The scene handle is a centered, direct child of the joystick background.
+        handleRect.anchoredPosition = position;
+        if (targetPlayer != null)
+        {
+            targetPlayer.SetVirtualJoystickInput(direction);
+        }
+    }
+
+    private float GetRadius()
+    {
+        return Mathf.Min(joystickRect.rect.width, joystickRect.rect.height) * 0.5f;
+    }
+
+    private float JoystickMoveRadius()
+    {
+        return Mathf.Min(joystickRect.rect.width, joystickRect.rect.height) * 0.2f;
+    }
+
+    private bool TryGetOffset(PointerEventData eventData, out Vector2 offset)
+    {
+        bool success = RectTransformUtility.ScreenPointToLocalPointInRectangle(
             joystickRect,
             eventData.position,
             eventData.pressEventCamera,
             out Vector2 localPoint);
 
-        float radius = joystickRect.rect.width * 0.5f;
-        Vector2 direction = Vector2.ClampMagnitude(localPoint / radius, 1f);
-        float handleRange = radius - (handleRect.rect.width * 0.5f);
-
-        handleRect.anchoredPosition = direction * handleRange;
-        targetPlayer.SetVirtualJoystickInput(direction);
+        offset = localPoint - joystickRect.rect.center;
+        return success;
     }
 
     private void ClearInput()
     {
+        activePointerId = null;
         if (handleRect != null)
         {
             handleRect.anchoredPosition = Vector2.zero;

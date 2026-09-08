@@ -22,6 +22,11 @@ public class IngameSessionManager : MonoBehaviour
     public event Action OnRaidExtracted;
     public event Action OnRaidFailed;
 
+    private void Awake()
+    {
+        TryCreateAndConnectVirtualJoystick();
+    }
+
     public void SetPlayer(Player loadedPlayer)
     {
         player = loadedPlayer;
@@ -137,7 +142,7 @@ public class IngameSessionManager : MonoBehaviour
     {
         bool canUseVirtualJoystick = Application.isMobilePlatform || createVirtualJoystickInEditor;
 
-        if (!canUseVirtualJoystick || player == null || hudCanvas == null)
+        if (!canUseVirtualJoystick || player == null || virtualJoystick == null)
         {
             return;
         }

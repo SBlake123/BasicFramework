@@ -16,7 +16,7 @@ public class UISafeArea : MonoBehaviour
         OnScreenSizeChanged();
     }
 
-#if UNITY_EDITOR
+
     void Update()
     {
         if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height)
@@ -26,7 +26,7 @@ public class UISafeArea : MonoBehaviour
             OnScreenSizeChanged();
         }
     }
-#endif
+
 
 
 
