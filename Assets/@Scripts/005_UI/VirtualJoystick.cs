@@ -4,55 +4,55 @@ using UnityEngine.UI;
 
 public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
-    private RectTransform joystickRect;
-    private RectTransform handleRect;
+    public RectTransform joystickRect;
+    public RectTransform handleRect;
     private Player targetPlayer;
 
-    public static VirtualJoystick Create(Transform parent)
-    {
-        GameObject joystickObject = new GameObject(
-            "VirtualJoystick",
-            typeof(RectTransform),
-            typeof(CanvasRenderer),
-            typeof(Image),
-            typeof(VirtualJoystick));
+    //public static VirtualJoystick Create(Transform parent)
+    //{
+    //    GameObject joystickObject = new GameObject(
+    //        "VirtualJoystick",
+    //        typeof(RectTransform),
+    //        typeof(CanvasRenderer),
+    //        typeof(Image),
+    //        typeof(VirtualJoystick));
 
-        joystickObject.transform.SetParent(parent, false);
+    //    joystickObject.transform.SetParent(parent, false);
 
-        RectTransform joystickRect = joystickObject.GetComponent<RectTransform>();
-        joystickRect.anchorMin = Vector2.zero;
-        joystickRect.anchorMax = Vector2.zero;
-        joystickRect.pivot = new Vector2(0.5f, 0.5f);
-        joystickRect.anchoredPosition = new Vector2(150f, 150f);
-        joystickRect.sizeDelta = new Vector2(220f, 220f);
+    //    RectTransform joystickRect = joystickObject.GetComponent<RectTransform>();
+    //    joystickRect.anchorMin = Vector2.zero;
+    //    joystickRect.anchorMax = Vector2.zero;
+    //    joystickRect.pivot = new Vector2(0.5f, 0.5f);
+    //    joystickRect.anchoredPosition = new Vector2(150f, 150f);
+    //    joystickRect.sizeDelta = new Vector2(220f, 220f);
 
-        Image joystickImage = joystickObject.GetComponent<Image>();
-        joystickImage.color = new Color(1f, 1f, 1f, 0.2f);
+    //    Image joystickImage = joystickObject.GetComponent<Image>();
+    //    joystickImage.color = new Color(1f, 1f, 1f, 0.2f);
 
-        GameObject handleObject = new GameObject(
-            "Handle",
-            typeof(RectTransform),
-            typeof(CanvasRenderer),
-            typeof(Image));
+    //    GameObject handleObject = new GameObject(
+    //        "Handle",
+    //        typeof(RectTransform),
+    //        typeof(CanvasRenderer),
+    //        typeof(Image));
 
-        handleObject.transform.SetParent(joystickObject.transform, false);
+    //    handleObject.transform.SetParent(joystickObject.transform, false);
 
-        RectTransform handleRect = handleObject.GetComponent<RectTransform>();
-        handleRect.anchorMin = new Vector2(0.5f, 0.5f);
-        handleRect.anchorMax = new Vector2(0.5f, 0.5f);
-        handleRect.pivot = new Vector2(0.5f, 0.5f);
-        handleRect.anchoredPosition = Vector2.zero;
-        handleRect.sizeDelta = new Vector2(100f, 100f);
+    //    RectTransform handleRect = handleObject.GetComponent<RectTransform>();
+    //    handleRect.anchorMin = new Vector2(0.5f, 0.5f);
+    //    handleRect.anchorMax = new Vector2(0.5f, 0.5f);
+    //    handleRect.pivot = new Vector2(0.5f, 0.5f);
+    //    handleRect.anchoredPosition = Vector2.zero;
+    //    handleRect.sizeDelta = new Vector2(100f, 100f);
 
-        Image handleImage = handleObject.GetComponent<Image>();
-        handleImage.color = new Color(1f, 1f, 1f, 0.45f);
-        handleImage.raycastTarget = false;
+    //    Image handleImage = handleObject.GetComponent<Image>();
+    //    handleImage.color = new Color(1f, 1f, 1f, 0.45f);
+    //    handleImage.raycastTarget = false;
 
-        VirtualJoystick joystick = joystickObject.GetComponent<VirtualJoystick>();
-        joystick.joystickRect = joystickRect;
-        joystick.handleRect = handleRect;
-        return joystick;
-    }
+    //    VirtualJoystick joystick = joystickObject.GetComponent<VirtualJoystick>();
+    //    joystick.joystickRect = joystickRect;
+    //    joystick.handleRect = handleRect;
+    //    return joystick;
+    //}
 
     public void SetTarget(Player player)
     {

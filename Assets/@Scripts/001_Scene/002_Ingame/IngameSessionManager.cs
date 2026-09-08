@@ -15,7 +15,7 @@ public class IngameSessionManager : MonoBehaviour
     [SerializeField] private string mapId = "03_Ingame";
     [SerializeField, Min(1f)] private float checkpointIntervalSeconds = 30f;
 
-    private VirtualJoystick virtualJoystick;
+    public VirtualJoystick virtualJoystick;
 
     public bool IsRaidActive { get; private set; }
     public event Action<RaidSessionData> OnRaidCheckpointed;
@@ -142,10 +142,10 @@ public class IngameSessionManager : MonoBehaviour
             return;
         }
 
-        if (virtualJoystick == null)
-        {
-            virtualJoystick = VirtualJoystick.Create(hudCanvas.transform);
-        }
+        //if (virtualJoystick == null)
+        //{
+        //    virtualJoystick = VirtualJoystick.Create(hudCanvas.transform);
+        //}
 
         virtualJoystick.SetTarget(player);
     }
