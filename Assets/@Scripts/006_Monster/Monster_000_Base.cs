@@ -16,16 +16,16 @@ public enum MonsterState
 [Serializable]
 public class MonsterStats
 {
-    [Min(1)] public float maxHealth;
-    [Min(0)] public float attackDamage;
-    [Min(0)] public float moveSpeed;
-    [Min(0)] public float detectionRange;
-    [Min(0)] public float attackRange;
-    [Range(1, 360)] public float attackAngle;
-    [Min(0)] public float attackPreparation;
-    [Min(.01f)] public float attackWindow;
-    [Min(0)] public float attackRecovery;
-    [Min(0)] public float leashRange;
+    [Min(1)] public float maxHealth = 10f;
+    [Min(0)] public float attackDamage = 10f;
+    [Min(0)] public float moveSpeed = 2f;
+    [Min(0)] public float detectionRange = 1000f;
+    [Min(0)] public float attackRange = 2f;
+    [Range(1, 360)] public float attackAngle = 2f;
+    [Min(0)] public float attackPreparation = 0.5f;
+    [Min(.01f)] public float attackWindow = 0.001f;
+    [Min(0)] public float attackRecovery = 0.2f;
+    [Min(0)] public float leashRange = 3f;
 }
 
 // XY-plane prototype. Movement intentionally has no pathfinding yet.
