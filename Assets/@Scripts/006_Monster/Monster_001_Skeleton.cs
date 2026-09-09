@@ -52,6 +52,8 @@ public class Monster_001_Skeleton : Monster_000_Base
 
             monsterState = (MonsterState)state;
 
+            Debug.Log($"MonsterState : {state}");
+
             await OnStateChange();
         }
     }
