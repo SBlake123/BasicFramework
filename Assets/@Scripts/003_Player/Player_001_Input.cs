@@ -43,6 +43,52 @@ public partial class Player : MonoBehaviour
         MovePlayer();
     }
 
+    public async UniTask ChangeState(int state)
+    {
+        if (playerState != (PlayerState)state)
+        {
+            playerState = (PlayerState)state;
+
+            await OnStateChange();
+        }
+    }
+
+    public async UniTask OnStateChange()
+    {
+        switch (playerState)
+        {
+            case PlayerState.NONE:
+                {
+
+                    break;
+                }
+
+            case PlayerState.IDLE:
+                {
+                    break;
+                }
+
+            case PlayerState.ATTACK:
+                {
+
+                    break;
+                }
+
+            case PlayerState.HIT:
+                {
+
+                    break;
+                }
+
+            case PlayerState.DIE:
+                {
+                    break;
+                }
+          
+        }
+        await UniTask.WaitForFixedUpdate();
+    }
+
     /// <summary>
     /// Virtual joystick calls this while the player drags it.
     /// </summary>

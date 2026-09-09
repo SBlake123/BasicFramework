@@ -7,9 +7,11 @@ using UnityEngine.UI;
 
 public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
 {
-    public RectTransform mainRect;
+    //public RectTransform mainRect;
+    public Transform mainTrf;
+    public SpriteRenderer mainSpr;
 
-    public Image mainImg;
+    //public Image mainImg;
 
     public Animator anim;
 
@@ -19,16 +21,14 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
 
     public virtual void PlayerSprRelocationLeft()
     {
-        mainRect.anchorMin = mainRect.anchorMax = new Vector2(1, 0.5f);
-        mainRect.anchoredPosition = Vector2.zero;
-        mainRect.localRotation = Quaternion.Euler(0f, 180f, 0f);
+        mainTrf.localPosition = Vector3.zero;
+        mainSpr.flipX = true;
     }
 
     public virtual void PlayerSprRelocationRight()
     {
-        mainRect.anchorMin = mainRect.anchorMax = new Vector2(0, 0.5f);
-        mainRect.anchoredPosition = Vector2.zero;
-        mainRect.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        mainTrf.localPosition = Vector3.zero;
+        mainSpr.flipX = false;
     }
 
 

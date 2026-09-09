@@ -9,7 +9,7 @@ public class SkinNewbie : PlayerSkinBase
     public override void PlayIdle()
     {
         anim.Play(GSkinSprName.IDLE);
-        mainImg.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.IDLE];
+        mainSpr.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.IDLE];
         Debug.Log("NEW IDLE");
     }
 
@@ -17,7 +17,7 @@ public class SkinNewbie : PlayerSkinBase
     {
         anim.Play(GSkinSprName.ATTACK);
 
-        mainImg.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.ATTACK];
+        mainSpr.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.ATTACK];
         Debug.Log("NEW ATTACK");
     }
 
@@ -25,13 +25,13 @@ public class SkinNewbie : PlayerSkinBase
     {
         anim.Play(GSkinSprName.HIT);
 
-        mainImg.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.HIT];
+        mainSpr.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.HIT];
         Debug.Log("NEW HIT");
     }
 
     public override void PlayDie()
     {
-        mainImg.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.DIE];
+        mainSpr.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.DIE];
         Debug.Log("NEW DIE");
     }
 }

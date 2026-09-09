@@ -20,7 +20,7 @@ public class MonsterStats
     [Min(0)] public float attackDamage = 10f;
     [Min(0)] public float moveSpeed = 2f;
     [Min(0)] public float detectionRange = 1000f;
-    [Min(0)] public float attackRange = 2f;
+    [Min(0)] public float attackRange = 0.8f;
     [Range(1, 360)] public float attackAngle = 2f;
     [Min(0)] public float attackPreparation = 0.5f;
     [Min(.01f)] public float attackWindow = 0.001f;

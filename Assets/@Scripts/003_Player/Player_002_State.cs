@@ -9,6 +9,7 @@ public enum PlayerState
 {
     NONE,
     IDLE,
+    MOVE,
     ATTACK,
     HIT,
     DIE
