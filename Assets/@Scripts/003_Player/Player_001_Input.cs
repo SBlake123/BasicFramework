@@ -25,68 +25,10 @@ public partial class Player : MonoBehaviour
 
     private PlayerState playerState;
 
-    private async UniTaskVoid PlayerInit()
-    {
-        moveSpeed = 3f;
-        await ChangeState(PlayerState.IDLE);
-        Debug.Log($"{playerState}");
-    }
-
+    
     private bool CanInputAction()
     {
         return !nowEvading && !isHit;
-    }
-
-    private void Update()
-    {
-        ReadMoveInput();
-        MovePlayer();
-    }
-
-    public async UniTask ChangeState(int state)
-    {
-        if (playerState != (PlayerState)state)
-        {
-            playerState = (PlayerState)state;
-
-            await OnStateChange();
-        }
-    }
-
-    public async UniTask OnStateChange()
-    {
-        switch (playerState)
-        {
-            case PlayerState.NONE:
-                {
-
-                    break;
-                }
-
-            case PlayerState.IDLE:
-                {
-                    break;
-                }
-
-            case PlayerState.ATTACK:
-                {
-
-                    break;
-                }
-
-            case PlayerState.HIT:
-                {
-
-                    break;
-                }
-
-            case PlayerState.DIE:
-                {
-                    break;
-                }
-          
-        }
-        await UniTask.WaitForFixedUpdate();
     }
 
     /// <summary>

@@ -34,4 +34,9 @@ public class SkinNewbie : PlayerSkinBase
         mainSpr.sprite = skinSpriteArr[(int)PlayerSkinBaseIdx.DIE];
         Debug.Log("NEW DIE");
     }
+
+    public override void PlayDodge()
+    {
+        
+    }
 }

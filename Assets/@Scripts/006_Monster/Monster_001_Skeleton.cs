@@ -16,14 +16,18 @@ using UnityEngine;
 
 public class Monster_001_Skeleton : Monster_000_Base
 {
+    public MonsterSkinSkeleton monsterSkinSkeleton;
+
     private MonsterState monsterState = MonsterState.Idle;
 
     private CancellationTokenSource stateCts;
 
     [SerializeField] private Transform target;
     private MonsterStats monsterStats = new MonsterStats();
-
     private Vector3 spawnPosition;
+
+    bool isAttack;
+    bool isDeath;
 
     private void Awake()
     {
@@ -68,6 +72,7 @@ public class Monster_001_Skeleton : Monster_000_Base
                     await Idle();
                 }
                 break;
+
             case MonsterState.Chase:
                 {
                     //적의 시야에 플레이어가 들어왔을 때 인지하고 공격을 시도한다.
@@ -78,7 +83,7 @@ public class Monster_001_Skeleton : Monster_000_Base
                 {
                     //범위안에 들어왔을 때 공격이 가능한 상태일 시 공격한다.
                     //공격이 끝나고 나서는 다시 공격하는 상태인지 판단해야 한다.
-                    await Attack();
+                    await OnAttack();
                 }
                 break;
             case MonsterState.Return:
@@ -90,7 +95,7 @@ public class Monster_001_Skeleton : Monster_000_Base
             case MonsterState.Dead:
                 {
                     //죽는 단계는 끝이기 때문에 연결할 필요가 없다.
-                    await Die();
+                    await OnDeath();
                 }
                 break;
         }
@@ -128,6 +133,7 @@ public class Monster_001_Skeleton : Monster_000_Base
                     return;
                 }
 
+                monsterSkinSkeleton.anim.Play("SkeletonMove");
                 MoveTo(idleDestination);
 
                 if (IsArrived(idleDestination))
@@ -157,12 +163,14 @@ public class Monster_001_Skeleton : Monster_000_Base
                     return;
                 }
 
+
                 if (CanAttackTarget())
                 {
                     ChangeState((int)MonsterState.Attack).Forget();
                     return;
                 }
 
+                monsterSkinSkeleton.anim.Play("SkeletonMove");
                 MoveTo(target.position);
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
@@ -172,7 +180,7 @@ public class Monster_001_Skeleton : Monster_000_Base
         }
     }
 
-    protected override async UniTask Attack()
+    protected override async UniTask OnAttack()
     {
         CancellationToken token = stateCts.Token;
 
@@ -212,8 +220,11 @@ public class Monster_001_Skeleton : Monster_000_Base
 
         try
         {
+            monsterSkinSkeleton.anim.Play("SkeletonMove");
+
             while (!token.IsCancellationRequested)
             {
+
                 MoveTo(spawnPosition);
 
                 if (IsArrived(spawnPosition))
@@ -230,7 +241,7 @@ public class Monster_001_Skeleton : Monster_000_Base
         }
     }
 
-    protected override async UniTask Die()
+    protected override async UniTask OnDeath()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
         Destroy(gameObject);
@@ -284,6 +295,15 @@ public class Monster_001_Skeleton : Monster_000_Base
     {
         Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * monsterStats.leashRange;
         return spawnPosition + new Vector3(randomOffset.x, randomOffset.y, 0f);
+    }
+
+    private void UpdateFacingDirection()
+    {
+        if (isAttack)
+        {
+            return;
+        }
+
     }
 
     private void OnDestroy()

@@ -35,7 +35,7 @@ public abstract class Monster_000_Base : MonoBehaviour
 
     protected abstract UniTask OnStateChange();
 
-    protected abstract UniTask Attack();
+    protected abstract UniTask OnAttack();
 
-    protected abstract UniTask Die();
+    protected abstract UniTask OnDeath();
 }

@@ -11,6 +11,7 @@ public enum PlayerState
     IDLE,
     MOVE,
     ATTACK,
+    DODGE,
     HIT,
     DIE
 }
@@ -25,11 +26,13 @@ public partial class Player : MonoBehaviour
     {
         { PlayerState.IDLE, new IdleState() },
         { PlayerState.ATTACK, new AttackState() },
-        { PlayerState.HIT, new HitState() },
+        { PlayerState.DODGE, new DodgeState()},
+        //{ PlayerState.HIT, new HitState() },
         { PlayerState.DIE, new DieState() }
     };
   
     bool isAttack = false;
+    bool isDodge = false;
     bool isHit = false;
 
     CancellationTokenSource stateCts;
@@ -67,23 +70,29 @@ public partial class Player : MonoBehaviour
             player.playerSkinBase.PlayAttack();
             await UniTask.Delay(500, cancellationToken: token);
             await player.ChangeState(PlayerState.IDLE);
-
-
         }
     }
 
-    public class HitState : IPlayerState
+    //public class HitState : IPlayerState
+    //{
+    //    public async UniTask EnterAsync(Player player, CancellationToken token)
+    //    {
+    //        player.isHit = true;
+    //        player.playerSkinBase.PlayHit();
+    //        await UniTask.Delay(500);
+           
+    //        await player.ChangeState(PlayerState.IDLE);
+    //    }
+
+    //}
+
+    public class DodgeState : IPlayerState
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
-            player.isHit = true;
-            player.playerSkinBase.PlayHit();
-            await UniTask.Delay(500);
-            
-            player.PlayerExternalReactionCheck().Forget();
-            await player.ChangeState(PlayerState.IDLE);
-        }
+            player.isDodge = true;
 
+        }
     }
 
     public class DieState : IPlayerState
@@ -107,6 +116,35 @@ public partial class Player : MonoBehaviour
             await OnStateChange(stateCts);
         }
     }
+    public async UniTask OnStateChange()
+    {
+        switch (playerState)
+        {
+            case PlayerState.IDLE:
+                {
+                    break;
+                }
+
+            case PlayerState.ATTACK:
+                {
+
+                    break;
+                }
+
+            case PlayerState.DODGE:
+                {
+
+                    break;
+                }
+
+            case PlayerState.DIE:
+                {
+
+                    break;
+                }
+        }
+        await UniTask.WaitForFixedUpdate();
+    }
 
     public async UniTask OnStateChange(CancellationTokenSource stateCts)
     {
@@ -120,22 +158,9 @@ public partial class Player : MonoBehaviour
         }
     }
 
-    public async UniTask PlayerExternalReactionCheck()
-    {
-        while (true)
-        {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                await ChangeState(PlayerState.HIT);
-            }
-            await UniTask.Yield(PlayerLoopTiming.Update);
-        }
-    }
-
-
     void AllStateBoolFalse()
     {
         isAttack = false;
-        isHit = false;
+        isDodge = false;
     }
 }

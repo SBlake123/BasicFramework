@@ -13,3 +13,12 @@ public enum PlayerSkinBaseIdx
     HIT_RED,
     DIE
 }
+
+public enum MonsterSkinBaseIdx
+{
+    IDLE,
+    ATTACK,
+    HIT,
+    HIT_RED,
+    DIE
+}

@@ -38,6 +38,8 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
 
     public abstract void PlayHit();
 
+    public abstract void PlayDodge();
+
     public abstract void PlayDie();
 }
 

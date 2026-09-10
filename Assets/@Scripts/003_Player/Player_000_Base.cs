@@ -8,10 +8,19 @@ public partial class Player : MonoBehaviour
     void Start()
     {
         PlayerInit().Forget();
-        PlayerExternalReactionCheck().Forget();
     }
 
-    //void Update()
-    //{
-    //}
+    private void Update()
+    {
+        ReadMoveInput();
+        MovePlayer();
+    }
+
+    private async UniTaskVoid PlayerInit()
+    {
+        moveSpeed = 3f;
+        await ChangeState(PlayerState.IDLE);
+        Debug.Log($"{playerState}");
+    }
+
 }
