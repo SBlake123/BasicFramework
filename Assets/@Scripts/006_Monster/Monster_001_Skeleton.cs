@@ -17,6 +17,7 @@ using UnityEngine;
 public class Monster_001_Skeleton : Monster_000_Base
 {
     public MonsterSkinSkeleton monsterSkinSkeleton;
+    public Transform facingObjectParentTrf;
 
     private MonsterState monsterState = MonsterState.Idle;
 
@@ -66,6 +67,7 @@ public class Monster_001_Skeleton : Monster_000_Base
     {
         switch (monsterState)
         {
+            
             case MonsterState.Idle:
                 {
                     //기본적인 대기 단계에서는 스폰 범위를 돌아다니는 자유 행동까지는 가능하다.
@@ -134,6 +136,7 @@ public class Monster_001_Skeleton : Monster_000_Base
                 }
 
                 monsterSkinSkeleton.anim.Play("SkeletonMove");
+                UpdateFacingDirection();
                 MoveTo(idleDestination);
 
                 if (IsArrived(idleDestination))
@@ -171,6 +174,7 @@ public class Monster_001_Skeleton : Monster_000_Base
                 }
 
                 monsterSkinSkeleton.anim.Play("SkeletonMove");
+                UpdateFacingDirection();
                 MoveTo(target.position);
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
@@ -221,7 +225,7 @@ public class Monster_001_Skeleton : Monster_000_Base
         try
         {
             monsterSkinSkeleton.anim.Play("SkeletonMove");
-
+            UpdateFacingDirection();
             while (!token.IsCancellationRequested)
             {
 
@@ -303,6 +307,17 @@ public class Monster_001_Skeleton : Monster_000_Base
         {
             return;
         }
+
+        var directionX = target.position.x - transform.position.x;
+
+
+        var facingDirection = directionX > 0f ? 1 : -1;
+
+        facingObjectParentTrf.localScale = new Vector3(
+            facingDirection,
+            facingObjectParentTrf.localScale.y,
+            facingObjectParentTrf.localScale.z
+        );
 
     }
 

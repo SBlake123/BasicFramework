@@ -123,6 +123,39 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &96970734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 96970735}
+  m_Layer: 6
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &96970735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96970734}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1828643633}
+  - {fileID: 857127188}
+  m_Father: {fileID: 1970006334}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &118750561
 GameObject:
   m_ObjectHideFlags: 0
@@ -162506,7 +162539,7 @@ GameObject:
   - component: {fileID: 325036396}
   - component: {fileID: 325036397}
   - component: {fileID: 325036398}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SkinNewbie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163086,7 +163119,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 798197130}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TransformCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163118,7 +163151,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 857127188}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Skin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163133,13 +163166,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857127187}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 325036395}
-  m_Father: {fileID: 1970006334}
+  m_Father: {fileID: 96970735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &975068590
 GameObject:
@@ -163599,7 +163632,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2125392675}
   - {fileID: 118750562}
   m_Father: {fileID: 1875701143}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -164295,13 +164327,13 @@ GameObject:
   - component: {fileID: 1828643633}
   - component: {fileID: 1828643635}
   - component: {fileID: 1828643634}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1828643633
 Transform:
   m_ObjectHideFlags: 0
@@ -164310,12 +164342,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1828643632}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1970006334}
+  m_Father: {fileID: 96970735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1828643634
 BoxCollider:
@@ -164361,10 +164393,10 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Constraints: 120
+  m_CollisionDetection: 1
 --- !u!1 &1839070361
 GameObject:
   m_ObjectHideFlags: 0
@@ -164412,7 +164444,7 @@ GameObject:
   - component: {fileID: 1875701143}
   - component: {fileID: 1875701144}
   m_Layer: 7
-  m_Name: Monster
+  m_Name: MonsterSkeleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164432,6 +164464,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1529734570}
+  - {fileID: 2125392675}
   m_Father: {fileID: 975068592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1875701144
@@ -164447,6 +164480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterSkinSkeleton: {fileID: 1647305750}
+  facingObjectParentTrf: {fileID: 1529734570}
   target: {fileID: 1970006334}
 --- !u!1 &1910750601
 GameObject:
@@ -164459,7 +164493,7 @@ GameObject:
   - component: {fileID: 1910750604}
   - component: {fileID: 1910750603}
   - component: {fileID: 1910750602}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -164550,7 +164584,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1970006334}
   - component: {fileID: 1970006335}
-  m_Layer: 0
+  - component: {fileID: 1970006336}
+  - component: {fileID: 1970006337}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164570,8 +164606,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1828643633}
-  - {fileID: 857127188}
+  - {fileID: 96970735}
   - {fileID: 798197130}
   m_Father: {fileID: 975068592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -164589,6 +164624,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSkinBase: {fileID: 325036396}
   useVirtualJoystickInEditor: 1
+--- !u!65 &1970006336
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970006333}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1970006337
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970006333}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 120
+  m_CollisionDetection: 2
 --- !u!1 &1992546693
 GameObject:
   m_ObjectHideFlags: 0
@@ -164740,6 +164823,7 @@ GameObject:
   - component: {fileID: 2125392675}
   - component: {fileID: 2125392678}
   - component: {fileID: 2125392677}
+  - component: {fileID: 2125392679}
   m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
@@ -164760,7 +164844,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1529734570}
+  m_Father: {fileID: 1875701143}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &2125392677
 Rigidbody:
@@ -164785,10 +164869,10 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Constraints: 120
+  m_CollisionDetection: 1
 --- !u!65 &2125392678
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -164808,8 +164892,20 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Size: {x: 0.9, y: 1, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2125392679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2125392674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71156897aae4167488a886a6c3a3e055, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2138551575
 GameObject:
   m_ObjectHideFlags: 0
