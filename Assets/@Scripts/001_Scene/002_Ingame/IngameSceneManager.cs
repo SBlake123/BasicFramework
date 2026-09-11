@@ -19,7 +19,7 @@ public enum IngameSceneState
 /// </summary>
 public class IngameSceneManager : StateBaseSceneManager
 {
-    [SerializeField] private IngameSessionManager ingameSessionManager;
+    public IngameSessionManager ingameSessionManager;
 
     public IngameSceneState CurrentState { get; private set; } = IngameSceneState.NONE;
     public event Action<IngameSceneState> OnStateChanged;

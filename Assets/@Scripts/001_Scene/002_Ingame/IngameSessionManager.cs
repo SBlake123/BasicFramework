@@ -9,11 +9,11 @@ using UnityEngine;
 /// </summary>
 public class IngameSessionManager : MonoBehaviour
 {
-    [SerializeField] private Player player;
-    [SerializeField] private Canvas hudCanvas;
-    [SerializeField] private bool createVirtualJoystickInEditor;
-    [SerializeField] private string mapId = "03_Ingame";
-    [SerializeField, Min(1f)] private float checkpointIntervalSeconds = 30f;
+    public Player player;
+    public Canvas hudCanvas;
+    public bool createVirtualJoystickInEditor;
+    public string mapId = "03_Ingame";
+    public float checkpointIntervalSeconds = 30f;
 
     public VirtualJoystick virtualJoystick;
 

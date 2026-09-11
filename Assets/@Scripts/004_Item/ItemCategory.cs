@@ -5,7 +5,7 @@ public enum ItemCategory
     Equipment
 }
 
-public enum EquipmentSlot
+public enum EquipmentType
 {
     None,
     Weapon,
