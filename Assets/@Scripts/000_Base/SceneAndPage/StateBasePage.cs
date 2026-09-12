@@ -19,5 +19,6 @@ public abstract class StateBasePage : MonoBehaviour
         isFirstSetting = false;
     }
 
+    //asyne
     protected abstract UniTask OnFirstSetting();
 }

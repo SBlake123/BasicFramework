@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: de855d9959432b94b997bbc0cc77ede9
+guid: 753362ef37345ef4f98e93a7e834dfae
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -50,7 +50,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -136,55 +136,55 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Attack_Large_Normal
+      name: 1002_InventoryBtn_0
       rect:
         serializedVersion: 2
-        x: 85
-        y: 437
-        width: 585
-        height: 585
+        x: 60
+        y: 214
+        width: 647
+        height: 618
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 260, y: 260, z: 260, w: 260}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cda630bb4fe9483593a721c755346e88
-      internalID: -371405734
+      spriteID: 315deb491979dbc439a9983a921ef13c
+      internalID: -1348389712
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack_Large_Pressed
+      name: 1002_InventoryBtn_1
       rect:
         serializedVersion: 2
-        x: 730
-        y: 437
-        width: 585
-        height: 585
+        x: 741
+        y: 217
+        width: 650
+        height: 614
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 260, y: 260, z: 260, w: 260}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b03ad6e2d784f83b20e589e177963f6
-      internalID: 210010002
+      spriteID: 8b5cf51601ac47943a7db8a7f94a096f
+      internalID: -584089200
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack_Small_Normal
+      name: 1002_InventoryBtn_2
       rect:
         serializedVersion: 2
-        x: 36
-        y: 82
-        width: 300
-        height: 300
+        x: 738
+        y: 440
+        width: 5
+        height: 159
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -192,20 +192,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f13882e632634cdf866e73f750c94045
-      internalID: 210010003
+      spriteID: d4e0c4e702e4f1e4eb3a0b88ef348435
+      internalID: -2067810959
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Attack_Small_Pressed
+      name: 1002_InventoryBtn_3
       rect:
         serializedVersion: 2
-        x: 359
-        y: 82
-        width: 300
-        height: 300
+        x: 511
+        y: 125
+        width: 82
+        height: 2
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,50 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0e19999e6cc849ef8fd7354d904f99f3
-      internalID: 210010004
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Attack_Small_Disabled
-      rect:
-        serializedVersion: 2
-        x: 681
-        y: 82
-        width: 300
-        height: 300
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cc93afd42a064b719414653528b710b2
-      internalID: 210010005
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Attack_Effect
-      rect:
-        serializedVersion: 2
-        x: 1010
-        y: 57
-        width: 330
-        height: 330
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 32c4abd3024945ceb5d2446ed48d8324
-      internalID: 210010006
+      spriteID: b185935be6eaab64ab012894c2e11b6a
+      internalID: 164113335
       vertices: []
       indices: 
       edges: []
@@ -264,7 +222,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 1ee9511b54344d7ba2dbfefeb53a060f
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -272,12 +230,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Attack_Effect: 210010006
-      Attack_Large_Normal: -371405734
-      Attack_Large_Pressed: 210010002
-      Attack_Small_Disabled: 210010005
-      Attack_Small_Normal: 210010003
-      Attack_Small_Pressed: 210010004
+      1002_InventoryBtn_0: -1348389712
+      1002_InventoryBtn_1: -584089200
+      1002_InventoryBtn_2: -2067810959
+      1002_InventoryBtn_3: 164113335
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

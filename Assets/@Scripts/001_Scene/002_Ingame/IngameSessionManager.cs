@@ -7,7 +7,7 @@ using UnityEngine;
 /// Owns one raid session. It receives meaningful player changes and creates
 /// checkpoints; it deliberately does not own player movement or combat logic.
 /// </summary>
-public class IngameSessionManager : MonoBehaviour
+public class IngameSessionManager : MonoSingleton<IngameSessionManager>
 {
     public Player player;
     public Canvas hudCanvas;

@@ -58,7 +58,7 @@ public partial class TitleSceneManager : StateBaseSceneManager
         await UniTask.WaitForFixedUpdate();
     }
 
-    private async UniTask BackKeySetting()
+    protected override async UniTask BackKeySetting()
     {
         while (true)
         {

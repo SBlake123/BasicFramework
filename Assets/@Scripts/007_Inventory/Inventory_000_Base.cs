@@ -12,7 +12,6 @@ public partial class Inventory_000_Base : MonoBehaviour
     public InventoryGrid_000_Base ArmorGrid;
     public InventoryGrid_000_Base[] AccessoryGrid;
 
-
     public InventoryGrid_000_Base selectedGrid { get; set; }
 
     public void Start()

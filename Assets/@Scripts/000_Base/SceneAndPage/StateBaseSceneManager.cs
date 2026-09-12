@@ -12,4 +12,7 @@ public abstract class StateBaseSceneManager  : MonoBehaviour
 
     //async
     public abstract UniTask OnStateChange();
+
+    //async
+    protected abstract UniTask BackKeySetting();
 }

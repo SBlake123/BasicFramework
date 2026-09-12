@@ -1,49 +1,92 @@
 using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum IngameSceneState
 {
     NONE,
-    READY,
-    PLAYING,
-    PAUSED,
-    EXTRACTING,
+    LOADING,
+    INGAME,
+    INVENTORY,
+    OPTION,
     DEAD,
+    EXTRACTING,
     RESULT
 }
 
-/// <summary>
-/// Owns the high-level state of one in-game scene.
-/// UI pages, fades, and result screens can subscribe to OnStateChanged later.
-/// </summary>
+public enum IngameSceneIdx
+{
+    INGAME,
+    INVENTORY,
+    OPTION
+}
+
+
 public class IngameSceneManager : StateBaseSceneManager
 {
-    public IngameSessionManager ingameSessionManager;
+    private IngameSceneState ingameSceneState = IngameSceneState.NONE;
+
+    public StateBasePage[] pages;
+
+    public GameObject screenGuard;
+    public Image screenBlur;
+
+    public IngameUIManager ingameUIManager;
+
+    public event Action PlayerDied;
+    public event Action InventoryClosed;
 
     public IngameSceneState CurrentState { get; private set; } = IngameSceneState.NONE;
-    public event Action<IngameSceneState> OnStateChanged;
 
     private void Start()
     {
         InitializeScene().Forget();
+        //InventoryClosed += ingameUIManager.
     }
 
     private async UniTask InitializeScene()
     {
-        if (ingameSessionManager == null)
-        {
-            Debug.LogError("[IngameSceneManager] IngameSessionManager reference is not assigned.");
-            return;
-        }
+        screenGuard.SetActive(true);
 
-        await ChangeState((int)IngameSceneState.READY);
-        await ChangeState((int)IngameSceneState.PLAYING);
+        BackKeySetting().Forget();
+        SceneAllocate();
+        SubscribingEvent();
+        await ingameUIManager.Init();
+        await ChangeState((int)IngameSceneState.LOADING);
+        await ChangeState((int)IngameSceneState.INGAME);
+
+        screenGuard.SetActive(false);
+    }
+
+    protected override async UniTask BackKeySetting()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                switch (ingameSceneState)
+                {
+                    default:
+                        break;
+                }
+            }
+            await UniTask.Yield(PlayerLoopTiming.Update, destroyCancellationToken);
+        }
+    }
+
+    protected void SubscribingEvent()
+    {
+        ingameUIManager.InventoryRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
+        //ingameUIManager.AttackRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
     }
 
     public override void SceneAllocate()
     {
-        // Keep scene-wide references here when in-game pages are added.
+        foreach (var item in pages)
+        {
+            item.stateBaseSceneManager = this;
+        }
     }
 
     public override async UniTask ChangeState(int state)
@@ -61,30 +104,73 @@ public class IngameSceneManager : StateBaseSceneManager
 
     public override async UniTask OnStateChange()
     {
+        screenGuard.SetActive(true);
+
+        Debug.Log($"NowState : {CurrentState}");
+
         switch (CurrentState)
         {
-            case IngameSceneState.PLAYING:
-                ingameSessionManager?.BeginRaid();
+            case IngameSceneState.NONE:
+                IngameSessionManager.Instance.BeginRaid();
                 break;
 
-            case IngameSceneState.EXTRACTING:
-                if (ingameSessionManager != null)
+            case IngameSceneState.LOADING:
+                IngameSessionManager.Instance.BeginRaid();
+                break;
+
+            case IngameSceneState.INGAME:
                 {
-                    await ingameSessionManager.CompleteExtraction();
+
+
+                    //그냥 게임창 상태로 복귀,
+                    //그거는 켜야 됨 조이스틱
+                    ingameUIManager.InputUISetActive(true);
+
+
+                    for (int i = 1; i < pages.Length; i++)
+                    {
+                        pages[i].pageMain.SetActive(false);
+                    }
                 }
+                
+                break;
+
+            case IngameSceneState.INVENTORY:
+                {
+                    Ingame_002_Inventory ingame_002_Inventory = pages[(int)IngameSceneIdx.INVENTORY].GetComponent<Ingame_002_Inventory>();
+                    await ingame_002_Inventory.Init();
+                    ingameUIManager.JoyStickUISetActive(false);
+                    ingame_002_Inventory.pageMain.SetActive(true);
+                }
+
+                break;
+
+            case IngameSceneState.OPTION:
+                {
+                    Ingame_003_Option ingame_003_Option = pages[(int)IngameSceneIdx.OPTION].GetComponent<Ingame_003_Option>();
+                    await ingame_003_Option.Init();
+                    ingame_003_Option.pageMain.SetActive(true);
+                }
+
+                break;
+
+
+            case IngameSceneState.EXTRACTING:
+
+                await IngameSessionManager.Instance.CompleteExtraction();
+
                 await ChangeState((int)IngameSceneState.RESULT);
                 return;
 
             case IngameSceneState.DEAD:
-                if (ingameSessionManager != null)
-                {
-                    await ingameSessionManager.CompleteDeath();
-                }
+
+                await IngameSessionManager.Instance.CompleteExtraction();
+
                 await ChangeState((int)IngameSceneState.RESULT);
                 return;
         }
 
-        OnStateChanged?.Invoke(CurrentState);
+        screenGuard.SetActive(false);
     }
 
     public void RequestExtraction()

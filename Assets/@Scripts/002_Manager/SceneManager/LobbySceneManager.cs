@@ -30,7 +30,7 @@ public class LobbySceneManager : StateBaseSceneManager
 
     public LobbyPage[] pages;
 
-    private async UniTask BackKeySetting()
+    protected override async UniTask BackKeySetting()
     {
         while (true)
         {
