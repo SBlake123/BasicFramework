@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,11 @@ public class Ingame_001_IngameField : StateBasePage
     protected override async UniTask OnFirstSetting()
     {
         IngameSceneManager = (IngameSceneManager)stateBaseSceneManager;
+    }
+
+    protected override async UniTask OnAfterFirstSetting()
+    {
+
     }
 
 }

@@ -15,6 +15,10 @@ public class Ingame_003_Option : StateBasePage
         OptionBackDropButton.onClick.AddListener(async () => await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME));
     }
 
+    protected override UniTask OnAfterFirstSetting()
+    {
+        throw new NotImplementedException();
+    }
     //오ㅂ션창 열었다 닫았다
 
 }

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,10 @@ public class Title_004_Continue : StateBasePage
 
     }
 
+    protected override UniTask OnAfterFirstSetting()
+    {
+        throw new NotImplementedException();
+    }
     public async UniTask ContinueCheck()
     {
         var saveData = SaveLoadManager.Instance.Load();

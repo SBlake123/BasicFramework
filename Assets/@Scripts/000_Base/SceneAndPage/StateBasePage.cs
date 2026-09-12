@@ -13,12 +13,17 @@ public abstract class StateBasePage : MonoBehaviour
 
     public async UniTask Init()
     {
-        if (!isFirstSetting) return;
+        if (isFirstSetting)
+        {
+            await OnFirstSetting();
+        }
+        await OnAfterFirstSetting();
 
-        await OnFirstSetting();
         isFirstSetting = false;
     }
 
     //asyne
     protected abstract UniTask OnFirstSetting();
+
+    protected abstract UniTask OnAfterFirstSetting();
 }

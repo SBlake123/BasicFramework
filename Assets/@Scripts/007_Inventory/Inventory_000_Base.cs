@@ -54,14 +54,16 @@ public partial class Inventory_000_Base : MonoBehaviour
 
             if (invenGridArr[i].itemData != null)
             {
-                MakeInvenItem(invenGridArr[i].itemData.itemName, invenGridArr[i].itemImgParent);
+                await MakeInvenItem(invenGridArr[i].itemData.itemName, invenGridArr[i].itemImgParent);
             }
         }
     }
 
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
-        var prefab = Resources.Load<GameObject>(ItemName);
-        Instantiate(prefab, itemRect, false);
+        Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(ItemName), itemRect);
+
+        //var prefab = Resources.Load<GameObject>(ItemName);
+        //Instantiate(prefab, itemRect, false);
     }
 }

@@ -260,10 +260,10 @@ public class ResourceManager : Singleton<ResourceManager>
 
         await UniTask.WaitUntil(() => isAssetLoaded);
 
-        if (obj is GameObject _obj && typeof(T) == typeof(GameObject))
-        {
-            SetGameObjectProperties(_obj, position, rotation, parent);
-        }
+        //if (obj is GameObject _obj && typeof(T) == typeof(GameObject))
+        //{
+        //    SetGameObjectProperties(_obj, position, rotation, parent);
+        //}
 
         try
         {
@@ -336,16 +336,16 @@ public class ResourceManager : Singleton<ResourceManager>
             //return _key;
         }
 
-        void SetGameObjectProperties(GameObject gameObject, Vector3? position, Quaternion? rotation, Transform parent)
-        {
-            gameObject.transform.position = position ?? Vector3.zero;
-            gameObject.transform.rotation = rotation ?? Quaternion.Euler(Vector3.zero);
+        //void SetGameObjectProperties(GameObject gameObject, Vector3? position, Quaternion? rotation, Transform parent)
+        //{
+        //    gameObject.transform.position = position ?? Vector3.zero;
+        //    gameObject.transform.rotation = rotation ?? Quaternion.Euler(Vector3.zero);
 
-            if (parent != null)
-            {
-                gameObject.transform.SetParent(parent);
-            }
-        }
+        //    if (parent != null)
+        //    {
+        //        gameObject.transform.SetParent(parent);
+        //    }
+        //}
     }
 
     public void OnAssetLoaded<T>(AsyncOperationHandle<T> handle) where T : UnityEngine.Object

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,11 @@ public class Title_001_Main : StateBasePage
         CanContinueCheck();
         AddListenerToButton();
         Debug.Log("ON_INIT");
+    }
+
+    protected override async UniTask OnAfterFirstSetting()
+    {
+       
     }
     //public async UniTask MainInit()
     //{

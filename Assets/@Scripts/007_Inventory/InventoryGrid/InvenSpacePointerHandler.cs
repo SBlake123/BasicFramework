@@ -22,8 +22,10 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
         {
             case not null:
                 {
-                    var prefab = Resources.Load<GameObject>("Sword");
-                    var instance = Instantiate(prefab, IngameUIManager.Instance.hudCanvas.transform, false);
+                    //var prefab = Resources.Load<GameObject>("Sword");
+                    var instance = Instantiate(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject, IngameUIManager.Instance.hudCanvas.transform, false);
+
+                    //var instance = Instantiate(prefab, IngameUIManager.Instance.hudCanvas.transform, false);
                     dragObject = instance.GetComponent<RectTransform>();
                     dragObject.SetAsLastSibling();
 
@@ -133,12 +135,13 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
             case null:
                 {
                     targetGrid.itemData = inventoryGrid_000_Base.itemData;
+                    Instantiate(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
+
                     Destroy(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject);
                     inventoryGrid_000_Base.itemData = null;
 
 
 
-                    targetGrid.Inventory_000_Base.MakeInvenItem("Sword", targetGrid.itemImgParent);
                     break;
                 }
         }

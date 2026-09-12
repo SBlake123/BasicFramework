@@ -21,5 +21,8 @@ public class Ingame_002_Inventory : StateBasePage
         inventoryBackDropButton.onClick.AddListener(async () => await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME));
     }
 
+    protected override async UniTask OnAfterFirstSetting()
+    {
 
+    }
 }
