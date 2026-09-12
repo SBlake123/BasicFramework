@@ -61,12 +61,26 @@ public class LanguageManager : Singleton<LanguageManager>
     {
         //메소드 내용은 프로젝트마다 다르게 작성.
 
+        SetLanguageType();
+
         await UniTask.WhenAll(
-                //LanguageScriptDicLoad("contents", languageScriptDic),
+                LanguageScriptDicLoad("contents", languageScriptDic)
                 //LanguageScriptDicLoad("returnCode", languageScriptDic),
                 //LanguageScriptDicLoad("ui", languageScriptDic),
                 //LanguageScriptDicLoad("word", wordInfoDic)
             );
+    }
+
+    private void SetLanguageType()
+    {
+        if (!PlayerPrefs.HasKey("LANGUAGE")) PlayerPrefs.SetInt("LANGUAGE", (int)LanguageType.KR);
+        currentLanguage = (LanguageType)PlayerPrefs.GetInt("LANGUAGE");
+    }
+
+    public void ChangeLanguageType(LanguageType languageType)
+    {
+        PlayerPrefs.SetInt("LANGUAGE", (int)languageType);
+        currentLanguage = (LanguageType)PlayerPrefs.GetInt("LANGUAGE");
     }
 
     public LanguageType GetCurrentLanguageType()
@@ -98,6 +112,34 @@ public class LanguageManager : Singleton<LanguageManager>
     {
         tmp.text = GetString(idx, scriptDic);
         FitterRefresh(fitter, rect);
+    }
+
+    public string GetLangScript(int idx, Dictionary<int, LanguageScript> scriptDic = null, LanguageType langType = LanguageType.NONE)
+    {
+        LanguageType _previousLangType = currentLanguage;
+
+        if (scriptDic == null) scriptDic = languageScriptDic;
+
+        switch (langType)
+        {
+            case LanguageType.NONE:
+                {
+
+                }
+                break;
+
+            default:
+                {
+                    currentLanguage = langType;
+                }
+                break;
+        }
+
+        string _text = GetString(idx, scriptDic);
+
+        currentLanguage = _previousLangType;
+
+        return _text;
     }
 
     private string GetString(int idx, Dictionary<int, LanguageScript> scriptDic)

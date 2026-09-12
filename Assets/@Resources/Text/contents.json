@@ -1,0 +1,98 @@
+[
+  {
+    "idx": "10000",
+    "kr": "새 게임",
+    "en": "NEW GAME",
+    "jp": "NEW GAME"
+  },
+  {
+    "idx": "10001",
+    "kr": "이어하기",
+    "en": "CONTINUE",
+    "jp": "CONTINUE"
+  },
+  {
+    "idx": "10002",
+    "kr": "확인",
+    "en": "Confirm",
+    "jp": "Confirm"
+  },
+  {
+    "idx": "10003",
+    "kr": "취소",
+    "en": "Cancel",
+    "jp": "Cancel"
+  },
+  {
+    "idx": "10004",
+    "kr": "메인 메뉴로\\n나가시겠습니까?",
+    "en": "Go to\\nMainMenu?",
+    "jp": "Go to\\nMainMenu?"
+  },
+  {
+    "idx": "10005",
+    "kr": "그만두기",
+    "en": "Quit",
+    "jp": "Quit"
+  },
+  {
+    "idx": "10006",
+    "kr": "배경음",
+    "en": "VOL",
+    "jp": "VOL"
+  },
+  {
+    "idx": "10007",
+    "kr": "효과",
+    "en": "FX",
+    "jp": "FX"
+  },
+  {
+    "idx": "10008",
+    "kr": "언어",
+    "en": "Language",
+    "jp": "Language"
+  },
+  {
+    "idx": "10009",
+    "kr": "한국어",
+    "en": "Korean",
+    "jp": "Korean"
+  },
+  {
+    "idx": "10010",
+    "kr": "영어",
+    "en": "English",
+    "jp": "English"
+  },
+  {
+    "idx": "10011",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "10012",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "10013",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "10014",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "20001",
+    "kr": "소드",
+    "en": "Sword",
+    "jp": "Sword"
+  }
+]

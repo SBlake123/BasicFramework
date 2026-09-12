@@ -17,29 +17,29 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 52d961dae9ede6c41bafe3d1b6c39544
   m_SerializeEntries:
-  - m_GUID: 5c38f3bb54356b1468bbad192acb5b0d
-    m_Address: GameObject/SoundDisk_1.prefab
+  - m_GUID: fbcc9af6e261b584a8ca922a127c5134
+    m_Address: Text
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Text
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b97e4e782055590439dda4421c03c09b
+    m_Address: Sprite
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sprite
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d2026e17525d894cb16f5e2594d231c
+    m_Address: GameObject
     m_ReadOnly: 0
     m_SerializedLabels:
     - GameObject
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7040c2c0bae8afe42b2a5ab9a1740969
-    m_Address: GameObject/SoundDisk.prefab
+  - m_GUID: 202e4c79c1bdfed43a25f3b4711b876e
+    m_Address: Sound
     m_ReadOnly: 0
     m_SerializedLabels:
-    - GameObject
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b702fbb7047ac5c4788f4738ffdf509b
-    m_Address: GameObject/SoundDisk_2.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - GameObject
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 51eb6c2c648751642ab2faa3b1b49ca1
-    m_Address: GameObject/Sword.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - GameObject
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 41fc6d5c7d4c8214a9b2c3f38e6817ab, type: 2}

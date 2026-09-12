@@ -86,8 +86,10 @@ MonoBehaviour:
     m_ProfileVersion: 1
   m_LabelTable:
     m_LabelNames:
-    - default
     - GameObject
+    - Sound
+    - Sprite
+    - Text
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 7ec829324b9d39449bcf9b9801b0011a, type: 2}

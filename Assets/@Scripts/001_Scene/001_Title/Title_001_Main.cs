@@ -4,12 +4,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Title_001_Main : StateBasePage
 {
     public Button newGameButton;
     public Button continueGameButton;
     public Button optionButton;
+    public TextMeshProUGUI newGameBtnTxt;
+    public TextMeshProUGUI continueBtnTxt;
+
 
     public List<RectTransform> skyRect = new List<RectTransform>();
     public List<RectTransform> groundRect = new List<RectTransform>();
@@ -27,7 +31,8 @@ public class Title_001_Main : StateBasePage
 
     protected override async UniTask OnAfterFirstSetting()
     {
-       
+        LanguageManager.Instance.GetLangScript(10000, LanguageManager.Instance.languageScriptDic, newGameBtnTxt);
+        LanguageManager.Instance.GetLangScript(10001, LanguageManager.Instance.languageScriptDic, continueBtnTxt);
     }
     //public async UniTask MainInit()
     //{
