@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using LitJson;
 using System;
 using Cysharp.Threading.Tasks;
+using TMPro;
 
 public class PopupManager : PersistentMonoSingleton<PopupManager>
 {
@@ -16,16 +17,23 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
     public GameObject popup2;
     public GameObject popup3;
 
-    [Header("Popup1 Button")]
+    [Header("Popup1")]
+    public TextMeshProUGUI popup1TextHeader;
+    public TextMeshProUGUI popup1TextBody;
+    public TextMeshProUGUI popup1BtnText;
     public Button popup1Btn;
     public Button popup1Back;
 
-    [Header("Popup2 Button")]
+    [Header("Popup2")]
+    public TextMeshProUGUI popup2TextHeader;
+    public TextMeshProUGUI popup2TextBody;
+    public TextMeshProUGUI popup2BtnYesText;
+    public TextMeshProUGUI popup2BtnNoText;
     public Button popup2BtnYes;
     public Button popup2BtnNo;
     public Button popup2Back;
 
-    [Header("Popup3 Button")]
+    [Header("Popup3")]
     public Button popup3Btn1;
     public Button popup3Btn2;
     public Button popup3Btn3;
@@ -174,6 +182,32 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
         }
         return reVal;
     }
+    //public bool setPopUpCode(bool bChoose, string body = "", string yesStr = "", string noStr = "", string header = "")
+    //{
+    //    bool reVal = false;
+    //    if (nowState == (int)POPUP_STATE.READY)
+    //    {
+    //        bChoosePopup = bChoose;
+    //        strHeader = header;
+    //        strBody = body;
+    //        if (string.Equals(strBody, "NULL", StringComparison.OrdinalIgnoreCase) == true)
+    //        {
+    //            //strBody = gText.getBaseText((int)ENUM_BASE.UNKNOWN_ERROR);
+    //        }
+    //        if (bChoose == true)
+    //        {
+    //            strYes = yesStr;
+    //            strNo = noStr;
+    //        }
+    //        else
+    //        {
+    //            strYes = yesStr;
+    //        }
+    //        nowState = (int)POPUP_STATE.REQUEST;
+    //        reVal = true;
+    //    }
+    //    return reVal;
+    //}
 
     /*
 
@@ -332,10 +366,27 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         popup3.gameObject.SetActive(false);
         panelPopUp.SetActive(true);
 
+        if (string.IsNullOrEmpty(popup1TextHeader.text))
+        {
+            popup1TextHeader.gameObject.SetActive(false);
+        }
+        else
+        {
+            popup1TextHeader.text = strHeader;
+            popup1TextHeader.gameObject.SetActive(true);
+        }
+     
+        popup1TextBody.text = strBody;
+        popup1BtnText.text = strYes;
+
+        //LanguageManager.Instance.GetLangScript(1, LanguageManager.Instance.languageScriptDic, popup1TextHeader);
+        //LanguageManager.Instance.GetLangScript(1, LanguageManager.Instance.languageScriptDic, popup1TextBody);
+        //LanguageManager.Instance.GetLangScript(1, LanguageManager.Instance.languageScriptDic, popup1BtnText);
+
         //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
         //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
         //gText.setText(body.transform.Find("Btn").transform.Find("Text").gameObject, strYes);
-        
+
         popupBody1.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
         popupBody1.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         Canvas.ForceUpdateCanvases();
@@ -348,6 +399,19 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         popup2.gameObject.SetActive(true);
         popup3.gameObject.SetActive(false);
         panelPopUp.SetActive(true);
+
+        if (string.IsNullOrEmpty(popup2TextHeader.text))
+        {
+            popup2TextHeader.gameObject.SetActive(false);
+        }
+        else
+        {
+            popup2TextHeader.text = strHeader;
+            popup2TextHeader.gameObject.SetActive(true);
+        }
+        popup2TextBody.text = strBody;
+        popup2BtnYesText.text = strYes;
+        popup2BtnNoText.text = strNo;
 
         //gText.setText(body.transform.Find("TextHeader").gameObject, strHeader);
         //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);

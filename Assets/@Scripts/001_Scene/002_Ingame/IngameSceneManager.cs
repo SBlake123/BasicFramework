@@ -12,7 +12,8 @@ public enum IngameSceneState
     OPTION,
     DEAD,
     EXTRACTING,
-    RESULT
+    RESULT,
+    GO_TO_TITLE
 }
 
 public enum IngameSceneIdx

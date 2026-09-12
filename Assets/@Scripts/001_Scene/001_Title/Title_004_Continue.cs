@@ -12,9 +12,9 @@ public class Title_004_Continue : StateBasePage
 
     }
 
-    protected override UniTask OnAfterFirstSetting()
+    protected override async UniTask OnAfterFirstSetting()
     {
-        throw new NotImplementedException();
+
     }
     public async UniTask ContinueCheck()
     {

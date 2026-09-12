@@ -136,7 +136,8 @@ public class LanguageManager : Singleton<LanguageManager>
         {
             fitter.SetLayoutHorizontal();
             fitter.SetLayoutVertical();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);       
         }
     }
 
