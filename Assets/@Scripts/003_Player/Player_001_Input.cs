@@ -73,11 +73,14 @@ public partial class Player : MonoBehaviour
 
     private void MovePlayer()
     {
+        //Debug.Log("Move");
+        
         if (!CanInputAction() || moveInput == Vector2.zero)
         {
             return;
         }
 
+        Debug.Log("Move");
         UpdateMoveSpeed();
         UpdateSpriteDirection();
 

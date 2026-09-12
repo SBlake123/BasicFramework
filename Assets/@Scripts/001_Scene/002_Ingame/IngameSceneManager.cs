@@ -78,6 +78,7 @@ public class IngameSceneManager : StateBaseSceneManager
     protected void SubscribingEvent()
     {
         ingameUIManager.InventoryRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
+        ingameUIManager.OptionRequested += async () => await ChangeState((int)IngameSceneState.OPTION);
         //ingameUIManager.AttackRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
     }
 
@@ -121,6 +122,7 @@ public class IngameSceneManager : StateBaseSceneManager
             case IngameSceneState.INGAME:
                 {
 
+                    SetGameplayPaused(false);
 
                     //그냥 게임창 상태로 복귀,
                     //그거는 켜야 됨 조이스틱
@@ -147,6 +149,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.OPTION:
                 {
+                    SetGameplayPaused(true);
                     Ingame_003_Option ingame_003_Option = pages[(int)IngameSceneIdx.OPTION].GetComponent<Ingame_003_Option>();
                     await ingame_003_Option.Init();
                     ingame_003_Option.pageMain.SetActive(true);
@@ -181,5 +184,15 @@ public class IngameSceneManager : StateBaseSceneManager
     public void NotifyPlayerDied()
     {
         ChangeState((int)IngameSceneState.DEAD).Forget();
+    }
+
+    private void SetGameplayPaused(bool isPaused)
+    {
+        Time.timeScale = isPaused ? 0f : 1f;
+
+        //ingameUIManager.SetInputUIActive(!isPaused);
+        //playerController.SetInputEnabled(!isPaused);
+
+        // 필요하면 스폰, AI 등에도 정지 상태 전달
     }
 }

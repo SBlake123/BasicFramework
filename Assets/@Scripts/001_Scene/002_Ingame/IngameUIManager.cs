@@ -9,6 +9,7 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
 {
     public event Func<UniTask> InventoryRequested;
     public event Func<UniTask> AttackRequested;
+    public event Func<UniTask> OptionRequested;
 
     public Canvas hudCanvas;
 
@@ -17,11 +18,13 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
 
     public Button attackBtn;
     public Button inventoryBtn;
+    public Button optionBtn;
 
     public async UniTask Init()
     {
         attackBtn.onClick.AddListener(async () => await OnAttackClicked());
         inventoryBtn.onClick.AddListener(async () => await OnInventoryClicked());
+        optionBtn.onClick.AddListener(async () => await OnOptionClicked());
     }
 
     private async UniTask OnInventoryClicked()
@@ -32,6 +35,11 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
     private async UniTask OnAttackClicked()
     {
         AttackRequested?.Invoke();
+    }
+
+    private async UniTask OnOptionClicked()
+    {
+        OptionRequested?.Invoke();
     }
 
 
