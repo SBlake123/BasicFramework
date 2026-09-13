@@ -4,10 +4,12 @@ using UnityEngine.UI;
 
 public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
+    [SerializeField] private RectTransform touchAreaRect;
     public RectTransform joystickRect;
     public RectTransform handleRect;
     private Player targetPlayer;
     private int? activePointerId;
+    private Vector2 defaultJoystickPosition;
 
     //public static VirtualJoystick Create(Transform parent)
     //{
@@ -55,6 +57,14 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     //    return joystick;
     //}
 
+    private void Awake()
+    {
+        if (joystickRect != null)
+        {
+            defaultJoystickPosition = joystickRect.anchoredPosition;
+        }
+    }
+
     public void SetTarget(Player player)
     {
         ClearInput();
@@ -63,17 +73,20 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (activePointerId.HasValue || joystickRect == null || handleRect == null)
+        if (activePointerId.HasValue || touchAreaRect == null || joystickRect == null || handleRect == null)
         {
             return;
         }
 
-        if (!TryGetOffset(eventData, out Vector2 offset) ||
-            offset.sqrMagnitude > GetRadius() * GetRadius())
+        if (!RectTransformUtility.RectangleContainsScreenPoint(
+                touchAreaRect,
+                eventData.position,
+                eventData.pressEventCamera))
         {
             return;
         }
 
+        MoveJoystickBase(eventData);
         activePointerId = eventData.pointerId;
         UpdateInput(eventData);
     }
@@ -119,9 +132,26 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
         }
     }
 
-    private float GetRadius()
+    private void MoveJoystickBase(PointerEventData eventData)
     {
-        return Mathf.Min(joystickRect.rect.width, joystickRect.rect.height) * 0.5f;
+        RectTransform parentRect = joystickRect.parent as RectTransform;
+        if (parentRect == null || !RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                parentRect,
+                eventData.position,
+                eventData.pressEventCamera,
+                out Vector2 localPoint))
+        {
+            return;
+        }
+
+        // anchoredPosition is measured from the RectTransform's anchor reference point.
+        Vector2 anchorReference = new Vector2(
+            Mathf.Lerp(parentRect.rect.xMin, parentRect.rect.xMax,
+                (joystickRect.anchorMin.x + joystickRect.anchorMax.x) * 0.5f),
+            Mathf.Lerp(parentRect.rect.yMin, parentRect.rect.yMax,
+                (joystickRect.anchorMin.y + joystickRect.anchorMax.y) * 0.5f));
+
+        joystickRect.anchoredPosition = localPoint - anchorReference;
     }
 
     private float JoystickMoveRadius()
@@ -147,6 +177,11 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
         if (handleRect != null)
         {
             handleRect.anchoredPosition = Vector2.zero;
+        }
+
+        if (joystickRect != null)
+        {
+            joystickRect.anchoredPosition = defaultJoystickPosition;
         }
 
         if (targetPlayer != null)
