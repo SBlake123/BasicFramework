@@ -6,6 +6,6 @@ public class Monster_001_SkeletonCollision : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("WOW");
+        //Debug.Log("WOW");
     }
 }

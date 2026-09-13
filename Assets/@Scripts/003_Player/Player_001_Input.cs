@@ -80,7 +80,6 @@ public partial class Player : MonoBehaviour
             return;
         }
 
-        Debug.Log("Move");
         UpdateMoveSpeed();
         UpdateSpriteDirection();
 
