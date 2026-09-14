@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInputKeyCode
 {
@@ -25,21 +26,24 @@ public partial class Player : MonoBehaviour
     private Rigidbody movementBody;
     private Vector3 desiredVelocity;
 
-    private void Awake()
+    private bool isAttackRequested;
+
+    public async UniTask Init()
     {
         movementBody = GetComponent<Rigidbody>();
+        IngameUIManager.Instance.AttackRequested += async () => await AttackPlayer();
     }
 
     private void FixedUpdate()
     {
         if (movementBody != null)
-            movementBody.velocity = CanInputAction() ? desiredVelocity : Vector3.zero;
+            CharacterContactMovement.Move(movementBody, CanInputAction() ? desiredVelocity : Vector3.zero);
     }
 
     private void OnDisable()
     {
         desiredVelocity = Vector3.zero;
-        if (movementBody != null) movementBody.velocity = Vector3.zero;
+
     }
 
     private PlayerState playerState;
@@ -107,6 +111,17 @@ public partial class Player : MonoBehaviour
 
         Vector3 moveDirection = new Vector3(moveInput.x, moveInput.y, 0f);
         desiredVelocity = moveDirection * moveSpeed;
+    }
+
+    private async UniTask AttackPlayer()
+    {
+        OnAttackRequested();
+        await ChangeState(PlayerState.ATTACK);
+    }
+
+    private void OnAttackRequested()
+    {
+        isAttackRequested = true;
     }
 
     private void UpdateMoveSpeed()

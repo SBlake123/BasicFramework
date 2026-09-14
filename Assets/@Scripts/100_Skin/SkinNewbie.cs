@@ -15,7 +15,7 @@ public class SkinNewbie : PlayerSkinBase
     public override void PlayMove()
     {
         anim.Play(GSkinSprName.MOVE);
-        Debug.Log("NEW ATTACK");
+        Debug.Log("NEW MOVE");
     }
 
 

@@ -44,15 +44,15 @@ public partial class Player : MonoBehaviour
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
             Debug.Log($"Idle Start - Frame: {Time.frameCount}");
-            Debug.Log("Idle State");
 
             player.AllStateBoolFalse();
             player.playerSkinBase.PlayIdle();
             // 입력 대기
             while (!token.IsCancellationRequested)
             {
-                if (Input.GetKeyDown(player.playerInputKeyCode.playerAttack))
+                if (Input.GetKeyDown(player.playerInputKeyCode.playerAttack) || player.isAttackRequested)
                 {
+                    player.isAttackRequested = false;
                     await player.ChangeState(PlayerState.ATTACK);
                     return;
                 }
@@ -67,10 +67,10 @@ public partial class Player : MonoBehaviour
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
             //Attack에 관한 메소드
+            player.isAttackRequested = false;
             player.isAttack = true;
             player.playerSkinBase.PlayAttack();
             await UniTask.Delay(500, cancellationToken: token);
-            await player.ChangeState(PlayerState.IDLE);
         }
     }
 
@@ -91,8 +91,6 @@ public partial class Player : MonoBehaviour
     {  
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
-            Debug.Log("In MOVESTATE");
-            await player.ChangeState(PlayerState.MOVE);
             player.playerSkinBase.PlayMove();
         }
     }
@@ -116,6 +114,9 @@ public partial class Player : MonoBehaviour
 
     public async UniTask ChangeState(PlayerState state)
     {
+        if (playerState == state)
+            return;
+
         stateCts?.Cancel();
         stateCts = new CancellationTokenSource();
 
@@ -148,7 +149,7 @@ public partial class Player : MonoBehaviour
 
             case PlayerState.ATTACK:
                 {
-
+                    await stateMap[PlayerState.ATTACK].EnterAsync(this, stateCts.Token);
                     break;
                 }
 

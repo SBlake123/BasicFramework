@@ -54,6 +54,7 @@ public class IngameSceneManager : StateBaseSceneManager
         SceneAllocate();
         SubscribingEvent();
         await ingameUIManager.Init();
+        await IngameSessionManager.Instance.Init();
         await ChangeState((int)IngameSceneState.LOADING);
         await ChangeState((int)IngameSceneState.INGAME);
 

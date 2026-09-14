@@ -34,18 +34,18 @@ public class Monster_001_Skeleton : Monster_000_Base
         if (movementBody == null) return;
         if (!moveDestination.HasValue)
         {
-            movementBody.velocity = Vector3.zero;
+
             return;
         }
         Vector3 delta = moveDestination.Value - movementBody.position;
         delta.z = 0;
-        movementBody.velocity = Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterStats.moveSpeed);
+        CharacterContactMovement.Move(movementBody, Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterStats.moveSpeed));
     }
 
     private void OnDisable()
     {
         moveDestination = null;
-        if (movementBody != null) movementBody.velocity = Vector3.zero;
+
     }
 
     bool isAttack;

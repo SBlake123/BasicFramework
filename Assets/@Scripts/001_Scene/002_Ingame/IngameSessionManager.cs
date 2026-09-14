@@ -22,9 +22,10 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
     public event Action OnRaidExtracted;
     public event Action OnRaidFailed;
 
-    private void Awake()
+    public async UniTask Init()
     {
         TryCreateAndConnectVirtualJoystick();
+        await player.Init();
     }
 
     public void SetPlayer(Player loadedPlayer)
