@@ -37,6 +37,7 @@ public class GameManager : PersistentMonoSingleton<GameManager>
         new InitStep("ResourceManager", () => ResourceManager.Instance.OnInitialize(), isEssential: true, maxRetryCount: 3),
         new InitStep("LanguageManager", () => LanguageManager.Instance.OnInitialize(), isEssential: true, maxRetryCount: 3),
         new InitStep("SaveLoadManager", () => SaveLoadManager.Instance.OnInitialize(), isEssential: true, maxRetryCount: 3),
+        new InitStep("DataManager", () => DataManager.Instance.OnInitialize(), isEssential: true, maxRetryCount: 3),
 
         // 선택 모듈 (실패해도 게임 진입에는 지장 없으므로 스킵 가능)
         new InitStep("SoundManager", () => { SoundManager.Instance.SoundInit(); return UniTask.CompletedTask; }, isEssential: false),
@@ -89,6 +90,18 @@ public class GameManager : PersistentMonoSingleton<GameManager>
     public async UniTask EssentialFailed()
     {
         PopupManager.Instance.setPopUpCode(false, "Error", "Yes");
+        PopupManager.Instance.AddMethodToBtn(() =>
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+        });
+
+
+
+
     }
 
     //public async UniTask KK()

@@ -16,26 +16,10 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public void Start()
     {
-        invenGridArr[0].itemData = itemData;
+        invenGridArr[0].itemData = DataManager.Instance.GetItemData(1001);
+        invenGridArr[1].itemData = DataManager.Instance.GetItemData(1002);
         InventoryInit();
     }
-
-    ItemData itemData = new ItemData()
-    {
-        itemId = 1,
-        itemName = "Sword",
-        category = ItemCategory.Equipment,
-        equipmentType = EquipmentType.Weapon
-
-
-        //ItemCategory category;
-        //private EquipmentSlot equipmentSlot = EquipmentSlot.None;
-
-        //private bool canStack = true;
-        //private int maxStackAmount = 99;
-
-        //private int healAmount;
-    };
 
     public async UniTask InventoryInit()
     {
@@ -54,7 +38,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
             if (invenGridArr[i].itemData != null)
             {
-                await MakeInvenItem(invenGridArr[i].itemData.itemName, invenGridArr[i].itemImgParent);
+                await MakeInvenItem(string.Format(GScriptAddress.invenItem, invenGridArr[i].itemData.itemKey), invenGridArr[i].itemImgParent);
             }
         }
     }

@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
-
+[Serializable]
 public class WeaponData
 {
+    public ItemData itemData;
+
     public float attackDamage = 1f;
     public float attackSpeed = 0.3f;
     public float attackRange = 1f;

@@ -115,7 +115,7 @@ public class PopupManager : PersistentMonoSingleton<PopupManager>
                     initManager();
                     break;
                 case (int)POPUP_STATE.THREEBTNPOPUP:
-                    shopPopUp3();
+                    showPopUp3();
                     break;
             }
         }
@@ -366,17 +366,17 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         popup3.gameObject.SetActive(false);
         panelPopUp.SetActive(true);
 
-        if (string.IsNullOrEmpty(popup1TextHeader.text))
+        if (string.IsNullOrEmpty(strHeader))
         {
             popup1TextHeader.gameObject.SetActive(false);
         }
         else
         {
-            popup1TextHeader.text = strHeader;
+            popup1TextHeader.text = strHeader.Replace("\\n", "\n");
             popup1TextHeader.gameObject.SetActive(true);
         }
      
-        popup1TextBody.text = strBody;
+        popup1TextBody.text = strBody.Replace("\\n", "\n");
         popup1BtnText.text = strYes;
 
         //LanguageManager.Instance.GetLangScript(1, LanguageManager.Instance.languageScriptDic, popup1TextHeader);
@@ -400,16 +400,16 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         popup3.gameObject.SetActive(false);
         panelPopUp.SetActive(true);
 
-        if (string.IsNullOrEmpty(popup2TextHeader.text))
+        if (string.IsNullOrEmpty(strHeader))
         {
             popup2TextHeader.gameObject.SetActive(false);
         }
         else
         {
-            popup2TextHeader.text = strHeader;
+            popup2TextHeader.text = strHeader.Replace("\\n", "\n");
             popup2TextHeader.gameObject.SetActive(true);
         }
-        popup2TextBody.text = strBody;
+        popup2TextBody.text = strBody.Replace("\\n", "\n");
         popup2BtnYesText.text = strYes;
         popup2BtnNoText.text = strNo;
 
@@ -476,7 +476,7 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
             });
             popup1Back.onClick.AddListener(async () => {
                 nowState = (int)POPUP_STATE.SELECT;
-                yesAction.Invoke(); setPopUpClose();
+                noAction?.Invoke(); setPopUpClose();
             });
             //백 키 액션 등록
             backKeyAction = yesAction;
@@ -489,11 +489,11 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
             });
             popup2BtnNo.onClick.AddListener(() => {
                 nowState = (int)POPUP_STATE.SELECT; 
-                noAction.Invoke(); setPopUpClose();
+                noAction?.Invoke(); setPopUpClose();
             });
             popup2Back.onClick.AddListener(() => {
                 nowState = (int)POPUP_STATE.SELECT; 
-                noAction.Invoke(); setPopUpClose();
+                noAction?.Invoke(); setPopUpClose();
             });
             //백 키 액션 등록
             backKeyAction = noAction;
@@ -539,7 +539,7 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         //백 키 액션 등록
         //backKeyAction = secondAction;
     }
-    void shopPopUp3()
+    void showPopUp3()
     {
         popup1.gameObject.SetActive(false);
         popup2.gameObject.SetActive(false);

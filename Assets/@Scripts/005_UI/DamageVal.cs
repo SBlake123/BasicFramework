@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,9 +8,14 @@ public class DamageVal : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageText;
 
-    private void Start()
+
+    private void OnEnable()
     {
-        SetDamage(227);
+        gameObject.SetActive(true);
+
+        SetDamage(223337);
+
+        transform.DOMoveY(transform.position.y + 20f, 0.8f).SetEase(Ease.Linear).OnComplete(()=> gameObject.SetActive(false));      
     }
 
     public void SetDamage(int damage)

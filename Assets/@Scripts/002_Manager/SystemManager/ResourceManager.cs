@@ -267,11 +267,13 @@ public class ResourceManager : Singleton<ResourceManager>
 
         try
         {
+
+            Debug.Log(key);
             return (T)obj;
         }
         catch (InvalidCastException)
         {
-            Debug.Log(key);
+            Debug.Log($"Cant Load {key}");
             return null;
         }
 

@@ -14,6 +14,15 @@ public static class GScriptAddress
 
     public static readonly string ogg = ".ogg";
 
+    public static readonly string equipItem = "{0}_Equip";
+
+    public static readonly string dropItem = "{0}_Drop";
+
+    public static readonly string invenItem = "{0}_Inven";
+
+    public static readonly string icon = "{0}_Icon";
+
+
     public static readonly string[] labelNameArr = new string[] { "Sprite", "Text", "Sound", "GameObject" };
 
     public static readonly string[] soundNameExtensions = new string[] { wav, mp3, ogg };

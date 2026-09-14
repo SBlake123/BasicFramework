@@ -173,6 +173,13 @@ public class IngameSceneManager : StateBaseSceneManager
 
                 await ChangeState((int)IngameSceneState.RESULT);
                 return;
+
+            case IngameSceneState.GO_TO_TITLE:
+
+                Debug.Log("GOTOTITLE");
+                SetGameplayPaused(false);
+                await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
+                return;
         }
 
         screenGuard.SetActive(false);

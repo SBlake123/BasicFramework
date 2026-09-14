@@ -10,11 +10,6 @@ public class Ingame_002_Inventory : StateBasePage
     private IngameSceneManager IngameSceneManager;
     public Inventory_000_Base Inventory_000_Base;
     public Button inventoryBackDropButton;
-
-    public Button confirmBtn;
-
-    public Slider volSlider;
-    public Slider fxSlider;
     protected override async UniTask OnFirstSetting()
     {
         IngameSceneManager = (IngameSceneManager)stateBaseSceneManager;

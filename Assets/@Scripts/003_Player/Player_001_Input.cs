@@ -29,6 +29,8 @@ public partial class Player : MonoBehaviour
     private Rigidbody movementBody;
     private Vector3 desiredVelocity;
 
+    public Vector2 lastMoveDirection { get; private set; } = Vector2.right;
+
     private bool isAttackRequested;
 
     public event Action<Vector2> MoveInputChanged;
@@ -63,6 +65,14 @@ public partial class Player : MonoBehaviour
     public void SetVirtualJoystickInput(Vector2 direction)
     {
         virtualJoystickInput = Vector2.ClampMagnitude(direction, 1f);
+
+        if (virtualJoystickInput.sqrMagnitude > 0.001f)
+        {
+            Debug.Log($"lastMoveDirection : {lastMoveDirection}");
+            lastMoveDirection = virtualJoystickInput.normalized;
+
+        }
+
         MoveInputChanged?.Invoke(moveInput);
     }
 

@@ -5,31 +5,39 @@ using UnityEngine;
 [Serializable]
 public class ItemData
 {
-    public int itemId;
-    public string itemName;
-    public Sprite icon;
-    public ItemCategory category;
-    public EquipmentType equipmentType = EquipmentType.None;
-    public bool canStack = true;
-    public int maxStackAmount = 99;
-    public int healAmount;
+    public int itemId = 0;
+    public string itemName = "";
+    public int itemNameId = 0;
+    public int icon = 0;
+    public string itemKey;
 
-    public void OnValidate()
-    {
-        if (category != ItemCategory.Equipment)
-        {
-            equipmentType = EquipmentType.None;
-        }
+    public int category = 0;
+    public int equipmentType = 0;
+    public int canStack = 0;
+    public int maxStackAmount = 0;
+    public int healAmount = 0;
 
-        if (category == ItemCategory.Equipment)
-        {
-            canStack = false;
-            maxStackAmount = 1;
-        }
+    public float attackDamage;
+    public float attackSpeed;
+    public float attackRange;
 
-        if (!canStack)
-        {
-            maxStackAmount = 1;
-        }
-    }
+
+    //public void OnValidate()
+    //{
+    //    if (category != ItemCategory.Equipment)
+    //    {
+    //        equipmentType = EquipmentType.None;
+    //    }
+
+    //    if (category == ItemCategory.Equipment)
+    //    {
+    //        canStack = false;
+    //        maxStackAmount = 1;
+    //    }
+
+    //    if (!canStack)
+    //    {
+    //        maxStackAmount = 1;
+    //    }
+    //}
 }
