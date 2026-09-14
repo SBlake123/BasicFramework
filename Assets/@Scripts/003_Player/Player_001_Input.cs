@@ -24,7 +24,7 @@ public partial class Player : MonoBehaviour
 
     private float moveSpeed;
     private bool nowEvading;
-    private Vector2 moveInput;
+    public Vector2 moveInput;
     private Vector2 virtualJoystickInput;
     private Rigidbody movementBody;
     private Vector3 desiredVelocity;
@@ -32,16 +32,10 @@ public partial class Player : MonoBehaviour
     private bool isAttackRequested;
 
     public event Action<Vector2> MoveInputChanged;
+    public bool isPlayerFacingRight = true;
     private MoveAnim lastMoveAnim = MoveAnim.None;
 
-    public async UniTask Init()
-    {
-        movementBody = GetComponent<Rigidbody>();
-        IngameUIManager.Instance.AttackRequested += async () => await AttackPlayer();
-        
-        MoveInputChanged += wd;
-       
-    }
+    
 
     private void FixedUpdate()
     {
@@ -144,15 +138,13 @@ public partial class Player : MonoBehaviour
         isAttackRequested = true;
     }
 
-    private void wd(Vector2 input)
+    private void UpdateMoveAnimation(Vector2 input)
     {
         if (!CanMoveAnimPlay()) return;
 
-        
-
         float inputSize = input.magnitude;
 
-        MoveAnim next = inputSize > 0.0001f ? MoveAnim.Move : MoveAnim.Idle;
+        MoveAnim next = inputSize > 0.01f ? MoveAnim.Move : MoveAnim.Idle;
 
         Debug.Log($"input: {input}, magnitude: {input.magnitude}");
         Debug.Log($"next :  {next}");        
@@ -181,11 +173,13 @@ public partial class Player : MonoBehaviour
 
         if (moveInput.x > 0f)
         {
+            isPlayerFacingRight = true;
             playerSkinBase.PlayerSprRelocationRight();
             UpdateWeaponRotation();
         }
         else if (moveInput.x < 0f)
         {
+            isPlayerFacingRight = false;
             playerSkinBase.PlayerSprRelocationLeft();
             UpdateWeaponRotation();
         }

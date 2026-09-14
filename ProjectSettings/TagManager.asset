@@ -15,7 +15,7 @@ TagManager:
   - Monster
   - Ground
   - Field
-  - 
+  - AttackEffect
   - 
   - 
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Weapon
+    uniqueID: 2178732939
+    locked: 0
+  - name: Character
+    uniqueID: 886366995
+    locked: 0
+  - name: Shield
+    uniqueID: 1364521713
+    locked: 0
+  - name: WeaponEffect
+    uniqueID: 2160931759
     locked: 0

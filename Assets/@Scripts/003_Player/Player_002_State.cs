@@ -58,8 +58,7 @@ public partial class Player : MonoBehaviour
             player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;
             player.isAttack = true;
-            player.playerSkinBase.PlayAttack();
-            await UniTask.Delay(600, cancellationToken: token);
+            await player.currentWeapon.AttackAsync(player, token);
             await player.ChangeState(PlayerState.IDLE);
             
         }

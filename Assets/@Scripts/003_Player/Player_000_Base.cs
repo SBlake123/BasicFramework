@@ -5,22 +5,26 @@ using UnityEngine;
 
 public partial class Player : MonoBehaviour
 {
-    void Start()
-    {
-        PlayerInit().Forget();
-    }
+    public WeaponBase currentWeapon;
+    public WeaponBase currentShield;
 
     private void Update()
     {
         ReadMoveInput();
         MovePlayer();
+        if (Input.GetKeyDown(playerInputKeyCode.playerAttack)) AttackPlayer().Forget();
     }
 
-    private async UniTaskVoid PlayerInit()
+    public async UniTask Init()
     {
         moveSpeed = 3f;
         await ChangeState(PlayerState.IDLE);
-        Debug.Log($"{playerState}");
-    }
 
+        movementBody = GetComponent<Rigidbody>();
+        IngameUIManager.Instance.AttackRequested += async () => await AttackPlayer();
+        
+
+        MoveInputChanged += UpdateMoveAnimation;
+
+    }
 }
