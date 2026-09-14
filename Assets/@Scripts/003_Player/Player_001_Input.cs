@@ -77,17 +77,19 @@ public partial class Player : MonoBehaviour
     /// </summary>
     public void ClearVirtualJoystickInput()
     {
+        Debug.Log("ClearVirtualJoystickInput");
         virtualJoystickInput = Vector2.zero;
+        moveInput = virtualJoystickInput;
         MoveInputChanged?.Invoke(moveInput);
     }
 
     private void ReadMoveInput()
     {
-        //if (Application.isMobilePlatform || useVirtualJoystickInEditor)
-        //{
-        //    moveInput = virtualJoystickInput;
-        //    return;
-        //}
+        if (Application.isMobilePlatform || useVirtualJoystickInEditor)
+        {
+            moveInput = virtualJoystickInput;
+            return;
+        }
 
         moveInput = ReadKeyboardMoveInput();
         
@@ -125,6 +127,7 @@ public partial class Player : MonoBehaviour
         //ChangeState(PlayerState.MOVE);
         UpdateMoveSpeed();
         UpdateSpriteDirection();
+        UpdateWeaponRotation();
 
         Vector3 moveDirection = new Vector3(moveInput.x, moveInput.y, 0f);
         desiredVelocity = moveDirection * moveSpeed;
@@ -149,8 +152,9 @@ public partial class Player : MonoBehaviour
 
         float inputSize = input.magnitude;
 
-        MoveAnim next = inputSize > 0.01f ? MoveAnim.Move : MoveAnim.Idle;
+        MoveAnim next = inputSize > 0.0001f ? MoveAnim.Move : MoveAnim.Idle;
 
+        Debug.Log($"input: {input}, magnitude: {input.magnitude}");
         Debug.Log($"next :  {next}");        
 
         if (lastMoveAnim == next) return;
@@ -178,11 +182,19 @@ public partial class Player : MonoBehaviour
         if (moveInput.x > 0f)
         {
             playerSkinBase.PlayerSprRelocationRight();
+            UpdateWeaponRotation();
         }
         else if (moveInput.x < 0f)
         {
             playerSkinBase.PlayerSprRelocationLeft();
+            UpdateWeaponRotation();
         }
+    }
+    public void UpdateWeaponRotation()
+    {
+        float angle = Mathf.Atan2(moveInput.y, moveInput.x) * Mathf.Rad2Deg;
+
+        playerSkinBase.weaponTrf.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
     }
 
     private bool CanMoveAnimPlay()

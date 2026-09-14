@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler, IEndDragHandler
 {
     [SerializeField] private RectTransform touchAreaRect;
     public RectTransform joystickRect;
@@ -99,6 +99,15 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
         }
     }
 
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (activePointerId == eventData.pointerId)
+        {
+            targetPlayer.ClearVirtualJoystickInput();
+        }
+    }
+
     public void OnPointerUp(PointerEventData eventData)
     {
         if (activePointerId == eventData.pointerId)
@@ -189,4 +198,5 @@ public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
             targetPlayer.ClearVirtualJoystickInput();
         }
     }
+
 }
