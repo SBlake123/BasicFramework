@@ -11,7 +11,9 @@ public class Sword : WeaponBase
 {
     public override async UniTask AttackAsync(Player player, CancellationToken token)
     {
+        weaponHitBox.SetActive(true);
         AttackEffectActive(player, destroyCancellationToken).Forget();
+        
 
         transform.localRotation = Quaternion.Euler(0f, 0f, -35f);
         transform.DOLocalRotate(new Vector3(0f, 0f, 55f), 0.12f).SetEase(Ease.OutQuad).OnComplete(() => transform.localRotation = Quaternion.Euler(0f, 0f, 0f));

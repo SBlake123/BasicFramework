@@ -18,6 +18,8 @@ public abstract class WeaponBase : MonoBehaviour
     public WeaponData weaponData { get; set; } = new WeaponData();
 
     public GameObject attackEffect;
+
+    public GameObject weaponHitBox;
     public float AttackDamage => weaponData.attackDamage;
     public float AttackSpeed => weaponData.attackSpeed;
     public float AttackRange => weaponData.attackRange;

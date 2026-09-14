@@ -43,7 +43,7 @@ public partial class Player : MonoBehaviour
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
-            Debug.Log($"Idle Start - Frame: {Time.frameCount}");
+            //Debug.Log($"Idle Start - Frame: {Time.frameCount}");
 
             player.AllStateBoolFalse();
             player.MoveInputChanged?.Invoke(player.moveInput);
@@ -113,7 +113,6 @@ public partial class Player : MonoBehaviour
         if (playerState != state)
         {
             playerState = state;
-            Debug.Log($"Now State : {state}");
 
             await OnStateChange(stateCts);
         }

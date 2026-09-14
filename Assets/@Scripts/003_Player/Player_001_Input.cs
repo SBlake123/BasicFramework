@@ -71,7 +71,6 @@ public partial class Player : MonoBehaviour
     /// </summary>
     public void ClearVirtualJoystickInput()
     {
-        Debug.Log("ClearVirtualJoystickInput");
         virtualJoystickInput = Vector2.zero;
         moveInput = virtualJoystickInput;
         MoveInputChanged?.Invoke(moveInput);
@@ -144,10 +143,7 @@ public partial class Player : MonoBehaviour
 
         float inputSize = input.magnitude;
 
-        MoveAnim next = inputSize > 0.01f ? MoveAnim.Move : MoveAnim.Idle;
-
-        Debug.Log($"input: {input}, magnitude: {input.magnitude}");
-        Debug.Log($"next :  {next}");        
+        MoveAnim next = inputSize > 0.01f ? MoveAnim.Move : MoveAnim.Idle;   
 
         if (lastMoveAnim == next) return;
 
@@ -195,7 +191,6 @@ public partial class Player : MonoBehaviour
     {
         bool canMoveAnimPlay = false;
         if (!isAttack && !isDodge) canMoveAnimPlay = true;
-        Debug.Log($"canMoveAnimPlay :{canMoveAnimPlay}");
         return canMoveAnimPlay;
     }
 
