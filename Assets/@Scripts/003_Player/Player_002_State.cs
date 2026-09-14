@@ -27,6 +27,7 @@ public partial class Player : MonoBehaviour
         { PlayerState.IDLE, new IdleState() },
         { PlayerState.ATTACK, new AttackState() },
         { PlayerState.DODGE, new DodgeState()},
+        { PlayerState.MOVE, new MoveState()},
         //{ PlayerState.HIT, new HitState() },
         { PlayerState.DIE, new DieState() }
     };
@@ -80,11 +81,21 @@ public partial class Player : MonoBehaviour
     //        player.isHit = true;
     //        player.playerSkinBase.PlayHit();
     //        await UniTask.Delay(500);
-           
+
     //        await player.ChangeState(PlayerState.IDLE);
     //    }
 
     //}
+
+    public class MoveState : IPlayerState
+    {  
+        public async UniTask EnterAsync(Player player, CancellationToken token)
+        {
+            Debug.Log("In MOVESTATE");
+            await player.ChangeState(PlayerState.MOVE);
+            player.playerSkinBase.PlayMove();
+        }
+    }
 
     public class DodgeState : IPlayerState
     {
@@ -122,6 +133,16 @@ public partial class Player : MonoBehaviour
         {
             case PlayerState.IDLE:
                 {
+                    await stateMap[PlayerState.IDLE].EnterAsync(this, stateCts.Token);
+
+
+                    break;
+                }
+
+            case PlayerState.MOVE:
+                {
+                    await stateMap[PlayerState.MOVE].EnterAsync(this,stateCts.Token);
+
                     break;
                 }
 

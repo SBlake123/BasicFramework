@@ -15,8 +15,6 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
 
     public Animator anim;
 
-    public Sprite[] skinSpriteArr;
-
     public virtual bool needSprRelocation => false;
 
     public virtual void PlayerSprRelocationLeft()
@@ -33,6 +31,9 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
 
 
     public abstract void PlayIdle();
+
+    public abstract void PlayMove();
+
 
     public abstract void PlayAttack();
 

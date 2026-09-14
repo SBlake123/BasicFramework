@@ -8,6 +8,8 @@ public static class GSkinSprName
 
     public static readonly string ATTACK = "Attack";
 
+    public static readonly string MOVE = "Move";
+
     public static readonly string HIT = "Hit";
 
     public static readonly string HIT_RED = "Hit Red";

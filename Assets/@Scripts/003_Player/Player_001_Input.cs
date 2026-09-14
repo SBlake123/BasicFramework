@@ -77,9 +77,11 @@ public partial class Player : MonoBehaviour
         
         if (!CanInputAction() || moveInput == Vector2.zero)
         {
+            ChangeState(PlayerState.IDLE);
             return;
         }
 
+        ChangeState(PlayerState.MOVE);
         UpdateMoveSpeed();
         UpdateSpriteDirection();
 
