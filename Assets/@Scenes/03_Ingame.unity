@@ -495,6 +495,7 @@ MonoBehaviour:
   InputUIParentRect: {fileID: 1352243426}
   JoystickParent: {fileID: 460765287}
   attackBtn: {fileID: 181815752}
+  dodgeBtn: {fileID: 1672031331}
   inventoryBtn: {fileID: 406573865}
   optionBtn: {fileID: 3814790335050611446}
 --- !u!1 &144365368

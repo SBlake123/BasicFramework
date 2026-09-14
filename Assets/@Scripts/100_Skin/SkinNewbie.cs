@@ -39,6 +39,6 @@ public class SkinNewbie : PlayerSkinBase
 
     public override void PlayDodge()
     {
-        
+        anim.Play("Dodge", 0, 0f);
     }
 }
