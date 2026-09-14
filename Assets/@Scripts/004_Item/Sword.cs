@@ -19,13 +19,13 @@ public class Sword : WeaponBase
 
     public async UniTask AttackEffectActive(Player player, CancellationToken token)
     {
-        var effect = Instantiate(attackEffect, attackEffect.transform.position, attackEffect.transform.rotation);
+        var effect = Instantiate(attackEffect, attackEffect.transform.position, Quaternion.identity);
         UpdateEffectDirection(effect, player);
         effect.SetActive(true);
 
         try
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(AttackSpeed), cancellationToken: token);
         }
         finally
         {
@@ -36,11 +36,12 @@ public class Sword : WeaponBase
 
     public override void UpdateEffectDirection(GameObject gameObject, Player player)
     {
-        Vector3 angle = attackEffect.transform.eulerAngles;
+        Vector2 dir = player.moveInput.normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         if (player.isPlayerFacingRight)
-            gameObject.transform.rotation = Quaternion.Euler(angle.x, 0f, angle.z);
+            gameObject.transform.rotation = Quaternion.Euler(0f, 0f, angle);
         else
-            gameObject.transform.rotation = Quaternion.Euler(angle.x, 180f, angle.z + 180f);
+            gameObject.transform.rotation = Quaternion.Euler(0f, 180f, 180f - angle);
     }
 }
