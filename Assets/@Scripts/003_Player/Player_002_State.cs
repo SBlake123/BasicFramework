@@ -25,10 +25,10 @@ public partial class Player : MonoBehaviour
     private readonly Dictionary<PlayerState, IPlayerState> stateMap = new()
     {
         { PlayerState.IDLE, new IdleState() },
+        //{ PlayerState.MOVE, new MoveState()},
+        //{ PlayerState.HIT, new HitState() },
         { PlayerState.ATTACK, new AttackState() },
         { PlayerState.DODGE, new DodgeState()},
-        { PlayerState.MOVE, new MoveState()},
-        //{ PlayerState.HIT, new HitState() },
         { PlayerState.DIE, new DieState() }
     };
   
@@ -46,19 +46,7 @@ public partial class Player : MonoBehaviour
             Debug.Log($"Idle Start - Frame: {Time.frameCount}");
 
             player.AllStateBoolFalse();
-            player.playerSkinBase.PlayIdle();
-            // 입력 대기
-            while (!token.IsCancellationRequested)
-            {
-                if (Input.GetKeyDown(player.playerInputKeyCode.playerAttack) || player.isAttackRequested)
-                {
-                    player.isAttackRequested = false;
-                    await player.ChangeState(PlayerState.ATTACK);
-                    return;
-                }
-
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
-            }
+            player.MoveInputChanged?.Invoke(player.moveInput);
         }
     }
 
@@ -67,10 +55,13 @@ public partial class Player : MonoBehaviour
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
             //Attack에 관한 메소드
+            player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;
             player.isAttack = true;
             player.playerSkinBase.PlayAttack();
-            await UniTask.Delay(500, cancellationToken: token);
+            await UniTask.Delay(600, cancellationToken: token);
+            await player.ChangeState(PlayerState.IDLE);
+            
         }
     }
 
@@ -87,13 +78,13 @@ public partial class Player : MonoBehaviour
 
     //}
 
-    public class MoveState : IPlayerState
-    {  
-        public async UniTask EnterAsync(Player player, CancellationToken token)
-        {
-            player.playerSkinBase.PlayMove();
-        }
-    }
+    //public class MoveState : IPlayerState
+    //{  
+    //    public async UniTask EnterAsync(Player player, CancellationToken token)
+    //    {
+    //        player.playerSkinBase.PlayMove();
+    //    }
+    //}
 
     public class DodgeState : IPlayerState
     {
@@ -140,12 +131,12 @@ public partial class Player : MonoBehaviour
                     break;
                 }
 
-            case PlayerState.MOVE:
-                {
-                    await stateMap[PlayerState.MOVE].EnterAsync(this,stateCts.Token);
+            //case PlayerState.MOVE:
+            //    {
+            //        await stateMap[PlayerState.MOVE].EnterAsync(this,stateCts.Token);
 
-                    break;
-                }
+            //        break;
+            //    }
 
             case PlayerState.ATTACK:
                 {
@@ -170,14 +161,11 @@ public partial class Player : MonoBehaviour
 
     public async UniTask OnStateChange(CancellationTokenSource stateCts)
     {
-        while (!stateCts.IsCancellationRequested)
+        if (stateMap.TryGetValue(playerState, out var state))
         {
-            if (stateMap.TryGetValue(playerState, out var state)) 
-            {
-                await state.EnterAsync(this, stateCts.Token); 
-            }
-            await UniTask.Yield(PlayerLoopTiming.Update, stateCts.Token);
+            await state.EnterAsync(this, stateCts.Token);
         }
+        await UniTask.Yield(PlayerLoopTiming.Update, stateCts.Token);
     }
 
     void AllStateBoolFalse()
