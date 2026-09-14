@@ -331,6 +331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 96970735}
   - component: {fileID: 96970736}
+  - component: {fileID: 1828643635}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -170049,7 +170050,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1828643633}
-  - component: {fileID: 1828643635}
   - component: {fileID: 1828643634}
   m_Layer: 6
   m_Name: Collider
@@ -170100,7 +170100,7 @@ Rigidbody:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828643632}
+  m_GameObject: {fileID: 96970734}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -170118,7 +170118,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 120
   m_CollisionDetection: 1
 --- !u!1 &1839070361
@@ -170273,6 +170273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1875701143}
   - component: {fileID: 1875701144}
+  - component: {fileID: 2125392677}
   m_Layer: 7
   m_Name: MonsterSkeleton
   m_TagString: Untagged
@@ -171280,7 +171281,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2125392675}
   - component: {fileID: 2125392678}
-  - component: {fileID: 2125392677}
   - component: {fileID: 2125392679}
   m_Layer: 7
   m_Name: Collider
@@ -171310,7 +171310,7 @@ Rigidbody:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2125392674}
+  m_GameObject: {fileID: 1875701142}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -171328,7 +171328,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 120
   m_CollisionDetection: 1
 --- !u!65 &2125392678

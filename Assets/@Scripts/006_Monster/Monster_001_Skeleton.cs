@@ -26,12 +26,34 @@ public class Monster_001_Skeleton : Monster_000_Base
     [SerializeField] private Transform target;
     private MonsterStats monsterStats = new MonsterStats();
     private Vector3 spawnPosition;
+    private Rigidbody movementBody;
+    private Vector3? moveDestination;
+
+    private void FixedUpdate()
+    {
+        if (movementBody == null) return;
+        if (!moveDestination.HasValue)
+        {
+            movementBody.velocity = Vector3.zero;
+            return;
+        }
+        Vector3 delta = moveDestination.Value - movementBody.position;
+        delta.z = 0;
+        movementBody.velocity = Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterStats.moveSpeed);
+    }
+
+    private void OnDisable()
+    {
+        moveDestination = null;
+        if (movementBody != null) movementBody.velocity = Vector3.zero;
+    }
 
     bool isAttack;
     bool isDeath;
 
     private void Awake()
     {
+        movementBody = GetComponent<Rigidbody>();
         spawnPosition = transform.position;
         MonsterInit().Forget();
     }
@@ -51,6 +73,7 @@ public class Monster_001_Skeleton : Monster_000_Base
     {
         if (monsterState != (MonsterState)state)
         {
+            moveDestination = null;
             stateCts?.Cancel();
             stateCts?.Dispose();
             stateCts = new CancellationTokenSource();
@@ -283,11 +306,7 @@ public class Monster_001_Skeleton : Monster_000_Base
 
     private void MoveTo(Vector3 destination)
     {
-        Vector3 flatDestination = new Vector3(destination.x, destination.y, transform.position.z);
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            flatDestination,
-            monsterStats.moveSpeed * Time.deltaTime);
+        moveDestination = new Vector3(destination.x, destination.y, transform.position.z);
     }
 
     private bool IsArrived(Vector3 destination)

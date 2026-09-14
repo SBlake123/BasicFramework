@@ -22,6 +22,25 @@ public partial class Player : MonoBehaviour
     private bool nowEvading;
     private Vector2 moveInput;
     private Vector2 virtualJoystickInput;
+    private Rigidbody movementBody;
+    private Vector3 desiredVelocity;
+
+    private void Awake()
+    {
+        movementBody = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (movementBody != null)
+            movementBody.velocity = CanInputAction() ? desiredVelocity : Vector3.zero;
+    }
+
+    private void OnDisable()
+    {
+        desiredVelocity = Vector3.zero;
+        if (movementBody != null) movementBody.velocity = Vector3.zero;
+    }
 
     private PlayerState playerState;
 
@@ -77,6 +96,7 @@ public partial class Player : MonoBehaviour
         
         if (!CanInputAction() || moveInput == Vector2.zero)
         {
+            desiredVelocity = Vector3.zero;
             ChangeState(PlayerState.IDLE);
             return;
         }
@@ -86,7 +106,7 @@ public partial class Player : MonoBehaviour
         UpdateSpriteDirection();
 
         Vector3 moveDirection = new Vector3(moveInput.x, moveInput.y, 0f);
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        desiredVelocity = moveDirection * moveSpeed;
     }
 
     private void UpdateMoveSpeed()
