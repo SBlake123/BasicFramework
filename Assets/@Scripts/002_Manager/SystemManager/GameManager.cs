@@ -89,7 +89,7 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
     public async UniTask EssentialFailed()
     {
-        PopupManager.Instance.setPopUpCode(false, "Error", "Yes");
+        PopupManager.Instance.setPopUpCode(false, "ERROR", "QUIT");
         PopupManager.Instance.AddMethodToBtn(() =>
         {
 #if UNITY_EDITOR
@@ -103,24 +103,4 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
 
     }
-
-    //public async UniTask KK()
-    //{
-    //    Application.targetFrameRate = 60;
-
-    //    var initSteps = new List<InitStep>
-    //    {
-    //    // 필수 모듈 (실패 시 재시도 후 팝업 띄우고 중단)
-    //    new InitStep("ResourceManager", () => ResourceManager.Instance.OnInitialize(), isEssential: true, maxRetryCount: 3),
-    //    new InitStep("LanguageManager", () => LanguageManager.Instance.OnInitialize(), isEssential: true),
-
-    //    // 선택 모듈 (실패해도 게임 진입에는 지장 없으므로 스킵 가능)
-    //    new InitStep("SoundManager", () => { SoundManager.Instance.SoundInit(); return UniTask.CompletedTask; }, isEssential: false),
-    //    };
-
-    //    await UniTask.Delay(2000);
-
-    //    await UniTask.Delay(2000);
-    //    await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
-    //}
 }

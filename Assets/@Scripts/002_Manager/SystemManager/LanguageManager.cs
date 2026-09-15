@@ -12,16 +12,6 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Text;
 
-
-public enum WordInfoField
-{
-    WORD,
-    KR,
-    KR_GAMEWORD,
-    ENGHINT,
-    KORHINT
-}
-
 [Serializable]
 public class ScriptClass
 {
@@ -36,22 +26,10 @@ public class LanguageScript : ScriptClass
     public string jp { get; set; }
 }
 
-[Serializable]
-public class WordInfo : ScriptClass
-{
-    public string word { get; set; }
-    public string kr { get; set; }
-    public string engHint { get; set; }
-    public string korHint { get; set; }
-    public int tgVal { get; set; }
-}
-
 public class LanguageManager : Singleton<LanguageManager>
 {
     private LanguageType currentLanguage = LanguageType.KR;
     public Dictionary<int, LanguageScript> languageScriptDic { get; set; } = new Dictionary<int, LanguageScript>();
-    public Dictionary<int, WordInfo> wordInfoDic { get; set; } = new Dictionary<int, WordInfo>();
-
     public async UniTask OnInitialize()
     {
         await Initialize();
@@ -65,9 +43,6 @@ public class LanguageManager : Singleton<LanguageManager>
 
         await UniTask.WhenAll(
                 LanguageScriptDicLoad("contents", languageScriptDic)
-                //LanguageScriptDicLoad("returnCode", languageScriptDic),
-                //LanguageScriptDicLoad("ui", languageScriptDic),
-                //LanguageScriptDicLoad("word", wordInfoDic)
             );
     }
 

@@ -12,7 +12,6 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
     public Player player;
     public Canvas hudCanvas;
     public bool createVirtualJoystickInEditor;
-    public string mapId = "03_Ingame";
     public float checkpointIntervalSeconds = 30f;
 
     public VirtualJoystick virtualJoystick;
@@ -48,7 +47,7 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
 
         PlayerDataManager.Instance.LoadOrCreate();
-        PlayerDataManager.Instance.BeginRaid(mapId);
+        PlayerDataManager.Instance.BeginRaid(GSceneName.INGAME_SCENE);
         IsRaidActive = true;
 
         TryCreateAndConnectVirtualJoystick();

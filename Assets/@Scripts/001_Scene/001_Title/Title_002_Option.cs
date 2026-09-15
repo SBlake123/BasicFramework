@@ -26,6 +26,7 @@ public class Title_002_Option : StateBasePage
     protected override async UniTask OnFirstSetting()
     {
         titleSceneManager = (TitleSceneManager)stateBaseSceneManager;
+
         optionBackDropButton.onClick.AddListener(async () => await titleSceneManager.ChangeState((int)TitleSceneState.MAIN));
         languageChangeBtn.onClick.AddListener(async () => await ChangeLanguage());
 
