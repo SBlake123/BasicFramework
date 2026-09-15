@@ -28,8 +28,18 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     public void DummyDataSetting()
     { 
-        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1001));
-        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1002));
+        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1001).DeepCopy());
+        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1002).DeepCopy());
+
+        ItemData itemData_1 = DataManager.Instance.GetItemData(1001).DeepCopy();
+        itemData_1.gridIdx = 10;
+
+        ItemData itemData_3 = DataManager.Instance.GetItemData(1002).DeepCopy();
+        itemData_3.gridIdx = 11;
+
+        playerIngameData.invenItems.Add(itemData_3);
+        playerIngameData.invenItems.Add(itemData_1);
+
     }
 
     //일단 인벤토리부터 해주자..

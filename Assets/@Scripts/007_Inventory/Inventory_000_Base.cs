@@ -158,11 +158,176 @@ public partial class Inventory_000_Base : MonoBehaviour
         {
             if (inventoryGrid_000_Base.itemData == null) return;
 
-            Debug.Log("AddItem");
-           
             ItemData item = inventoryGrid_000_Base.itemData.DeepCopy();
 
             itemdataList.Add(item);
         }
     }
+
+    public async UniTask ItemMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
+    {
+        switch (targetGrid)
+        {
+            case var grid when grid == weaponGrid:
+                {
+                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
+                    {
+                        Debug.Log("StashToWeapon");
+                        await ItemMoveOrChange(startGrid, targetGrid);
+                        targetGrid.itemData.isEquip = (int)IsEquip.YES;
+                        targetGrid.itemData.gridIdx = 0;
+
+                        //장착하고, 아이템데이타 서로 교환하고, 인스턴시에이트 다시해서 각각에 채워넣기
+                        //startgrid에 있는 isEquip = 1, targetGrid에 있는 isEquip = 0;
+                        //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
+                    }
+                }
+                break;
+
+            case var grid when grid == ArmorGrid:
+                {
+                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Armor)
+                    {
+                        Debug.Log("StashToArmor");
+
+                        await ItemMoveOrChange(startGrid, targetGrid);
+                        targetGrid.itemData.isEquip = (int)IsEquip.YES;
+                        targetGrid.itemData.gridIdx = 0;
+                    }
+                }
+                break;
+
+            case var grid when AccessoryGridList.Contains(grid):
+                {
+                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
+                    {
+                        Debug.Log("StashToAccessory");
+
+                        int targetGridIdx = AccessoryGridList.IndexOf(grid);
+
+                        await ItemMoveOrChange(startGrid, targetGrid);
+                        targetGrid.itemData.isEquip = (int)IsEquip.YES;
+                        targetGrid.itemData.gridIdx = targetGridIdx;
+                    }
+                }
+                break;
+
+            default:
+                {
+                    await IsStashToStashMoveCheck(startGrid, targetGrid);
+
+                    //int targetGridIdx = invenGridList.IndexOf(targetGrid);
+
+                    //await ItemMoveOrChange(startGrid, targetGrid);
+
+
+
+                }
+                break;
+        }
+
+        async UniTask IsStashToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
+        {
+            int targetGridIdx = invenGridList.IndexOf(targetGrid);
+
+            if (targetGrid.itemData != null)
+            {
+                switch (startGrid)
+                {
+                    case var grid when grid == weaponGrid:
+                        {
+                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
+                            {
+                                Debug.Log("WeaponToStash");                
+                                await ItemMoveOrChange(startGrid, targetGrid);
+
+                                //장착하고, 아이템데이타 서로 교환하고, 인스턴시에이트 다시해서 각각에 채워넣기
+                                //startgrid에 있는 isEquip = 1, targetGrid에 있는 isEquip = 0;
+                                //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
+                            }
+                        }
+                        break;
+
+                    case var grid when grid == ArmorGrid:
+                        {
+                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Armor)
+                            {
+                                Debug.Log("ArmorToStash");
+                                await ItemMoveOrChange(startGrid, targetGrid);
+                            }
+                        }
+                        break;
+
+                    case var grid when AccessoryGridList.Contains(grid):
+                        {
+                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
+                            {
+                                Debug.Log("AccessoryToStash");
+                                await ItemMoveOrChange(startGrid, targetGrid);                           
+                            }
+                        }
+                        break;
+
+                    default:
+                        {
+                            Debug.Log("StashToStash");
+                            //stash to stash
+                            await ItemMoveOrChange(startGrid, targetGrid);
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                Debug.Log("NULL~");
+
+                await ItemMoveOrChange(startGrid, targetGrid);
+            }
+
+            targetGrid.itemData.isEquip = (int)IsEquip.NO;
+            targetGrid.itemData.gridIdx = targetGridIdx;
+        }
+
+
+        async UniTask ItemMoveOrChange(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
+        {
+            if (targetGrid.itemData == null)
+            {
+                var data = startGrid.itemData.DeepCopy();
+
+                targetGrid.itemData = data;
+                Instantiate(startGrid.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
+
+                startGrid.itemData = null;
+                Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
+            }
+            else
+            {
+                ItemData startItem = startGrid.itemData.DeepCopy();
+                ItemData targetItem = targetGrid.itemData.DeepCopy();
+
+                startItem.isEquip = targetGrid.itemData.isEquip;
+                targetItem.isEquip = startGrid.itemData.isEquip;
+
+                startItem.gridIdx = targetGrid.itemData.gridIdx;
+                targetItem.gridIdx = startGrid.itemData.gridIdx;
+
+                startGrid.itemData = targetItem;
+                targetGrid.itemData = startItem;
+
+                Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
+                Destroy(targetGrid.itemImgParent.GetChild(0).gameObject);
+
+                await MakeInvenItem(string.Format(GScriptAddress.invenItem, startGrid.itemData.itemKey), startGrid.itemImgParent);
+                await MakeInvenItem(string.Format(GScriptAddress.invenItem, targetGrid.itemData.itemKey), targetGrid.itemImgParent);
+            }
+        }
+
+
+
+
+    }
+
+
+
 }

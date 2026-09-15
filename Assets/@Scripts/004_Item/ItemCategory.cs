@@ -12,3 +12,9 @@ public enum EquipmentType
     Armor,
     Accessory
 }
+
+public enum IsEquip
+{
+    NO = 0,
+    YES = 1
+}

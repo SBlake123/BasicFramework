@@ -11,7 +11,7 @@ public enum InventoryEmpty
 
 
 public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler, IEndDragHandler, IBeginDragHandler, IPointerClickHandler
-{ 
+{
     public RectTransform dragObject { get; set; }
 
     public InventoryGrid_000_Base inventoryGrid_000_Base; //데이터 불러오기
@@ -130,21 +130,7 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
 
     private void MoveItem(InventoryGrid_000_Base targetGrid)
     {
-        switch (targetGrid.itemData)
-        {
-            case null:
-                {
-                    targetGrid.itemData = inventoryGrid_000_Base.itemData.DeepCopy();
-                    Instantiate(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
-
-                    Destroy(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject);
-                    inventoryGrid_000_Base.itemData = null;
-
-
-
-                    break;
-                }
-        }
+        inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, targetGrid);
     }
 
     public void OnPointerClick(PointerEventData eventData)
