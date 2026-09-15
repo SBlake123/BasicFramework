@@ -177,6 +177,9 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = 0;
 
+                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData);
+
+
                         //장착 무기 갱신
                     }
                 }
@@ -191,6 +194,9 @@ public partial class Inventory_000_Base : MonoBehaviour
                         await ItemMoveOrChange(startGrid, targetGrid);
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = 0;
+
+                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData);
+
                     }
                 }
                 break;
@@ -206,6 +212,9 @@ public partial class Inventory_000_Base : MonoBehaviour
                         await ItemMoveOrChange(startGrid, targetGrid);
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = targetGridIdx;
+
+                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData);
+
                     }
                 }
                 break;
@@ -223,6 +232,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                 }
                 break;
         }
+
 
         //항상 장착 아이템 여부 확인하고 갱신해줘야함.
 
@@ -244,6 +254,9 @@ public partial class Inventory_000_Base : MonoBehaviour
                                 //장착하고, 아이템데이타 서로 교환하고, 인스턴시에이트 다시해서 각각에 채워넣기
                                 //startgrid에 있는 isEquip = 1, targetGrid에 있는 isEquip = 0;
                                 //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
+
+                                await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData);
+
                             }
                         }
                         break;
@@ -254,6 +267,9 @@ public partial class Inventory_000_Base : MonoBehaviour
                             {
                                 Debug.Log("ArmorToStash");
                                 await ItemMoveOrChange(startGrid, targetGrid);
+
+                                await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData);
+
                             }
                         }
                         break;
@@ -263,7 +279,9 @@ public partial class Inventory_000_Base : MonoBehaviour
                             if (targetGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
                             {
                                 Debug.Log("AccessoryToStash");
-                                await ItemMoveOrChange(startGrid, targetGrid);                           
+                                await ItemMoveOrChange(startGrid, targetGrid);
+
+                                await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData);
                             }
                         }
                         break;

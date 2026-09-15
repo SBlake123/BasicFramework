@@ -42,8 +42,6 @@ public class DataManager : Singleton<DataManager>
             if (saveDic.ContainsKey(item.itemId)) continue;
 
             saveDic.Add(item.itemId, item);
-
-            Debug.Log($"{item.itemId}");
         }
 
 

@@ -44,30 +44,87 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     }
 
+    public async UniTask PlayerEquipmentSetting()
+    {
+        foreach (var item in playerIngameData.invenItems)
+        {
+            if (item.isEquip == (int)IsEquip.YES)
+            {
+                switch ((EquipmentType)item.equipmentType)
+                {
+                    case EquipmentType.Weapon:
+                        {
+                            ItemData currentWeaponData = item.DeepCopy();
+                            this.currentWeaponData = currentWeaponData;
+
+                            Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
+
+                            player.currentWeapon = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<WeaponBase>();
+                        }
+                        break;
+
+                    case EquipmentType.Shield:
+                        {
+                            ItemData currentShieldData = item.DeepCopy();
+                            this.currentShieldData = currentShieldData;
+                            Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
+
+                            player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
     public async UniTask CurrentItemRefresh(ItemData itemData)
     {
+        if (itemData == null) return;
         if (itemData.isEquip == (int)IsEquip.NO) return;
 
         switch ((EquipmentType)itemData.equipmentType)
         {
             case EquipmentType.Weapon:
                 {
+                    this.currentWeaponData = null;
+                    player.currentWeapon = null;
+                    if (player.playerSkinBase.weaponTrf.childCount > 0)
+                        Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+
+
                     ItemData currentWeaponData = itemData.DeepCopy();
                     this.currentWeaponData = currentWeaponData;
+
+                    Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
+
+                    player.currentWeapon = player.playerSkinBase.weaponTrf.GetChild(0).GetComponent<WeaponBase>();
                     //데이터 기반으로 만들어야됨 player 위치에 
                 }
                 break;
 
             case EquipmentType.Shield:
                 {
+                    this.currentShieldData = null;
+                    player.currentShield = null;
+
+                    if (player.playerSkinBase.shieldTrf.childCount > 0)
+                        Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+
                     ItemData currentShieldData = itemData.DeepCopy();
                     this.currentShieldData = currentShieldData;
+                    Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
+
+                    player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
                 }
                 break;
 
             case EquipmentType.Accessory:
                 {
                     ItemData currentAccessoryData = itemData.DeepCopy();
+                    currentAccessoryDataArr[currentAccessoryData.gridIdx] = null;
+
+
+
                     currentAccessoryDataArr[currentAccessoryData.gridIdx] = currentAccessoryData;
                 }
                 break;

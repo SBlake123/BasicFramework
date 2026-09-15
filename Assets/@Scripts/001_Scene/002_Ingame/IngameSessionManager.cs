@@ -35,7 +35,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         ConnectVirtualJoystick();
     }
 
-    public void BeginRaid()
+    public async UniTask BeginRaid()
     {
         if (IsRaidActive)
         {
@@ -45,6 +45,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         PlayerDataManager.Instance.PlayerLoad();
         PlayerDataSetting();
         DummyDataSetting();
+        await PlayerEquipmentSetting();
         IsRaidActive = true;
 
         ConnectVirtualJoystick();

@@ -246,7 +246,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
     private string lastKey = "";
 
-    public async UniTask<T> LoadAsset<T>(string key, Transform parent = null, Vector3? position = null, Quaternion? rotation = null) where T : UnityEngine.Object
+    public async UniTask<T> LoadAsset<T>(string key) where T : UnityEngine.Object //, Transform parent = null, Vector3? position = null, Quaternion? rotation = null) where T : UnityEngine.Object
     {
         key = RefineKey();
 
@@ -267,7 +267,6 @@ public class ResourceManager : Singleton<ResourceManager>
 
         try
         {
-
             Debug.Log(key);
             return (T)obj;
         }

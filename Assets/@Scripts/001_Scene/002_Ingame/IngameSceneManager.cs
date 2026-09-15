@@ -118,7 +118,7 @@ public class IngameSceneManager : StateBaseSceneManager
                 break;
 
             case IngameSceneState.LOADING:
-                IngameSessionManager.Instance.BeginRaid();
+                await IngameSessionManager.Instance.BeginRaid();
                 break;
 
             case IngameSceneState.INGAME:
