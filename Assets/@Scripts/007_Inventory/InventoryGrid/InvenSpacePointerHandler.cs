@@ -16,14 +16,16 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
 
     public InventoryGrid_000_Base inventoryGrid_000_Base; //데이터 불러오기
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public async void OnBeginDrag(PointerEventData eventData)
     {
         switch (inventoryGrid_000_Base.itemData)
         {
             case not null:
                 {
                     //var prefab = Resources.Load<GameObject>("Sword");
-                    var instance = Instantiate(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject, IngameUIManager.Instance.hudCanvas.transform, false);
+                    //GameObject instance = ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.invenItem, inventoryGrid_000_Base.itemData.itemKey), IngameUIManager.Instance.hudCanvas.transform);
+                    var instance = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.invenItem, inventoryGrid_000_Base.itemData.itemKey), IngameUIManager.Instance.hudCanvas.transform);
+                   // var instance = Instantiate(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject, IngameUIManager.Instance.hudCanvas.transform, false);
 
                     //var instance = Instantiate(prefab, IngameUIManager.Instance.hudCanvas.transform, false);
                     dragObject = instance.GetComponent<RectTransform>();
@@ -97,13 +99,13 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                             MoveItem(targetGrid);
                             break;
                     }
-                    Destroy(dragObject.gameObject);
+                    ObjectPool.Instance.PushToPool(dragObject.gameObject);
                     dragObject = null;
                     break;
                 }
             default:
                 {
-                    Destroy(dragObject.gameObject);
+                    ObjectPool.Instance.PushToPool(dragObject.gameObject);
                     dragObject = null;
                     break;
                 }
@@ -112,6 +114,8 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
 
     private void MoveDragObject(PointerEventData eventData)
     {
+        if (dragObject == null) return;
+
         var canvasRect = (RectTransform)IngameUIManager.Instance.hudCanvas.transform;
 
         var camera = IngameUIManager.Instance.hudCanvas.renderMode == RenderMode.ScreenSpaceOverlay

@@ -5,7 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class PooledObject : MonoBehaviour
 {
-    // Start is called before the first frame update
     public string name { get; set; }
     public GameObject prefab { get; set; }
     public GameObject poolParent { get; set; }

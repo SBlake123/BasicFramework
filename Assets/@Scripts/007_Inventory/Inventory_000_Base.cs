@@ -101,13 +101,17 @@ public partial class Inventory_000_Base : MonoBehaviour
         if (weaponGrid.itemData != null)
         {
             weaponGrid.itemData = null;
-            Destroy(weaponGrid.itemImgParent.GetChild(0).gameObject);
+
+            ObjectPool.Instance.PushToPool(weaponGrid.itemImgParent.GetChild(0).gameObject);
+            //Destroy(weaponGrid.itemImgParent.GetChild(0).gameObject);
         }
 
         if (ArmorGrid.itemData != null)
         {
             ArmorGrid.itemData = null;
-            Destroy(ArmorGrid.itemImgParent.GetChild(0).gameObject);
+            ObjectPool.Instance.PushToPool(ArmorGrid.itemImgParent.GetChild(0).gameObject);
+
+            //Destroy(ArmorGrid.itemImgParent.GetChild(0).gameObject);
         }
 
         for (int i = 0; i < invenGridList.Count; i++)
@@ -115,7 +119,9 @@ public partial class Inventory_000_Base : MonoBehaviour
             if (invenGridList[i].itemData != null)
             {
                 invenGridList[i].itemData = null;
-                Destroy(invenGridList[i].itemImgParent.GetChild(0).gameObject);
+                ObjectPool.Instance.PushToPool(invenGridList[i].itemImgParent.GetChild(0).gameObject);
+
+                //Destroy(invenGridList[i].itemImgParent.GetChild(0).gameObject);
             }
 
         }
@@ -125,13 +131,17 @@ public partial class Inventory_000_Base : MonoBehaviour
             if (AccessoryGridList[i].itemData != null)
             {
                 AccessoryGridList[i].itemData = null;
-                Destroy(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
+                ObjectPool.Instance.PushToPool(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
+
+                //Destroy(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
             }
         }
     }
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
-        Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(ItemName), itemRect);
+        await ObjectPool.Instance.PopFromPool(ItemName, itemRect);
+
+        //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(ItemName), itemRect);
 
         //var prefab = Resources.Load<GameObject>(ItemName);
         //Instantiate(prefab, itemRect, false);
@@ -337,12 +347,24 @@ public partial class Inventory_000_Base : MonoBehaviour
             }
             else
             {
-                Debug.Log("NULL~");
+                switch (startGrid)
+                {
+                    case var grid when invenGridList.Contains(grid):
+                        {
+                            await ItemMoveOrChange(startGrid, targetGrid);
+                        }
+                        break;
 
-                await ItemMoveOrChange(startGrid, targetGrid);
+                    default:
+                        {
+                            await ItemMoveOrChange(startGrid, targetGrid);
 
-                await IngameSessionManager.Instance.CurrentItemRefresh((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
-            }
+                            await IngameSessionManager.Instance.CurrentItemRefresh((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
+                        }
+                        break;
+                }
+                //targetgrid은 아이템 없는 빈 칸 stash에서 지금 
+            };
 
             targetGrid.itemData.isEquip = (int)IsEquip.NO;
             targetGrid.itemData.gridIdx = targetGridIdx;
@@ -355,10 +377,15 @@ public partial class Inventory_000_Base : MonoBehaviour
                 var data = startGrid.itemData.DeepCopy();
 
                 targetGrid.itemData = data;
-                Instantiate(startGrid.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
+
+                await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.invenItem, startGrid.itemData.itemKey), targetGrid.itemImgParent);
+
+                //Instantiate(startGrid.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
 
                 startGrid.itemData = null;
-                Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
+
+                ObjectPool.Instance.PushToPool(startGrid.itemImgParent.GetChild(0).gameObject);
+                //Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
             }
             else
             {
@@ -374,8 +401,11 @@ public partial class Inventory_000_Base : MonoBehaviour
                 startGrid.itemData = targetItem;
                 targetGrid.itemData = startItem;
 
-                Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
-                Destroy(targetGrid.itemImgParent.GetChild(0).gameObject);
+                ObjectPool.Instance.PushToPool(startGrid.itemImgParent.GetChild(0).gameObject);
+                ObjectPool.Instance.PushToPool(targetGrid.itemImgParent.GetChild(0).gameObject);
+
+                //Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
+                //Destroy(targetGrid.itemImgParent.GetChild(0).gameObject);
 
                 await MakeInvenItem(string.Format(GScriptAddress.invenItem, startGrid.itemData.itemKey), startGrid.itemImgParent);
                 await MakeInvenItem(string.Format(GScriptAddress.invenItem, targetGrid.itemData.itemKey), targetGrid.itemImgParent);

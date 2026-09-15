@@ -57,7 +57,9 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                             ItemData currentWeaponData = item.DeepCopy();
                             this.currentWeaponData = currentWeaponData;
 
-                            Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
+                            await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.weaponTrf);
+
+                            //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
 
                             player.currentWeapon = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<WeaponBase>();
                         }
@@ -67,7 +69,10 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                         {
                             ItemData currentShieldData = item.DeepCopy();
                             this.currentShieldData = currentShieldData;
-                            Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
+
+                            await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
+
+                            //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
 
                             player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
                         }
@@ -89,13 +94,17 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     this.currentWeaponData = null;
                     player.currentWeapon = null;
                     if (player.playerSkinBase.weaponTrf.childCount > 0)
-                        Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                        ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                        //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
 
 
                     ItemData currentWeaponData = itemData.DeepCopy();
                     this.currentWeaponData = currentWeaponData;
 
-                    Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
+                    await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.weaponTrf);
+
+
+                    //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
 
                     player.currentWeapon = player.playerSkinBase.weaponTrf.GetChild(0).GetComponent<WeaponBase>();
                     //데이터 기반으로 만들어야됨 player 위치에 
@@ -108,11 +117,16 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     player.currentShield = null;
 
                     if (player.playerSkinBase.shieldTrf.childCount > 0)
-                        Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+                        ObjectPool.Instance.PushToPool(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+
+                    //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
 
                     ItemData currentShieldData = itemData.DeepCopy();
                     this.currentShieldData = currentShieldData;
-                    Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
+
+                    await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
+
+                    //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
 
                     player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
                 }
@@ -140,7 +154,9 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     this.currentWeaponData = null;
                     player.currentWeapon = null;
                     if (player.playerSkinBase.weaponTrf.childCount > 0)
-                        Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                        ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+
+                        //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
                     //데이터 기반으로 만들어야됨 player 위치에 
                 }
                 break;
@@ -151,7 +167,9 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     player.currentShield = null;
 
                     if (player.playerSkinBase.shieldTrf.childCount > 0)
-                        Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+                        ObjectPool.Instance.PushToPool(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+
+                    //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
                 }
                 break;
 
