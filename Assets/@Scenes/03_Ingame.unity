@@ -163742,7 +163742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hudCanvas: {fileID: 1558365261}
-  invenGridArr:
+  invenGridList:
   - {fileID: 893768471}
   - {fileID: 1107359859}
   - {fileID: 1540245671}
@@ -163760,7 +163760,7 @@ MonoBehaviour:
   - {fileID: 1938972394}
   weaponGrid: {fileID: 1170498435}
   ArmorGrid: {fileID: 792988986}
-  AccessoryGrid:
+  AccessoryGridList:
   - {fileID: 1151437257}
   - {fileID: 1847758212}
   - {fileID: 1892596107}
@@ -165031,10 +165031,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 96970736}
   hudCanvas: {fileID: 1558365261}
-  createVirtualJoystickInEditor: 1
-  mapId: 03_Ingame
   checkpointIntervalSeconds: 30
   virtualJoystick: {fileID: 209922004}
+  playerHp: 0
+  playerStamina: 0
+  playerIngameData:
+    playerId: local-player
+    money: 0
+    playerHp: 0
+    playerStamina: 0
+    invenItems: []
 --- !u!1 &798197129
 GameObject:
   m_ObjectHideFlags: 0

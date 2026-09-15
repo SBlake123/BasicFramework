@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ public partial class Inventory_000_Base : MonoBehaviour
         {
             InventoryInit();
         }
-   
+
         await InventoryItemSetting();
         isFirstSetting = false;
     }
@@ -41,9 +42,17 @@ public partial class Inventory_000_Base : MonoBehaviour
             grid.Inventory_000_Base = this;
     }
 
+
+
     public async UniTask InventoryItemSetting()
     {
+
+        Debug.Log("ItemSetting");
+        InventoryItemInit();
+
         var items = IngameSessionManager.Instance.playerIngameData.invenItems;
+
+        Debug.Log(JsonConvert.SerializeObject(items, Formatting.Indented));
 
         foreach (var item in items)
         {
@@ -86,11 +95,74 @@ public partial class Inventory_000_Base : MonoBehaviour
             await MakeInvenItem(prefabKey, grid.itemImgParent);
         }
     }
+
+    public void InventoryItemInit()
+    {
+        if (weaponGrid.itemData != null)
+        {
+            weaponGrid.itemData = null;
+            Destroy(weaponGrid.itemImgParent.GetChild(0).gameObject);
+        }
+
+        if (ArmorGrid.itemData != null)
+        {
+            ArmorGrid.itemData = null;
+            Destroy(ArmorGrid.itemImgParent.GetChild(0).gameObject);
+        }
+
+        for (int i = 0; i < invenGridList.Count; i++)
+        {
+            if (invenGridList[i].itemData != null)
+            {
+                invenGridList[i].itemData = null;
+                Destroy(invenGridList[i].itemImgParent.GetChild(0).gameObject);
+            }
+
+        }
+
+        for (int i = 0; i < AccessoryGridList.Count; i++)
+        {
+            if (AccessoryGridList[i].itemData != null)
+            {
+                AccessoryGridList[i].itemData = null;
+                Destroy(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
+            }
+        }
+    }
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
         Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(ItemName), itemRect);
 
         //var prefab = Resources.Load<GameObject>(ItemName);
         //Instantiate(prefab, itemRect, false);
+    }
+
+    public async UniTask InventoryClosed()
+    {
+        IngameSessionManager.Instance.playerIngameData.invenItems.Clear();
+
+        AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, weaponGrid);
+        AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, ArmorGrid);
+
+        foreach (var item in AccessoryGridList)
+        {
+            AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, item);
+        }
+
+        foreach (var item in invenGridList)
+        {
+            AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, item);
+        }
+
+        void AddGridItem(List<ItemData> itemdataList, InventoryGrid_000_Base inventoryGrid_000_Base)
+        {
+            if (inventoryGrid_000_Base.itemData == null) return;
+
+            Debug.Log("AddItem");
+           
+            ItemData item = inventoryGrid_000_Base.itemData.DeepCopy();
+
+            itemdataList.Add(item);
+        }
     }
 }

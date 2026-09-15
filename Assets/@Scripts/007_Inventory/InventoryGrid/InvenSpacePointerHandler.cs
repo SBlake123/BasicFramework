@@ -134,7 +134,7 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
         {
             case null:
                 {
-                    targetGrid.itemData = inventoryGrid_000_Base.itemData;
+                    targetGrid.itemData = inventoryGrid_000_Base.itemData.DeepCopy();
                     Instantiate(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
 
                     Destroy(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject);

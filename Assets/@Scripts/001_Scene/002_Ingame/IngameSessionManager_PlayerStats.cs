@@ -27,9 +27,9 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
 
     public void DummyDataSetting()
-    {
-        playerIngameData.invenItems[0] = DataManager.Instance.GetItemData(1001);
-        playerIngameData.invenItems[1] = DataManager.Instance.GetItemData(1002);
+    { 
+        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1001));
+        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1002));
     }
 
     //일단 인벤토리부터 해주자..
