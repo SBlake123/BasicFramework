@@ -71,7 +71,7 @@ public partial class Inventory_000_Base : MonoBehaviour
             {
                 if (item.equipmentType == (int)EquipmentType.Weapon && item.gridIdx == 0)
                     grid = weaponGrid;
-                else if (item.equipmentType == (int)EquipmentType.Armor && item.gridIdx == 0)
+                else if (item.equipmentType == (int)EquipmentType.Shield && item.gridIdx == 0)
                     grid = ArmorGrid;
                 else if (item.equipmentType == (int)EquipmentType.Accessory &&
                          item.gridIdx >= 0 && item.gridIdx < AccessoryGridList.Count)
@@ -177,16 +177,14 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = 0;
 
-                        //장착하고, 아이템데이타 서로 교환하고, 인스턴시에이트 다시해서 각각에 채워넣기
-                        //startgrid에 있는 isEquip = 1, targetGrid에 있는 isEquip = 0;
-                        //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
+                        //장착 무기 갱신
                     }
                 }
                 break;
 
             case var grid when grid == ArmorGrid:
                 {
-                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Armor)
+                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Shield)
                     {
                         Debug.Log("StashToArmor");
 
@@ -226,6 +224,8 @@ public partial class Inventory_000_Base : MonoBehaviour
                 break;
         }
 
+        //항상 장착 아이템 여부 확인하고 갱신해줘야함.
+
         async UniTask IsStashToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
         {
             int targetGridIdx = invenGridList.IndexOf(targetGrid);
@@ -250,7 +250,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
                     case var grid when grid == ArmorGrid:
                         {
-                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Armor)
+                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Shield)
                             {
                                 Debug.Log("ArmorToStash");
                                 await ItemMoveOrChange(startGrid, targetGrid);
@@ -288,7 +288,6 @@ public partial class Inventory_000_Base : MonoBehaviour
             targetGrid.itemData.gridIdx = targetGridIdx;
         }
 
-
         async UniTask ItemMoveOrChange(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
         {
             if (targetGrid.itemData == null)
@@ -322,9 +321,6 @@ public partial class Inventory_000_Base : MonoBehaviour
                 await MakeInvenItem(string.Format(GScriptAddress.invenItem, targetGrid.itemData.itemKey), targetGrid.itemImgParent);
             }
         }
-
-
-
 
     }
 

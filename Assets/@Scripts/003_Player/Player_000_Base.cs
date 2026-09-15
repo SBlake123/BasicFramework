@@ -6,8 +6,7 @@ using UnityEngine;
 public partial class Player : MonoBehaviour
 {
     public WeaponBase currentWeapon;
-    public WeaponBase currentShield;
-
+    public ShieldBase currentShield;
     private void Update()
     {
         ReadMoveInput();
