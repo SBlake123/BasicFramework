@@ -245,6 +245,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8692006418812507354}
   - component: {fileID: 3211114052418208058}
+  - component: {fileID: -6525172796611293932}
   m_Layer: 6
   m_Name: Sword_Equip
   m_TagString: Untagged
@@ -284,6 +285,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackEffect: {fileID: 3097308059515680971}
   weaponHitBox: {fileID: 8088769733079907097}
+--- !u!114 &-6525172796611293932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5956996921117413264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647ec52a50a45d34db36e6853968cf11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8088769733079907097
 GameObject:
   m_ObjectHideFlags: 0

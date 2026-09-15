@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2754978407514868458}
   - component: {fileID: 8941741669246341083}
   - component: {fileID: 5174143054639100280}
+  - component: {fileID: -1901528857243403099}
   m_Layer: 0
   m_Name: SoundDisk
   m_TagString: Untagged
@@ -142,3 +143,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-1901528857243403099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8347989960684497276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647ec52a50a45d34db36e6853968cf11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 8703229292985874773}
   - component: {fileID: 7526478833942024008}
   - component: {fileID: 7118871123777251916}
+  - component: {fileID: -562788828989640006}
   m_Layer: 6
   m_Name: AmethystShield_Equip
   m_TagString: Untagged
@@ -183,3 +184,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guardEffect: {fileID: 2694264834601328252}
+--- !u!114 &-562788828989640006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8302253091592643370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647ec52a50a45d34db36e6853968cf11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

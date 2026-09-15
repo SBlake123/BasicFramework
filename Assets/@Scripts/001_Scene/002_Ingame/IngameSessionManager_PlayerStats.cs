@@ -77,7 +77,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
     }
 
-    public async UniTask CurrentItemRefresh(ItemData itemData)
+    public async UniTask CurrentItemRefresh(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
     {
         if (itemData == null) return;
         if (itemData.isEquip == (int)IsEquip.NO) return;
@@ -131,6 +131,37 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
     }
 
+    public async UniTask CurrentItemRefresh(EquipmentType equipmentType, IsEquip isEquip)
+    {
+        switch (equipmentType)
+        {
+            case EquipmentType.Weapon:
+                {
+                    this.currentWeaponData = null;
+                    player.currentWeapon = null;
+                    if (player.playerSkinBase.weaponTrf.childCount > 0)
+                        Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                    //데이터 기반으로 만들어야됨 player 위치에 
+                }
+                break;
+
+            case EquipmentType.Shield:
+                {
+                    this.currentShieldData = null;
+                    player.currentShield = null;
+
+                    if (player.playerSkinBase.shieldTrf.childCount > 0)
+                        Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+                }
+                break;
+
+            case EquipmentType.Accessory:
+                {
+                    
+                }
+                break;
+        }
+    }
 
     //일단 인벤토리부터 해주자..
     //플레이어 현재 아이템, 상태, 스탯값 다 계산하기.

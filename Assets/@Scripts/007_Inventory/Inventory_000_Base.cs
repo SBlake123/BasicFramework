@@ -177,7 +177,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = 0;
 
-                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData);
+                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
 
 
                         //장착 무기 갱신
@@ -195,7 +195,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = 0;
 
-                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData);
+                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData, EquipmentType.Shield, IsEquip.YES);
 
                     }
                 }
@@ -213,7 +213,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = targetGridIdx;
 
-                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData);
+                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
 
                     }
                 }
@@ -221,7 +221,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
             default:
                 {
-                    await IsStashToStashMoveCheck(startGrid, targetGrid);
+                    await ToStashMoveCheck(startGrid, targetGrid);
 
                     //int targetGridIdx = invenGridList.IndexOf(targetGrid);
 
@@ -236,7 +236,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         //항상 장착 아이템 여부 확인하고 갱신해줘야함.
 
-        async UniTask IsStashToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
+        async UniTask ToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
         {
             int targetGridIdx = invenGridList.IndexOf(targetGrid);
 
@@ -255,7 +255,21 @@ public partial class Inventory_000_Base : MonoBehaviour
                                 //startgrid에 있는 isEquip = 1, targetGrid에 있는 isEquip = 0;
                                 //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
 
-                                await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData);
+                                if(startGrid.itemData == null)
+                                {
+                                    await IngameSessionManager.Instance.CurrentItemRefresh(EquipmentType.Weapon, IsEquip.NO);
+
+
+                                    //없어진거임
+                                }
+                                else
+                                {
+                                    await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
+
+
+                                    //갱신 ㄱㄱ
+                                }
+
 
                             }
                         }
@@ -268,7 +282,20 @@ public partial class Inventory_000_Base : MonoBehaviour
                                 Debug.Log("ArmorToStash");
                                 await ItemMoveOrChange(startGrid, targetGrid);
 
-                                await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData);
+                                if (startGrid.itemData == null)
+                                {
+                                    await IngameSessionManager.Instance.CurrentItemRefresh(EquipmentType.Shield, IsEquip.NO);
+
+
+                                    //없어진거임
+                                }
+                                else
+                                {
+                                    await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData, EquipmentType.Shield, IsEquip.YES);
+                                    //갱신 ㄱㄱ
+                                }
+
+                                
 
                             }
                         }
@@ -281,7 +308,20 @@ public partial class Inventory_000_Base : MonoBehaviour
                                 Debug.Log("AccessoryToStash");
                                 await ItemMoveOrChange(startGrid, targetGrid);
 
-                                await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData);
+                                if (startGrid.itemData == null)
+                                {
+                                    await IngameSessionManager.Instance.CurrentItemRefresh(EquipmentType.Accessory, IsEquip.NO);
+
+
+                                    //없어진거임
+                                }
+                                else
+                                {
+                                    await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
+                                    //갱신 ㄱㄱ
+                                }
+
+                                
                             }
                         }
                         break;
@@ -300,6 +340,8 @@ public partial class Inventory_000_Base : MonoBehaviour
                 Debug.Log("NULL~");
 
                 await ItemMoveOrChange(startGrid, targetGrid);
+
+                await IngameSessionManager.Instance.CurrentItemRefresh((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
             }
 
             targetGrid.itemData.isEquip = (int)IsEquip.NO;
