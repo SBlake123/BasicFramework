@@ -20,7 +20,27 @@ public class ItemData
     public float attackDamage;
     public float attackSpeed;
     public float attackRange;
+    public ItemData DeepCopy()
+    {
+        return new ItemData
+        {
+            itemId = itemId,
+            itemName = itemName,
+            itemNameId = itemNameId,
+            icon = icon,
+            itemKey = itemKey,
 
+            category = category,
+            equipmentType = equipmentType,
+            canStack = canStack,
+            maxStackAmount = maxStackAmount,
+            healAmount = healAmount,
+
+            attackDamage = attackDamage,
+            attackSpeed = attackSpeed,
+            attackRange = attackRange
+        };
+    }
 
     //public void OnValidate()
     //{

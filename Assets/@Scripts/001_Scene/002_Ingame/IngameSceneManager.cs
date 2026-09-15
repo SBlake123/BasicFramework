@@ -114,7 +114,7 @@ public class IngameSceneManager : StateBaseSceneManager
         switch (CurrentState)
         {
             case IngameSceneState.NONE:
-                IngameSessionManager.Instance.BeginRaid();
+                
                 break;
 
             case IngameSceneState.LOADING:
@@ -123,7 +123,6 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.INGAME:
                 {
-
                     SetGameplayPaused(false);
 
                     //그냥 게임창 상태로 복귀,

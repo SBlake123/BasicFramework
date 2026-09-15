@@ -7,36 +7,32 @@ using UnityEngine;
 /// Owns one raid session. It receives meaningful player changes and creates
 /// checkpoints; it deliberately does not own player movement or combat logic.
 /// </summary>
-public class IngameSessionManager : MonoSingleton<IngameSessionManager>
+public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 {
     public Player player;
     public Canvas hudCanvas;
-    public bool createVirtualJoystickInEditor;
     public float checkpointIntervalSeconds = 30f;
-
     public VirtualJoystick virtualJoystick;
-
     public bool IsRaidActive { get; private set; }
-    public event Action<RaidSessionData> OnRaidCheckpointed;
     public event Action OnRaidExtracted;
     public event Action OnRaidFailed;
 
     public async UniTask Init()
     {
-        TryCreateAndConnectVirtualJoystick();
+        ConnectVirtualJoystick();
         await player.Init();
     }
 
     public void SetPlayer(Player loadedPlayer)
     {
         player = loadedPlayer;
-        TryCreateAndConnectVirtualJoystick();
+        ConnectVirtualJoystick();
     }
 
     public void SetHudCanvas(Canvas loadedHudCanvas)
     {
         hudCanvas = loadedHudCanvas;
-        TryCreateAndConnectVirtualJoystick();
+        ConnectVirtualJoystick();
     }
 
     public void BeginRaid()
@@ -46,11 +42,10 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
             return;
         }
 
-        PlayerDataManager.Instance.LoadOrCreate();
-        PlayerDataManager.Instance.BeginRaid(GSceneName.INGAME_SCENE);
+        PlayerDataManager.Instance.PlayerLoad();
         IsRaidActive = true;
 
-        TryCreateAndConnectVirtualJoystick();
+        ConnectVirtualJoystick();
         CapturePlayerTransform();
         CheckpointLoop().Forget();
     }
@@ -64,24 +59,11 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
         {
             return;
         }
-
-        PlayerDataManager.Instance.UpdateRaidVitals(health, stamina);
-        PlayerDataManager.Instance.RequestCheckpoint();
     }
 
     /// <summary>
     /// Call this from future inventory code after loot, drop, or equipment changes.
     /// </summary>
-    public void ReportRaidInventory(IReadOnlyList<ItemStackData> items)
-    {
-        if (!IsRaidActive)
-        {
-            return;
-        }
-
-        PlayerDataManager.Instance.ReplaceRaidInventory(items);
-        PlayerDataManager.Instance.RequestCheckpoint();
-    }
 
     public async UniTask CompleteExtraction()
     {
@@ -91,7 +73,6 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
 
         CapturePlayerTransform();
-        PlayerDataManager.Instance.CommitExtraction();
         IsRaidActive = false;
         OnRaidExtracted?.Invoke();
         await UniTask.CompletedTask;
@@ -105,7 +86,6 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
 
         CapturePlayerTransform();
-        PlayerDataManager.Instance.CommitDeath();
         IsRaidActive = false;
         OnRaidFailed?.Invoke();
         await UniTask.CompletedTask;
@@ -123,8 +103,6 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
             }
 
             CapturePlayerTransform();
-            PlayerDataManager.Instance.SaveCheckpointNow();
-            OnRaidCheckpointed?.Invoke(PlayerDataManager.Instance.ActiveRaid);
         }
     }
 
@@ -135,23 +113,10 @@ public class IngameSessionManager : MonoSingleton<IngameSessionManager>
             return;
         }
 
-        PlayerDataManager.Instance.UpdateRaidPosition(player.transform.position);
     }
 
-    private void TryCreateAndConnectVirtualJoystick()
+    private void ConnectVirtualJoystick()
     {
-        bool canUseVirtualJoystick = Application.isMobilePlatform || createVirtualJoystickInEditor;
-
-        if (!canUseVirtualJoystick || player == null || virtualJoystick == null)
-        {
-            return;
-        }
-
-        //if (virtualJoystick == null)
-        //{
-        //    virtualJoystick = VirtualJoystick.Create(hudCanvas.transform);
-        //}
-
         virtualJoystick.SetTarget(player);
     }
 }

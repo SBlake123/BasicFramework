@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class SaveLoadManager : Singleton<SaveLoadManager>
 {
-    private string savePath => Path.Combine(Application.persistentDataPath, "SaveData.dat");
+    private string savePath => Path.Combine(Application.persistentDataPath, GScriptAddress.localSaveDataName);
 
 
     //세이브 하는 경우 -> 강제 종료, 종료하겠습니다, 죽었을 때, 상태변화 할 때,

@@ -7,17 +7,15 @@ public partial class Inventory_000_Base : MonoBehaviour
 {
     public Canvas hudCanvas;
 
-    public InventoryGrid_000_Base[] invenGridArr;
+    public List<InventoryGrid_000_Base> invenGridArr = new List<InventoryGrid_000_Base>();
     public InventoryGrid_000_Base weaponGrid;
     public InventoryGrid_000_Base ArmorGrid;
-    public InventoryGrid_000_Base[] AccessoryGrid;
+    public List<InventoryGrid_000_Base> AccessoryGrid = new List<InventoryGrid_000_Base>();
 
     public InventoryGrid_000_Base selectedGrid { get; set; }
 
     public void Start()
     {
-        invenGridArr[0].itemData = DataManager.Instance.GetItemData(1001);
-        invenGridArr[1].itemData = DataManager.Instance.GetItemData(1002);
         InventoryInit();
     }
 
@@ -27,17 +25,19 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         weaponGrid.Inventory_000_Base = this;
         ArmorGrid.Inventory_000_Base = this;
-        for (int i = 0; i < AccessoryGrid.Length; i++)
+        for (int i = 0; i < AccessoryGrid.Count; i++)
         {
             AccessoryGrid[i].Inventory_000_Base = this;
         }
 
-        for (int i = 0; i < invenGridArr.Length; i++)
+        for (int i = 0; i < invenGridArr.Count; i++)
         {
             invenGridArr[i].Inventory_000_Base = this;
 
-            if (invenGridArr[i].itemData != null)
+            if (IngameSessionManager.Instance.ingamePlayerData.stashItems[i] != null)
             {
+                IngameSessionManager.Instance.ingamePlayerData.stashItems[i]
+
                 await MakeInvenItem(string.Format(GScriptAddress.invenItem, invenGridArr[i].itemData.itemKey), invenGridArr[i].itemImgParent);
             }
         }
