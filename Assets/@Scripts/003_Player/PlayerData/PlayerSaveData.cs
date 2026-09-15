@@ -17,7 +17,6 @@ public class PlayerProfileData
     public int money;
     public int playerHp;
     public int playerStamina;
-    public List<ItemData> stashItems = new List<ItemData>();
-    public List<ItemData> equipItems = new List<ItemData>();
+    public List<ItemData> invenItems = new List<ItemData>();
 }
 

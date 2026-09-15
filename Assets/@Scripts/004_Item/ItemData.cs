@@ -13,6 +13,8 @@ public class ItemData
 
     public int category = 0;
     public int equipmentType = 0;
+    public int isEquip = 0;
+    public int gridIdx = 0;
     public int canStack = 0;
     public int maxStackAmount = 0;
     public int healAmount = 0;
@@ -20,6 +22,7 @@ public class ItemData
     public float attackDamage;
     public float attackSpeed;
     public float attackRange;
+
     public ItemData DeepCopy()
     {
         return new ItemData
@@ -28,10 +31,12 @@ public class ItemData
             itemName = itemName,
             itemNameId = itemNameId,
             icon = icon,
-            itemKey = itemKey,
+            itemKey = itemKey,        
 
             category = category,
             equipmentType = equipmentType,
+            isEquip = isEquip,
+            gridIdx = gridIdx,
             canStack = canStack,
             maxStackAmount = maxStackAmount,
             healAmount = healAmount,

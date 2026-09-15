@@ -9,28 +9,27 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     public int playerStamina;
 
 
-    public PlayerProfileData ingamePlayerData;
+    public PlayerProfileData playerIngameData;
 
     public void PlayerDataSetting()
     {
         var profile = PlayerDataManager.Instance.Profile;
 
-        ingamePlayerData = new PlayerProfileData
+        playerIngameData = new PlayerProfileData
         {
             playerId = profile.playerId,
             money = profile.money,
             playerHp = profile.playerHp,
             playerStamina = profile.playerStamina,
-            stashItems = profile.stashItems.ConvertAll(item => item.DeepCopy()),
-            equipItems = profile.equipItems.ConvertAll(item => item.DeepCopy())
+            invenItems = profile.invenItems.ConvertAll(item => item.DeepCopy()),
         };
     }
 
 
     public void DummyDataSetting()
     {
-        ingamePlayerData.stashItems[0] = DataManager.Instance.GetItemData(1001);
-        ingamePlayerData.stashItems[1] = DataManager.Instance.GetItemData(1002);
+        playerIngameData.invenItems[0] = DataManager.Instance.GetItemData(1001);
+        playerIngameData.invenItems[1] = DataManager.Instance.GetItemData(1002);
     }
 
     //일단 인벤토리부터 해주자..

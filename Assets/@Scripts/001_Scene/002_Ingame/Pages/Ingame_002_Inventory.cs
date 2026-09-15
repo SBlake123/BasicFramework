@@ -18,6 +18,6 @@ public class Ingame_002_Inventory : StateBasePage
 
     protected override async UniTask OnAfterFirstSetting()
     {
-
+        await Inventory_000_Base.Init();
     }
 }

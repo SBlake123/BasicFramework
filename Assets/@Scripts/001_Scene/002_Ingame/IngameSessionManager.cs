@@ -43,6 +43,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
 
         PlayerDataManager.Instance.PlayerLoad();
+        PlayerDataSetting();
         IsRaidActive = true;
 
         ConnectVirtualJoystick();
