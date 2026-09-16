@@ -31,6 +31,8 @@ public class MonsterStats
 // XY-plane prototype. Movement intentionally has no pathfinding yet.
 public abstract class Monster_000_Base : MonoBehaviour
 {
+    public Transform damageTrf;
+
     public abstract UniTask ChangeState(int state);
 
     protected abstract UniTask OnStateChange();
@@ -38,4 +40,5 @@ public abstract class Monster_000_Base : MonoBehaviour
     protected abstract UniTask OnAttack();
 
     protected abstract UniTask OnDeath();
+    public abstract UniTask TakeDamage(int attackDamage);
 }

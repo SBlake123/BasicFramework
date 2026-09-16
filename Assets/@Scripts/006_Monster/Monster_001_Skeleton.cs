@@ -346,4 +346,17 @@ public class Monster_001_Skeleton : Monster_000_Base
         stateCts?.Dispose();
     }
 
+    public override async UniTask TakeDamage(int attackDamage)
+    {
+        GameObject obj = await ObjectPool.Instance.PopFromPool(GPrefabName.ATTACK_EFFECT_BASE, (RectTransform)IngameUIManager.Instance.hudCanvas.transform, false);
+
+        obj.transform.position = Camera.main.WorldToScreenPoint(damageTrf.transform.position);
+
+        DamageVal damageVal = obj.GetComponent<DamageVal>();        
+
+        damageVal.SetDamage(attackDamage);
+        damageVal.Play();
+        //몬스터의 방어력 값 계산 후 적용
+    }
+
 }

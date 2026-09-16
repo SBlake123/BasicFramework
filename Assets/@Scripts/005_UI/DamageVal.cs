@@ -8,16 +8,6 @@ public class DamageVal : MonoBehaviour
 {
     [SerializeField] private TMP_Text damageText;
 
-
-    private void OnEnable()
-    {
-        gameObject.SetActive(true);
-
-        SetDamage(223337);
-
-        transform.DOMoveY(transform.position.y + 20f, 0.8f).SetEase(Ease.Linear).OnComplete(()=> gameObject.SetActive(false));      
-    }
-
     public void SetDamage(int damage)
     {
         string value = damage.ToString();
@@ -27,6 +17,13 @@ public class DamageVal : MonoBehaviour
             result += $"<sprite=\"DamageNumber\" index={c - '0'}>";
 
         damageText.text = result;
+    }
+
+    public void Play()
+    {
+        gameObject.SetActive(true);
+        transform.DOKill();
+        transform.DOMoveY(transform.position.y + 20f, 0.8f).SetEase(Ease.Linear).OnComplete(() => ObjectPool.Instance.PushToPool(gameObject));
     }
 }
 

@@ -55,7 +55,7 @@ public class ObjectPool : MonoSingleton<ObjectPool>
         return await PopFromPool(_objName, null);
     }
 
-    public async UniTask<GameObject> PopFromPool(string _objName, Transform parent = null)
+    public async UniTask<GameObject> PopFromPool(string _objName, Transform parent = null, bool isActive = true)
     {
         Debug.Log($"_objName: {_objName}");
 
@@ -71,7 +71,7 @@ public class ObjectPool : MonoSingleton<ObjectPool>
             PooledObject _pooledObj = objectDictionary[_objName].Pop();
 
             _obj = _pooledObj.gameObject;
-            _obj.SetActive(true);
+            _obj.SetActive(isActive);
 
             //if (_obj.activeSelf)
             //{
@@ -169,7 +169,7 @@ public class ObjectPool : MonoSingleton<ObjectPool>
         //}
     }
 
-    public async UniTask<GameObject> PopFromPool(string _objName, RectTransform parent = null)
+    public async UniTask<GameObject> PopFromPool(string _objName, RectTransform parent = null, bool isActive = true)
     {
         GameObject _obj;
 
@@ -183,7 +183,7 @@ public class ObjectPool : MonoSingleton<ObjectPool>
             PooledObject _pooledObj = objectDictionary[_objName].Pop();
 
             _obj = _pooledObj.gameObject;
-            _obj.SetActive(true);
+            _obj.SetActive(isActive);
 
             //if (_obj.activeSelf)
             //{

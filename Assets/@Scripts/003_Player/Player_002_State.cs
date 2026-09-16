@@ -28,10 +28,10 @@ public partial class Player : MonoBehaviour
         //{ PlayerState.MOVE, new MoveState()},
         //{ PlayerState.HIT, new HitState() },
         { PlayerState.ATTACK, new AttackState() },
-        { PlayerState.DODGE, new DodgeState()},
+        { PlayerState.DODGE, new DodgeState() },
         { PlayerState.DIE, new DieState() }
     };
-  
+
     bool isAttack = false;
     bool isDodge = false;
     bool isHit = false;
@@ -58,9 +58,18 @@ public partial class Player : MonoBehaviour
             player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;
             player.isAttack = true;
-            await player.currentWeapon.AttackAsync(player, token);
+
+            if (player.currentWeapon != null)
+            {
+                await player.currentWeapon.AttackAsync(player, token);
+            }
+            else
+            {
+
+            }
+
             await player.ChangeState(PlayerState.IDLE);
-            
+
         }
     }
 
@@ -98,7 +107,7 @@ public partial class Player : MonoBehaviour
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
-   
+
         }
     }
 
