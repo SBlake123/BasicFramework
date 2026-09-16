@@ -43,9 +43,10 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
 
         PlayerDataManager.Instance.PlayerLoad();
-        PlayerDataSetting();
-        DummyDataSetting();
-        await PlayerEquipmentSetting();
+        SetPlayerData();
+        SetDummyData();
+        await SetPlayerEquipment();
+        await SetPlayerStatus();
         IsRaidActive = true;
 
         ConnectVirtualJoystick();

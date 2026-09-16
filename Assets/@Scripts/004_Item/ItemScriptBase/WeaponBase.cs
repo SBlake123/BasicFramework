@@ -6,13 +6,40 @@ using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 [Serializable]
-public class WeaponData
+public class WeaponData : ItemData
 {
-    public ItemData itemData;
-
     public float attackDamage = 1f;
     public float attackSpeed = 0.3f;
     public float attackRange = 1f;
+
+    public List<ItemStatModifierData> additionalOptionsList = new List<ItemStatModifierData>();
+
+    public override ItemData DeepCopy()
+    {
+        return new WeaponData
+        {
+            itemId = itemId,
+            itemName = itemName,
+            itemNameId = itemNameId,
+            icon = icon,
+            itemKey = itemKey,
+
+            category = category,
+            equipmentType = equipmentType,
+            isEquip = isEquip,
+            gridIdx = gridIdx,
+            canStack = canStack,
+            maxStackAmount = maxStackAmount,
+            healAmount = healAmount,
+
+            attackDamage = attackDamage,
+            attackSpeed = attackSpeed,
+            attackRange = attackRange,
+
+            additionalOptionsList =
+                additionalOptionsList.ConvertAll(option => option.DeepCopy())
+        };
+    }
 }
 
 public abstract class WeaponBase : MonoBehaviour

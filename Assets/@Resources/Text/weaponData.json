@@ -1,0 +1,9 @@
+[
+  {
+    "itemId": 1001,
+    "itemName": "소드",
+    "attackDamage": 10,
+    "attackSpeed": 0.3,
+    "attackRange": 1
+  }
+]

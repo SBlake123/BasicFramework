@@ -19,11 +19,11 @@ public class ItemData
     public int maxStackAmount = 0;
     public int healAmount = 0;
 
-    public float attackDamage;
-    public float attackSpeed;
-    public float attackRange;
+    //public float attackDamage;
+    //public float attackSpeed;
+    //public float attackRange;
 
-    public ItemData DeepCopy()
+    public virtual ItemData DeepCopy()
     {
         return new ItemData
         {
@@ -41,9 +41,9 @@ public class ItemData
             maxStackAmount = maxStackAmount,
             healAmount = healAmount,
 
-            attackDamage = attackDamage,
-            attackSpeed = attackSpeed,
-            attackRange = attackRange
+            //attackDamage = attackDamage,
+            //attackSpeed = attackSpeed,
+            //attackRange = attackRange
         };
     }
 

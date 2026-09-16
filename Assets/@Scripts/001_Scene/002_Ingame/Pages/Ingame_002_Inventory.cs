@@ -18,6 +18,8 @@ public class Ingame_002_Inventory : StateBasePage
             await Inventory_000_Base.InventoryClosed();
             await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME);
         });
+
+        IngameSessionManager.Instance.playerStatsChanged += Inventory_000_Base.SetInventoryStatusVal;
     }
 
     protected override async UniTask OnAfterFirstSetting()

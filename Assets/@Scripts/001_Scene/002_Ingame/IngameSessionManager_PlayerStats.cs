@@ -3,18 +3,60 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class PlayerRuntimeStats
+{
+    public int currentHp { get; set; }
+    public int maxHp { get; set; } = 60;
+    public int currentStamina { get; set; }
+    public int maxStamina { get; set; } = 100;
+    public float attackDamage { get; set; }
+    public float noWeaponDamage { get; set; } = 1;
+    public float defense { get; set; }
+    public float noShieldDefense { get; set; } = 1;
+    public float attackFlatBonus { get; set; }
+    public float attackPercentBonus { get; set; }
+    public float defenseFlatBonus { get; set; }
+    public float defensePercentBonus { get; set; }
+
+    public void ResetEquipmentBonus()
+    {
+        attackFlatBonus = 0f;
+        attackPercentBonus = 0f;
+
+        defenseFlatBonus = 0f;
+        defensePercentBonus = 0f;
+    }
+
+    public void CalculateAttackDamage(float baseAttackDamage)
+    {
+        attackDamage = (baseAttackDamage + attackFlatBonus) * (1f + attackPercentBonus);
+    }
+
+    public void CalculateDefense(float baseDefense)
+    {
+        defense = (baseDefense + defenseFlatBonus) * (1f + defensePercentBonus);
+    }
+
+    public void CalculateMaxHpAndStanima(float baseHp, float baseStamina)
+    {
+        maxHp = (int)baseHp;
+        maxHp = (int)baseStamina;
+    }
+}
+
+
 public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 {
-    public int playerHp;
-    public int playerStamina;
+    public PlayerRuntimeStats playerStats = new PlayerRuntimeStats();
+    public WeaponData currentWeaponData { get; set; }
+    public ShieldData currentShieldData { get; set; }
+    public ItemData[] currentAccessoryDataArr { get; set; } = new ItemData[3];
+    public PlayerProfileData playerIngameData { get; set; }
 
-    public ItemData currentWeaponData;
-    public ItemData currentShieldData;
-    public ItemData[] currentAccessoryDataArr = new ItemData[3];
+    public event Action playerStatsChanged;
 
-    public PlayerProfileData playerIngameData;
-
-    public void PlayerDataSetting()
+    public void SetPlayerData()
     {
         var profile = PlayerDataManager.Instance.Profile;
 
@@ -28,15 +70,15 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         };
     }
 
-    public void DummyDataSetting()
+    public void SetDummyData()
     {
-        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1001).DeepCopy());
-        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData(1002).DeepCopy());
+        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy());
+        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy());
 
-        ItemData itemData_1 = DataManager.Instance.GetItemData(1001).DeepCopy();
+        ItemData itemData_1 = DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy();
         itemData_1.gridIdx = 10;
 
-        ItemData itemData_3 = DataManager.Instance.GetItemData(1002).DeepCopy();
+        ItemData itemData_3 = DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy();
         itemData_3.gridIdx = 11;
 
         playerIngameData.invenItems.Add(itemData_3);
@@ -44,7 +86,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     }
 
-    public async UniTask PlayerEquipmentSetting()
+    public async UniTask SetPlayerEquipment()
     {
         foreach (var item in playerIngameData.invenItems)
         {
@@ -55,7 +97,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     case EquipmentType.Weapon:
                         {
                             ItemData currentWeaponData = item.DeepCopy();
-                            this.currentWeaponData = currentWeaponData;
+                            this.currentWeaponData = (WeaponData)currentWeaponData;
+
 
                             await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.weaponTrf);
 
@@ -68,7 +111,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     case EquipmentType.Shield:
                         {
                             ItemData currentShieldData = item.DeepCopy();
-                            this.currentShieldData = currentShieldData;
+                            this.currentShieldData = (ShieldData)currentShieldData;
 
                             await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
 
@@ -82,7 +125,115 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
     }
 
-    public async UniTask CurrentItemRefresh(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
+    public async UniTask SetPlayerStatus()
+    {
+        CalculateStatCoefficients();
+
+        float baseAttackDamage = currentWeaponData != null
+        ? currentWeaponData.attackDamage
+        : playerStats.noWeaponDamage;
+
+        float baseDefense = currentShieldData != null
+        ? currentShieldData.defense
+        : playerStats.noShieldDefense;
+
+        Debug.Log($"baseAttackDamage : {baseAttackDamage}");
+
+        playerStats.CalculateAttackDamage(baseAttackDamage);
+        playerStats.CalculateDefense(baseDefense);
+        //SetDefense();
+        SetHpAndStamina();
+    }
+
+    public void CalculateStatCoefficients()
+    {
+        playerStats.ResetEquipmentBonus();
+
+        ApplyOptions(currentWeaponData?.additionalOptionsList);
+        ApplyOptions(currentShieldData?.additionalOptionsList);
+
+        //악세서리 추가
+
+        void ApplyOptions(List<ItemStatModifierData> options)
+        {
+            if (options == null)
+                return;
+
+            foreach (ItemStatModifierData option in options)
+            {
+                switch (option.statType)
+                {
+                    case StatType.ADDIDTIONAL_DAMAGE:
+                        {
+                            if (option.modifierType == ModifierType.FLAT)
+                                playerStats.attackFlatBonus += option.value;
+                            else
+                                playerStats.attackPercentBonus += option.value;
+
+                            break;
+                        }
+
+                    case StatType.TOTAL_DAMAGE:
+                        {
+                            if (option.modifierType == ModifierType.PERCENT)
+                                playerStats.attackPercentBonus += option.value;
+                            else
+                                playerStats.attackFlatBonus += option.value;
+
+                            break;
+                        }
+
+                    case StatType.ADDIDTIONAL_DEFENSE:
+                        {
+                            if (option.modifierType == ModifierType.FLAT)
+                                playerStats.defenseFlatBonus += option.value;
+                            else
+                                playerStats.defensePercentBonus += option.value;
+
+                            break;
+                        }
+
+                    case StatType.ATTACK_RANGE:
+                        {
+                            // PlayerRuntimeStats에 공격 범위 필드를 만든 뒤 계산
+                            break;
+                        }
+                }
+            }
+        }
+    }
+
+    //public void SetAttackDamage()
+    //{
+    //    //무기 공격력 -> 배수 계산까지 할 것
+    //    //없으면 맨손
+    //}
+
+    //public void SetDefense()
+    //{
+    //    //
+    //}
+
+    public void SetHpAndStamina()
+    {
+
+    }
+
+    public async UniTask RefreshPlayerStatus(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
+    {
+        await RefreshCurrentItem(itemData, equipmentType, isEquip);
+        await SetPlayerStatus();
+        playerStatsChanged?.Invoke();
+    }
+
+    public async UniTask RefreshPlayerStatus(EquipmentType equipmentType, IsEquip isEquip)
+    {
+        await RefreshCurrentItem(equipmentType, isEquip);
+        await SetPlayerStatus();
+        playerStatsChanged?.Invoke();
+    }
+
+    public async UniTask RefreshCurrentItem(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
     {
         if (itemData == null) return;
         if (itemData.isEquip == (int)IsEquip.NO) return;
@@ -95,11 +246,12 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     player.currentWeapon = null;
                     if (player.playerSkinBase.weaponTrf.childCount > 0)
                         ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
-                        //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                    //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
 
 
-                    ItemData currentWeaponData = itemData.DeepCopy();
+                    WeaponData currentWeaponData = (WeaponData)itemData.DeepCopy();
                     this.currentWeaponData = currentWeaponData;
+                    Debug.Log($"this.currentWeaponData.attackDamage : {this.currentWeaponData.attackDamage}");
 
                     await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.weaponTrf);
 
@@ -121,7 +273,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
                     //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
 
-                    ItemData currentShieldData = itemData.DeepCopy();
+                    ShieldData currentShieldData = (ShieldData)itemData.DeepCopy();
                     this.currentShieldData = currentShieldData;
 
                     await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
@@ -145,7 +297,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
     }
 
-    public async UniTask CurrentItemRefresh(EquipmentType equipmentType, IsEquip isEquip)
+    public async UniTask RefreshCurrentItem(EquipmentType equipmentType, IsEquip isEquip)
     {
         switch (equipmentType)
         {
@@ -156,7 +308,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     if (player.playerSkinBase.weaponTrf.childCount > 0)
                         ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
 
-                        //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                    //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
                     //데이터 기반으로 만들어야됨 player 위치에 
                 }
                 break;
@@ -175,7 +327,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
             case EquipmentType.Accessory:
                 {
-                    
+
                 }
                 break;
         }

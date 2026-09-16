@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using TMPro;
 
 public partial class Inventory_000_Base : MonoBehaviour
 {
@@ -17,6 +18,16 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public InventoryGrid_000_Base selectedGrid { get; set; }
 
+    public TextMeshProUGUI damageMainTxt;
+    public TextMeshProUGUI defenseMainTxt;
+    public TextMeshProUGUI hpMainTxt;
+    public TextMeshProUGUI staminaMainTxt;
+    public TextMeshProUGUI damageValTxt;
+    public TextMeshProUGUI defenseValTxt;
+    public TextMeshProUGUI hpValTxt;
+    public TextMeshProUGUI staminaValTxt;
+
+
     private bool isFirstSetting = true;
 
     public async UniTask Init()
@@ -27,6 +38,7 @@ public partial class Inventory_000_Base : MonoBehaviour
         }
 
         await InventoryItemSetting();
+        SetInventoryStatusVal();
         isFirstSetting = false;
     }
 
@@ -96,6 +108,20 @@ public partial class Inventory_000_Base : MonoBehaviour
         }
     }
 
+    public void SetInventoryStatusVal()
+    {
+        LanguageManager.Instance.GetLangScript(10020, LanguageManager.Instance.languageScriptDic, damageMainTxt);
+        LanguageManager.Instance.GetLangScript(10021, LanguageManager.Instance.languageScriptDic, defenseMainTxt);
+        LanguageManager.Instance.GetLangScript(10022, LanguageManager.Instance.languageScriptDic, hpMainTxt);
+        LanguageManager.Instance.GetLangScript(10023, LanguageManager.Instance.languageScriptDic, staminaMainTxt);
+
+        damageValTxt.text = $": {(int)IngameSessionManager.Instance.playerStats.attackDamage}";
+        defenseValTxt.text = $": {(int)IngameSessionManager.Instance.playerStats.defense}";
+
+        Debug.Log($"IngameSessionManager.Instance.playerStats.maxHp {IngameSessionManager.Instance.playerStats.maxHp} ");
+        hpValTxt.text = $": {IngameSessionManager.Instance.playerStats.maxHp}";
+        staminaValTxt.text = $": {IngameSessionManager.Instance.playerStats.maxStamina}";
+    }
     public void InventoryItemInit()
     {
         if (weaponGrid.itemData != null)
@@ -187,7 +213,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = 0;
 
-                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
+                        await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
 
 
                         //장착 무기 갱신
@@ -205,7 +231,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = 0;
 
-                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData, EquipmentType.Shield, IsEquip.YES);
+                        await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Shield, IsEquip.YES);
 
                     }
                 }
@@ -223,7 +249,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
                         targetGrid.itemData.gridIdx = targetGridIdx;
 
-                        await IngameSessionManager.Instance.CurrentItemRefresh(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
+                        await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
 
                     }
                 }
@@ -267,14 +293,14 @@ public partial class Inventory_000_Base : MonoBehaviour
 
                                 if(startGrid.itemData == null)
                                 {
-                                    await IngameSessionManager.Instance.CurrentItemRefresh(EquipmentType.Weapon, IsEquip.NO);
+                                    await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Weapon, IsEquip.NO);
 
 
                                     //없어진거임
                                 }
                                 else
                                 {
-                                    await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
+                                    await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
 
 
                                     //갱신 ㄱㄱ
@@ -294,14 +320,14 @@ public partial class Inventory_000_Base : MonoBehaviour
 
                                 if (startGrid.itemData == null)
                                 {
-                                    await IngameSessionManager.Instance.CurrentItemRefresh(EquipmentType.Shield, IsEquip.NO);
+                                    await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Shield, IsEquip.NO);
 
 
                                     //없어진거임
                                 }
                                 else
                                 {
-                                    await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData, EquipmentType.Shield, IsEquip.YES);
+                                    await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Shield, IsEquip.YES);
                                     //갱신 ㄱㄱ
                                 }
 
@@ -320,14 +346,14 @@ public partial class Inventory_000_Base : MonoBehaviour
 
                                 if (startGrid.itemData == null)
                                 {
-                                    await IngameSessionManager.Instance.CurrentItemRefresh(EquipmentType.Accessory, IsEquip.NO);
+                                    await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Accessory, IsEquip.NO);
 
 
                                     //없어진거임
                                 }
                                 else
                                 {
-                                    await IngameSessionManager.Instance.CurrentItemRefresh(startGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
+                                    await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
                                     //갱신 ㄱㄱ
                                 }
 
@@ -359,7 +385,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         {
                             await ItemMoveOrChange(startGrid, targetGrid);
 
-                            await IngameSessionManager.Instance.CurrentItemRefresh((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
+                            await IngameSessionManager.Instance.RefreshPlayerStatus((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
                         }
                         break;
                 }

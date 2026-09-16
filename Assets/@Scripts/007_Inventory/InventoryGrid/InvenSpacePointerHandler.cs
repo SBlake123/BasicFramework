@@ -134,7 +134,7 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
 
     private void MoveItem(InventoryGrid_000_Base targetGrid)
     {
-        inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, targetGrid);
+        inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, targetGrid);       
     }
 
     public void OnPointerClick(PointerEventData eventData)
