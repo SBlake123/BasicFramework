@@ -17,6 +17,7 @@ public class Sword : WeaponBase
 
         transform.localRotation = Quaternion.Euler(0f, 0f, -35f);
         transform.DOLocalRotate(new Vector3(0f, 0f, 55f), 0.12f).SetEase(Ease.OutQuad).OnComplete(() => transform.localRotation = Quaternion.Euler(0f, 0f, 0f));
+        weaponHitBox.SetActive(false);
     }
 
     public async UniTask AttackEffectActive(Player player, CancellationToken token)

@@ -16,7 +16,9 @@ public enum MonsterState
 [Serializable]
 public class MonsterStats
 {
-    [Min(1)] public float maxHealth = 10f;
+
+    public int currentHp = 40;
+    [Min(1)] public float maxHp = 100f;
     [Min(0)] public float attackDamage = 10f;
     [Min(0)] public float moveSpeed = 2f;
     [Min(0)] public float detectionRange = 1000f;

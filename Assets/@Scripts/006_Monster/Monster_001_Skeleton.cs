@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using DG.Tweening;
 
 //public enum MonsterState
 //{
@@ -90,7 +91,7 @@ public class Monster_001_Skeleton : Monster_000_Base
     {
         switch (monsterState)
         {
-            
+
             case MonsterState.Idle:
                 {
                     //기본적인 대기 단계에서는 스폰 범위를 돌아다니는 자유 행동까지는 가능하다.
@@ -270,8 +271,9 @@ public class Monster_001_Skeleton : Monster_000_Base
 
     protected override async UniTask OnDeath()
     {
+        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() => Destroy(gameObject));
+
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
-        Destroy(gameObject);
     }
 
     private bool CanDetectTarget()
@@ -352,11 +354,22 @@ public class Monster_001_Skeleton : Monster_000_Base
 
         obj.transform.position = Camera.main.WorldToScreenPoint(damageTrf.transform.position);
 
-        DamageVal damageVal = obj.GetComponent<DamageVal>();        
+        DamageVal damageVal = obj.GetComponent<DamageVal>();
 
         damageVal.SetDamage(attackDamage);
         damageVal.Play();
+
+        CalculateDamage(attackDamage);
         //몬스터의 방어력 값 계산 후 적용
+    }
+
+    public void CalculateDamage(int attackDamage)
+    {
+        monsterStats.currentHp -= attackDamage;
+
+        //죽음판정
+        if (monsterStats.currentHp <= 0)
+            ChangeState((int)MonsterState.Dead).Forget();
     }
 
 }
