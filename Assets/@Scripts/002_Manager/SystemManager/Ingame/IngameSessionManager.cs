@@ -12,7 +12,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     public Player player;
     public Canvas hudCanvas;
     public float checkpointIntervalSeconds = 30f;
-    public VirtualJoystick virtualJoystick;
+    public VirtualJoystick movingVirtualJoystick;
+    public VirtualJoystick aimVirtualJoystick;
     public bool IsRaidActive { get; private set; }
     public event Action OnRaidExtracted;
     public event Action OnRaidFailed;
@@ -54,6 +55,6 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     private void ConnectVirtualJoystick()
     {
-        virtualJoystick.SetTarget(player);
+        movingVirtualJoystick.SetTarget(player);
     }
 }
