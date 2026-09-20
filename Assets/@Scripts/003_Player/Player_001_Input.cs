@@ -25,7 +25,9 @@ public partial class Player : MonoBehaviour
     private float moveSpeed;
     private bool nowEvading;
     public Vector2 moveInput;
-    private Vector2 virtualJoystickInput;
+    public Vector2 aimInput;
+    private Vector2 movingVirtualJoystickInput;
+    private Vector2 aimingVirtualJoystickInput;
     private Rigidbody movementBody;
     private Vector3 desiredVelocity;
 
@@ -34,6 +36,7 @@ public partial class Player : MonoBehaviour
     private bool isAttackRequested;
 
     public event Action<Vector2> MoveInputChanged;
+    public event Action<Vector2> AimInputChanged;
     public bool isPlayerFacingRight = true;
     private MoveAnim lastMoveAnim = MoveAnim.None; 
 
@@ -54,13 +57,13 @@ public partial class Player : MonoBehaviour
     /// <summary>
     /// Virtual joystick calls this while the player drags it.
     /// </summary>
-    public void SetVirtualJoystickInput(Vector2 direction)
+    public void SetMovingVirtualJoystickInput(Vector2 direction)
     {
-        virtualJoystickInput = Vector2.ClampMagnitude(direction, 1f);
+        movingVirtualJoystickInput = Vector2.ClampMagnitude(direction, 1f);
 
-        if (virtualJoystickInput.sqrMagnitude > 0.001f)
+        if (movingVirtualJoystickInput.sqrMagnitude > 0.001f)
         {
-            lastMoveDirection = virtualJoystickInput.normalized;
+            lastMoveDirection = movingVirtualJoystickInput.normalized;
 
         }
 
@@ -70,18 +73,38 @@ public partial class Player : MonoBehaviour
     /// <summary>
     /// Virtual joystick calls this when the player's finger leaves it.
     /// </summary>
-    public void ClearVirtualJoystickInput()
+    public void ClearMovingVirtualJoystickInput()
     {
-        virtualJoystickInput = Vector2.zero;
-        moveInput = virtualJoystickInput;
+        movingVirtualJoystickInput = Vector2.zero;
+        moveInput = movingVirtualJoystickInput;
         MoveInputChanged?.Invoke(moveInput);
     }
+
+    public void SetAimingVirtualJoystickInput(Vector2 direction)
+    {
+        aimingVirtualJoystickInput = Vector2.ClampMagnitude(direction, 1f);
+
+        if (aimingVirtualJoystickInput.sqrMagnitude > 0.001f)
+        {
+            lastMoveDirection = aimingVirtualJoystickInput.normalized;
+        }
+
+        AimInputChanged?.Invoke(aimInput);
+    }
+
+    public void ClearAimingVirtualJoystickInput()
+    {
+        aimingVirtualJoystickInput = Vector2.zero;
+        moveInput = aimingVirtualJoystickInput;
+        AimInputChanged?.Invoke(aimInput);
+    }
+
 
     private void ReadMoveInput()
     {
         if (Application.isMobilePlatform || useVirtualJoystickInEditor)
         {
-            moveInput = virtualJoystickInput;
+            moveInput = movingVirtualJoystickInput;
             return;
         }
 
