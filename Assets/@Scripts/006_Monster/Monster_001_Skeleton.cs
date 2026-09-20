@@ -6,29 +6,23 @@ using System.Threading;
 using UnityEngine;
 using DG.Tweening;
 
-//public enum MonsterState
-//{
-//    Idle,
-//    Chase,
-//    Attack,
-//    Return,
-//    Dead
-//}
-
 public class Monster_001_Skeleton : Monster_000_Base
 {
     public MonsterSkinSkeleton monsterSkinSkeleton;
     public Transform facingObjectParentTrf;
 
-    private MonsterState monsterState = MonsterState.Idle;
+    private MonsterState monsterState = MonsterState.IDLE;
 
     private CancellationTokenSource stateCts;
 
     [SerializeField] private Transform target;
     private MonsterStats monsterStats = new MonsterStats();
+    public Rigidbody movementBody;
     private Vector3 spawnPosition;
-    private Rigidbody movementBody;
     private Vector3? moveDestination;
+
+    bool isAttack;
+    bool isDeath;
 
     private void FixedUpdate()
     {
@@ -42,15 +36,6 @@ public class Monster_001_Skeleton : Monster_000_Base
         delta.z = 0;
         CharacterContactMovement.Move(movementBody, Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterStats.moveSpeed));
     }
-
-    private void OnDisable()
-    {
-        moveDestination = null;
-
-    }
-
-    bool isAttack;
-    bool isDeath;
 
     private void Awake()
     {
@@ -92,33 +77,33 @@ public class Monster_001_Skeleton : Monster_000_Base
         switch (monsterState)
         {
 
-            case MonsterState.Idle:
+            case MonsterState.IDLE:
                 {
                     //기본적인 대기 단계에서는 스폰 범위를 돌아다니는 자유 행동까지는 가능하다.
-                    await Idle();
+                    await OnIdle();
                 }
                 break;
 
-            case MonsterState.Chase:
+            case MonsterState.CHASE:
                 {
                     //적의 시야에 플레이어가 들어왔을 때 인지하고 공격을 시도한다.
-                    await Chase();
+                    await OnChase();
                 }
                 break;
-            case MonsterState.Attack:
+            case MonsterState.ATTACK:
                 {
                     //범위안에 들어왔을 때 공격이 가능한 상태일 시 공격한다.
                     //공격이 끝나고 나서는 다시 공격하는 상태인지 판단해야 한다.
                     await OnAttack();
                 }
                 break;
-            case MonsterState.Return:
+            case MonsterState.RETURN:
                 {
                     //Return되는 경우는 플레이어가 사라진 상태에서 Chase 범위를 벗어났을 때 뿐.
-                    await Return();
+                    await OnReturn();
                 }
                 break;
-            case MonsterState.Dead:
+            case MonsterState.DEAD:
                 {
                     //죽는 단계는 끝이기 때문에 연결할 필요가 없다.
                     await OnDeath();
@@ -129,22 +114,7 @@ public class Monster_001_Skeleton : Monster_000_Base
         await UniTask.WaitForFixedUpdate();
     }
 
-    private UniTask Idle()
-    {
-        return IdleAction();
-    }
-
-    private UniTask Chase()
-    {
-        return ChaseAction();
-    }
-
-    private UniTask Return()
-    {
-        return ReturnAction();
-    }
-
-    private async UniTask IdleAction()
+    private async UniTask OnIdle()
     {
         CancellationToken token = stateCts.Token;
         Vector3 idleDestination = GetRandomSpawnPosition();
@@ -155,11 +125,11 @@ public class Monster_001_Skeleton : Monster_000_Base
             {
                 if (CanDetectTarget())
                 {
-                    ChangeState((int)MonsterState.Chase).Forget();
+                    ChangeState((int)MonsterState.CHASE).Forget();
                     return;
                 }
 
-                monsterSkinSkeleton.anim.Play("SkeletonMove");
+                monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
                 UpdateFacingDirection();
                 MoveTo(idleDestination);
 
@@ -176,7 +146,7 @@ public class Monster_001_Skeleton : Monster_000_Base
         }
     }
 
-    private async UniTask ChaseAction()
+    private async UniTask OnChase()
     {
         CancellationToken token = stateCts.Token;
 
@@ -184,16 +154,16 @@ public class Monster_001_Skeleton : Monster_000_Base
         {
             while (!token.IsCancellationRequested)
             {
-                if (target == null || !CanDetectTarget() || HasLeftSpawnRange())
+                if (target == null || !CanDetectTarget())// || HasLeftSpawnRange())
                 {
-                    ChangeState((int)MonsterState.Return).Forget();
+                    ChangeState((int)MonsterState.RETURN).Forget();
                     return;
                 }
 
 
                 if (CanAttackTarget())
                 {
-                    ChangeState((int)MonsterState.Attack).Forget();
+                    ChangeState((int)MonsterState.ATTACK).Forget();
                     return;
                 }
 
@@ -218,7 +188,7 @@ public class Monster_001_Skeleton : Monster_000_Base
             {
                 if (!CanAttackTarget())
                 {
-                    ChangeState((int)(CanDetectTarget() ? MonsterState.Chase : MonsterState.Return)).Forget();
+                    ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
                     return;
                 }
 
@@ -226,7 +196,7 @@ public class Monster_001_Skeleton : Monster_000_Base
 
                 if (!CanAttackTarget())
                 {
-                    ChangeState((int)(CanDetectTarget() ? MonsterState.Chase : MonsterState.Return)).Forget();
+                    ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
                     return;
                 }
 
@@ -242,13 +212,13 @@ public class Monster_001_Skeleton : Monster_000_Base
         }
     }
 
-    private async UniTask ReturnAction()
+    private async UniTask OnReturn()
     {
         CancellationToken token = stateCts.Token;
 
         try
         {
-            monsterSkinSkeleton.anim.Play("SkeletonMove");
+            monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
             UpdateFacingDirection();
             while (!token.IsCancellationRequested)
             {
@@ -257,7 +227,7 @@ public class Monster_001_Skeleton : Monster_000_Base
 
                 if (IsArrived(spawnPosition))
                 {
-                    ChangeState((int)MonsterState.Idle).Forget();
+                    ChangeState((int)MonsterState.IDLE).Forget();
                     return;
                 }
 
@@ -296,15 +266,15 @@ public class Monster_001_Skeleton : Monster_000_Base
         return Vector2.Distance(transform.position, target.position) <= monsterStats.attackRange;
     }
 
-    private bool HasLeftSpawnRange()
-    {
-        if (monsterStats.leashRange <= 0f)
-        {
-            return false;
-        }
+    //private bool HasLeftSpawnRange()
+    //{
+    //    if (monsterStats.leashRange <= 0f)
+    //    {
+    //        return false;
+    //    }
 
-        return Vector2.Distance(transform.position, spawnPosition) > monsterStats.leashRange;
-    }
+    //    return Vector2.Distance(transform.position, spawnPosition) > monsterStats.leashRange;
+    //}
 
     private void MoveTo(Vector3 destination)
     {
@@ -369,7 +339,7 @@ public class Monster_001_Skeleton : Monster_000_Base
 
         //죽음판정
         if (monsterStats.currentHp <= 0)
-            ChangeState((int)MonsterState.Dead).Forget();
+            ChangeState((int)MonsterState.DEAD).Forget();
     }
 
 }

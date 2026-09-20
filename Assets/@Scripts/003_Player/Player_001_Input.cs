@@ -35,15 +35,7 @@ public partial class Player : MonoBehaviour
 
     public event Action<Vector2> MoveInputChanged;
     public bool isPlayerFacingRight = true;
-    private MoveAnim lastMoveAnim = MoveAnim.None;
-
-    
-
-    private void FixedUpdate()
-    {
-        if (movementBody != null)
-            CharacterContactMovement.Move(movementBody, CanInputAction() ? desiredVelocity : Vector3.zero);
-    }
+    private MoveAnim lastMoveAnim = MoveAnim.None; 
 
     private void OnDisable()
     {
@@ -68,7 +60,6 @@ public partial class Player : MonoBehaviour
 
         if (virtualJoystickInput.sqrMagnitude > 0.001f)
         {
-            Debug.Log($"lastMoveDirection : {lastMoveDirection}");
             lastMoveDirection = virtualJoystickInput.normalized;
 
         }

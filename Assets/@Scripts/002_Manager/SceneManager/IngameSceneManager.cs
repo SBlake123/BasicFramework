@@ -161,14 +161,10 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.EXTRACTING:
 
-                await IngameSessionManager.Instance.CompleteExtraction();
-
                 await ChangeState((int)IngameSceneState.RESULT);
                 return;
 
             case IngameSceneState.DEAD:
-
-                await IngameSessionManager.Instance.CompleteExtraction();
 
                 await ChangeState((int)IngameSceneState.RESULT);
                 return;
@@ -182,16 +178,6 @@ public class IngameSceneManager : StateBaseSceneManager
         }
 
         screenGuard.SetActive(false);
-    }
-
-    public void RequestExtraction()
-    {
-        ChangeState((int)IngameSceneState.EXTRACTING).Forget();
-    }
-
-    public void NotifyPlayerDied()
-    {
-        ChangeState((int)IngameSceneState.DEAD).Forget();
     }
 
     private void SetGameplayPaused(bool isPaused)

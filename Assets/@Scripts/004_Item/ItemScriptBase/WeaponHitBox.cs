@@ -8,11 +8,9 @@ public class WeaponHitBox : MonoBehaviour
     {
         Debug.Log($"TRIGGER ENTER : {other.name}");
 
-
         if (other.GetComponentInParent<Monster_000_Base>() is Monster_000_Base monster)
         {
             monster.TakeDamage((int)IngameSessionManager.Instance.playerStats.attackDamage);
-
         }
         //monster.TakeDamage(damage);
     }

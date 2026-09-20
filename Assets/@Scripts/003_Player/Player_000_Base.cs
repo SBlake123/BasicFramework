@@ -5,13 +5,18 @@ using UnityEngine;
 
 public partial class Player : MonoBehaviour
 {
-    public WeaponBase currentWeapon;
-    public ShieldBase currentShield;
+    public WeaponBase currentWeapon { get; set; }
+    public ShieldBase currentShield { get; set; }
     private void Update()
     {
         ReadMoveInput();
         MovePlayer();
         if (Input.GetKeyDown(playerInputKeyCode.playerAttack)) AttackPlayer().Forget();
+    }
+    private void FixedUpdate()
+    {
+        if (movementBody != null)
+            CharacterContactMovement.Move(movementBody, CanInputAction() ? desiredVelocity : Vector3.zero);
     }
 
     public async UniTask Init()

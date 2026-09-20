@@ -5,15 +5,10 @@ using UnityEngine;
 
 public class MonsterSkinSkeleton : MonsterSkinBase
 {
-    public Sprite hitSprite;
-    public Sprite deadSprite;
-    public Sprite[] runSpriteArr;
-
     public override bool needSprRelocation => true;
     public override async UniTask PlayIdle()
     {
         anim.Play(GSkinSprName.IDLE);
-        mainSpr.sprite = runSpriteArr[0];
         Debug.Log("NEW IDLE");
     }
     public override async UniTask PlayAttack()
@@ -35,4 +30,6 @@ public class MonsterSkinSkeleton : MonsterSkinBase
     {
         anim.Play("SkeletonMove");
     }
+
+
 }
