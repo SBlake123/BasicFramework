@@ -32,6 +32,7 @@ public partial class Player : MonoBehaviour
     private Vector3 desiredVelocity;
 
     public Vector2 lastMoveDirection { get; private set; } = Vector2.right;
+    public Vector2 lastAimDirection { get; private set; } = Vector2.right;
 
     private bool isAttackRequested;
 
@@ -86,7 +87,7 @@ public partial class Player : MonoBehaviour
 
         if (aimingVirtualJoystickInput.sqrMagnitude > 0.001f)
         {
-            lastMoveDirection = aimingVirtualJoystickInput.normalized;
+            lastAimDirection = aimingVirtualJoystickInput.normalized;
         }
 
         AimInputChanged?.Invoke(aimInput);
@@ -95,7 +96,7 @@ public partial class Player : MonoBehaviour
     public void ClearAimingVirtualJoystickInput()
     {
         aimingVirtualJoystickInput = Vector2.zero;
-        moveInput = aimingVirtualJoystickInput;
+        aimInput = aimingVirtualJoystickInput;
         AimInputChanged?.Invoke(aimInput);
     }
 
