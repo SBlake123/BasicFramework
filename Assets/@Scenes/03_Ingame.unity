@@ -303550,7 +303550,7 @@ GameObject:
   - component: {fileID: 323368229}
   - component: {fileID: 323368231}
   - component: {fileID: 323368230}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Square (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303887,7 +303887,7 @@ GameObject:
   - component: {fileID: 342618208}
   - component: {fileID: 342618210}
   - component: {fileID: 342618209}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Square (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306242,7 +306242,7 @@ GameObject:
   - component: {fileID: 562125619}
   - component: {fileID: 562125621}
   - component: {fileID: 562125620}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Square (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -307146,7 +307146,7 @@ GameObject:
   - component: {fileID: 709455274}
   - component: {fileID: 709455276}
   - component: {fileID: 709455275}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Square (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309908,7 +309908,7 @@ GameObject:
   - component: {fileID: 995308552}
   - component: {fileID: 995308554}
   - component: {fileID: 995308553}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Square (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312562,7 +312562,7 @@ GameObject:
   - component: {fileID: 1271280255}
   - component: {fileID: 1271280257}
   - component: {fileID: 1271280256}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Square (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318287,7 +318287,7 @@ MonoBehaviour:
   visionOrigin: {fileID: 1122457809}
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2048
 --- !u!23 &1894908373
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -319213,7 +319213,7 @@ GameObject:
   - component: {fileID: 1968824451}
   - component: {fileID: 1968824453}
   - component: {fileID: 1968824454}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
