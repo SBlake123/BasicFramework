@@ -33,6 +33,7 @@ public partial class Player : MonoBehaviour
 
     public Vector2 lastMoveDirection { get; private set; } = Vector2.right;
     public Vector2 lastAimDirection { get; private set; } = Vector2.right;
+    public Vector2 lastLookDirection { get; private set; } = Vector2.right;
 
     private bool isAttackRequested;
 
