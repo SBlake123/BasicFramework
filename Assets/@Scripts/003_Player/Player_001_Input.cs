@@ -178,6 +178,13 @@ public partial class Player : MonoBehaviour
         desiredVelocity = moveDirection * moveSpeed;
     }
 
+    private void AimPlayer()
+    {
+        //Debug.Log("Move");
+        UpdateSpriteDirection();
+        UpdateWeaponRotation();
+    }
+
     private async UniTask AttackPlayer()
     {
         OnAttackRequested();

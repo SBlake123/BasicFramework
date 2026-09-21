@@ -11,6 +11,7 @@ public partial class Player : MonoBehaviour
     {
         ReadMoveInput();
         MovePlayer();
+        AimPlayer();
         if (Input.GetKeyDown(playerInputKeyCode.playerAttack)) AttackPlayer().Forget();
     }
     private void FixedUpdate()

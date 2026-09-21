@@ -307260,6 +307260,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 798197130}
+  - component: {fileID: 798197131}
   m_Layer: 6
   m_Name: TransformCameraParent
   m_TagString: Untagged
@@ -307283,6 +307284,19 @@ Transform:
   - {fileID: 1910750604}
   m_Father: {fileID: 96970735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &798197131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798197129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5066e1a3a2674a245a938140cd3174fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 96970736}
 --- !u!1 &801892367
 GameObject:
   m_ObjectHideFlags: 0
