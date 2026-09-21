@@ -39,7 +39,8 @@ public class Sword : WeaponBase
 
     public override void UpdateEffectDirection(GameObject gameObject, Player player)
     {
-        Vector2 dir = player.moveInput.sqrMagnitude > 0.001f ? player.moveInput.normalized : player.lastMoveDirection;
+        //Vector2 dir = player.moveInput.sqrMagnitude > 0.001f ? player.moveInput.normalized : player.lastMoveDirection;
+        Vector2 dir = player.lastLookDirection;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         if (player.isPlayerFacingRight)

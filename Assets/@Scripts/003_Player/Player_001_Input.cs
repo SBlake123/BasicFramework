@@ -39,6 +39,9 @@ public partial class Player : MonoBehaviour
 
     public event Action<Vector2> MoveInputChanged;
     public event Action<Vector2> AimInputChanged;
+    public bool hasMovingInput;
+    public bool hasAimInput;
+
     public bool isPlayerFacingRight = true;
     private MoveAnim lastMoveAnim = MoveAnim.None; 
 
@@ -65,8 +68,9 @@ public partial class Player : MonoBehaviour
 
         if (movingVirtualJoystickInput.sqrMagnitude > 0.001f)
         {
+            hasMovingInput = true;
             lastMoveDirection = movingVirtualJoystickInput.normalized;
-
+            SetLastLookPosition();
         }
 
         MoveInputChanged?.Invoke(moveInput);
@@ -78,6 +82,7 @@ public partial class Player : MonoBehaviour
     public void ClearMovingVirtualJoystickInput()
     {
         movingVirtualJoystickInput = Vector2.zero;
+        hasMovingInput = false;
         moveInput = movingVirtualJoystickInput;
         MoveInputChanged?.Invoke(moveInput);
     }
@@ -88,15 +93,36 @@ public partial class Player : MonoBehaviour
 
         if (aimingVirtualJoystickInput.sqrMagnitude > 0.001f)
         {
+            hasAimInput = true;
             lastAimDirection = aimingVirtualJoystickInput.normalized;
+            SetLastLookPosition();
         }
 
         AimInputChanged?.Invoke(aimInput);
     }
 
+    public void SetLastLookPosition()
+    {
+        if (hasAimInput)
+        {
+            // Aim만 있거나 둘 다 있으면 Aim 기준
+            lastLookDirection = lastAimDirection;
+        }
+        else if (hasMovingInput)
+        {
+            // Move만 있으면 Move 기준
+            lastLookDirection = lastMoveDirection;
+        }
+        else
+        {
+            // 입력 없으면 마지막 방향 유지
+        }
+    }
+
     public void ClearAimingVirtualJoystickInput()
     {
         aimingVirtualJoystickInput = Vector2.zero;
+        hasAimInput = false;
         aimInput = aimingVirtualJoystickInput;
         AimInputChanged?.Invoke(aimInput);
     }
@@ -193,22 +219,35 @@ public partial class Player : MonoBehaviour
             return;
         }
 
-        if (moveInput.x > 0f)
+        if (lastLookDirection.x > 0f)
         {
             isPlayerFacingRight = true;
             playerSkinBase.PlayerSprRelocationRight();
             UpdateWeaponRotation();
         }
-        else if (moveInput.x < 0f)
+        else if (lastLookDirection.x < 0f)
         {
             isPlayerFacingRight = false;
             playerSkinBase.PlayerSprRelocationLeft();
             UpdateWeaponRotation();
         }
+
+        //if (moveInput.x > 0f)
+        //{
+        //    isPlayerFacingRight = true;
+        //    playerSkinBase.PlayerSprRelocationRight();
+        //    UpdateWeaponRotation();
+        //}
+        //else if (moveInput.x < 0f)
+        //{
+        //    isPlayerFacingRight = false;
+        //    playerSkinBase.PlayerSprRelocationLeft();
+        //    UpdateWeaponRotation();
+        //}
     }
     public void UpdateWeaponRotation()
     {
-        float angle = Mathf.Atan2(moveInput.y, moveInput.x) * Mathf.Rad2Deg;
+        float angle = Mathf.Atan2(lastLookDirection.y, lastLookDirection.x) * Mathf.Rad2Deg;
 
         playerSkinBase.weaponTrf.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
     }
@@ -219,7 +258,6 @@ public partial class Player : MonoBehaviour
         if (!isAttack && !isDodge) canMoveAnimPlay = true;
         return canMoveAnimPlay;
     }
-
 
     // Legacy PlayerActionCheck() read keyboard input and moved the player in a
     // UniTask loop. The same responsibility now lives in Update, ReadMoveInput,

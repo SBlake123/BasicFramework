@@ -27,7 +27,7 @@ public class PlayerFieldOfView : MonoBehaviour
     private void LateUpdate()
     {
         if (player == null || visionOrigin == null) return;
-        CreateViewMesh(player.lastMoveDirection);
+        CreateViewMesh(player.lastLookDirection);
     }
 
     private void CreateViewMesh(Vector2 facingDirection)
