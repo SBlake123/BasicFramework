@@ -20,7 +20,7 @@ public class MonsterStats
     public float maxHp = 100f;
     public float attackDamage = 10f;
     public float moveSpeed = 2f;
-    public float detectionRange = 1000f;
+    public float detectionRange = 20f;
     public float attackRange = 0.8f;
     public float attackAngle = 2f;
     public float attackPreparation = 0.5f;
