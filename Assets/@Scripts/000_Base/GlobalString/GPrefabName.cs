@@ -5,4 +5,6 @@ using UnityEngine;
 public class GPrefabName : MonoBehaviour
 {
     public static readonly string ATTACK_EFFECT_BASE = "DamageVal";
+
+    public static readonly string SKELETON = "MonsterSkeleton";
 }

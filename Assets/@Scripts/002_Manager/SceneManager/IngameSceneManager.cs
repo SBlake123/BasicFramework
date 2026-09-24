@@ -53,6 +53,7 @@ public class IngameSceneManager : StateBaseSceneManager
         BackKeySetting().Forget();
         SceneAllocate();
         SubscribingEvent();
+        await SpawnMonsters();
         await ingameUIManager.Init();
         await IngameSessionManager.Instance.Init();
         await ChangeState((int)IngameSceneState.LOADING);
@@ -82,6 +83,13 @@ public class IngameSceneManager : StateBaseSceneManager
         ingameUIManager.InventoryRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
         ingameUIManager.OptionRequested += async () => await ChangeState((int)IngameSceneState.OPTION);
         //ingameUIManager.AttackRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
+    }
+
+    async UniTask SpawnMonsters()
+    {
+        //랜덤 배치할 것.
+        //지금은 있는 몬스터들 Init 시키기?
+
     }
 
     public override void SceneAllocate()

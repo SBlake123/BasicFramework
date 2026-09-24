@@ -29,7 +29,7 @@ public partial class Player : MonoBehaviour
         //{ PlayerState.HIT, new HitState() },
         { PlayerState.ATTACK, new AttackState() },
         { PlayerState.DODGE, new DodgeState() },
-        { PlayerState.DEAD, new DieState() }
+        { PlayerState.DEAD, new DeadState() }
     };
 
     bool isAttack = false;
@@ -103,7 +103,7 @@ public partial class Player : MonoBehaviour
         }
     }
 
-    public class DieState : IPlayerState
+    public class DeadState : IPlayerState
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
