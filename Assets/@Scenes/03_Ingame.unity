@@ -3233,7 +3233,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0727a0d4c779a4cb9f28a05cdd6eb6, type: 2}
+  - {fileID: 2100000, guid: 9f20a8ea67f92f24ca17240f7f3adbef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -324899,7 +324899,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0727a0d4c779a4cb9f28a05cdd6eb6, type: 2}
+  - {fileID: 2100000, guid: 9f20a8ea67f92f24ca17240f7f3adbef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -330054,7 +330054,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a0727a0d4c779a4cb9f28a05cdd6eb6, type: 2}
+  - {fileID: 2100000, guid: 9f20a8ea67f92f24ca17240f7f3adbef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -336829,6 +336829,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonsterSkeleton
       objectReference: {fileID: 0}
+    - target: {fileID: 3214310202825846891, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f20a8ea67f92f24ca17240f7f3adbef, type: 2}
     - target: {fileID: 5676547091297140415, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: target
       value: 
