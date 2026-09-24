@@ -13,7 +13,7 @@ public enum PlayerState
     ATTACK,
     DODGE,
     HIT,
-    DIE
+    DEAD
 }
 
 public partial class Player : MonoBehaviour
@@ -29,7 +29,7 @@ public partial class Player : MonoBehaviour
         //{ PlayerState.HIT, new HitState() },
         { PlayerState.ATTACK, new AttackState() },
         { PlayerState.DODGE, new DodgeState() },
-        { PlayerState.DIE, new DieState() }
+        { PlayerState.DEAD, new DieState() }
     };
 
     bool isAttack = false;
@@ -107,7 +107,9 @@ public partial class Player : MonoBehaviour
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
-
+            await player.OnDeath();
+            PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10004), LanguageManager.Instance.GetLangScript(10002));
+            PopupManager.Instance.AddMethodToBtn(async () => await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE));
         }
     }
 
@@ -157,10 +159,11 @@ public partial class Player : MonoBehaviour
                     break;
                 }
 
-            case PlayerState.DIE:
+            case PlayerState.DEAD:
                 {
+                    await stateMap[PlayerState.DEAD].EnterAsync(this, stateCts.Token);
 
-                    break;
+                    return;
                 }
         }
         await UniTask.WaitForFixedUpdate();

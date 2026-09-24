@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class IngameUIManager : MonoSingleton<IngameUIManager>
 {
@@ -21,6 +22,10 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
     public Button dodgeBtn;
     public Button inventoryBtn;
     public Button optionBtn;
+
+    public Slider hpSlider;
+    public Slider staminaSlider;
+    public TextMeshProUGUI hpTmp;
 
     public async UniTask Init()
     {
@@ -60,6 +65,11 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
     public void JoyStickUISetActive(bool isActive)
     {
         JoystickParent.gameObject.SetActive(isActive);
+    }
+
+    public void SetHpSliderText()
+    {
+        hpTmp.text = $"{IngameSessionManager.Instance.playerStats.currentHp}/{IngameSessionManager.Instance.playerStats.maxHp}";
     }
 
 }

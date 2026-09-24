@@ -5,4 +5,6 @@ using UnityEngine;
 public partial class Player : MonoBehaviour
 {
     public PlayerSkinBase playerSkinBase;
+
+    public Transform damageTrf;
 }

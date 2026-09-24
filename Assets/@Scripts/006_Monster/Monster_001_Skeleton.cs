@@ -10,13 +10,14 @@ public class Monster_001_Skeleton : Monster_000_Base
 {
     public MonsterSkinSkeleton monsterSkinSkeleton;
     public Transform facingObjectParentTrf;
+    public Transform attackHitBoxTrf;
 
     private MonsterState monsterState = MonsterState.IDLE;
 
     private CancellationTokenSource stateCts;
 
     [SerializeField] private Transform target;
-    private MonsterStats monsterStats = new MonsterStats();
+    
     public Rigidbody movementBody;
     private Vector3 spawnPosition;
     private Vector3? moveDestination;
@@ -37,16 +38,16 @@ public class Monster_001_Skeleton : Monster_000_Base
         CharacterContactMovement.Move(movementBody, Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterStats.moveSpeed));
     }
 
-    private void Awake()
+    private void Start()
     {
-        movementBody = GetComponent<Rigidbody>();
-        spawnPosition = transform.position;
         MonsterInit().Forget();
     }
 
     async UniTask MonsterInit()
     {
         stateCts = new CancellationTokenSource();
+        spawnPosition = transform.position;
+        target = IngameSessionManager.Instance.player.GetComponent<Transform>();
         await OnStateChange();
     }
 
@@ -200,8 +201,10 @@ public class Monster_001_Skeleton : Monster_000_Base
                     return;
                 }
 
+                await AttackAsync(IngameSessionManager.Instance.player, stateCts.Token);
+
                 // Player의 피해 함수가 만들어지면 이 위치에서 호출한다.
-                Debug.Log($"{name} Attack");
+
 
                 await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackWindow), cancellationToken: token);
                 await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackRecovery), cancellationToken: token);
@@ -266,16 +269,6 @@ public class Monster_001_Skeleton : Monster_000_Base
         return Vector2.Distance(transform.position, target.position) <= monsterStats.attackRange;
     }
 
-    //private bool HasLeftSpawnRange()
-    //{
-    //    if (monsterStats.leashRange <= 0f)
-    //    {
-    //        return false;
-    //    }
-
-    //    return Vector2.Distance(transform.position, spawnPosition) > monsterStats.leashRange;
-    //}
-
     private void MoveTo(Vector3 destination)
     {
         moveDestination = new Vector3(destination.x, destination.y, transform.position.z);
@@ -301,7 +294,6 @@ public class Monster_001_Skeleton : Monster_000_Base
 
         var directionX = target.position.x - transform.position.x;
 
-
         var facingDirection = directionX > 0f ? 1 : -1;
 
         facingObjectParentTrf.localScale = new Vector3(
@@ -309,7 +301,6 @@ public class Monster_001_Skeleton : Monster_000_Base
             facingObjectParentTrf.localScale.y,
             facingObjectParentTrf.localScale.z
         );
-
     }
 
     private void OnDestroy()
@@ -340,6 +331,47 @@ public class Monster_001_Skeleton : Monster_000_Base
         //죽음판정
         if (monsterStats.currentHp <= 0)
             ChangeState((int)MonsterState.DEAD).Forget();
+    }
+
+    public async UniTask AttackAsync(Player player, CancellationToken token)
+    {
+        attackHitBoxTrf.gameObject.SetActive(true);
+        AttackEffectActive(player, destroyCancellationToken).Forget();
+
+        await UniTask.Delay(System.TimeSpan.FromSeconds(0.12f), cancellationToken: token);
+
+        transform.localRotation = Quaternion.Euler(0f, 0f, -35f);
+        transform.DOLocalRotate(new Vector3(0f, 0f, 55f), 0.12f).SetEase(Ease.OutQuad).OnComplete(() => transform.localRotation = Quaternion.Euler(0f, 0f, 0f));
+        attackHitBoxTrf.gameObject.SetActive(false);
+    }
+
+    public async UniTask AttackEffectActive(Player player, CancellationToken token)
+    {
+        //var effect = Instantiate(attackEffect, attackEffect.transform.position, Quaternion.identity);
+        //UpdateEffectDirection(attackHitBoxTrf.gameObject, player);
+        //effect.SetActive(true);
+
+        //try
+        //{
+        //    await UniTask.Delay(TimeSpan.FromSeconds(AttackSpeed), cancellationToken: token);
+        //}
+        //finally
+        //{
+        //    if (effect != null)
+        //        Destroy(effect);
+        //}
+    }
+
+    public void UpdateEffectDirection(GameObject gameObject, Player player)
+    {
+        //Vector2 dir = player.moveInput.sqrMagnitude > 0.001f ? player.moveInput.normalized : player.lastMoveDirection;
+        Vector2 dir = (player.transform.position - transform.position).normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        if (player.isPlayerFacingRight)
+            gameObject.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        else
+            gameObject.transform.rotation = Quaternion.Euler(0f, 180f, 180f - angle);
     }
 
 }

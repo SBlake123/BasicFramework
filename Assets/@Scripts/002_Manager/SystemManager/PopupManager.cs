@@ -465,9 +465,10 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         */
     }
 
-    public void AddMethodToBtn(Action yesAction, Action noAction = null)
+    public void AddMethodToBtn(Action yesAction, Action noAction = null)//, Action backKeyAction = null)
     {
-        //RemoveBtnListener();
+        RemoveBtnListener();
+
         if (noAction == null)
         {
             popup1Btn.onClick.AddListener(async () => {

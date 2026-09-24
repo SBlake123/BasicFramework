@@ -45,7 +45,6 @@ public class PlayerRuntimeStats
     }
 }
 
-
 public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 {
     public PlayerRuntimeStats playerStats = new PlayerRuntimeStats();
@@ -137,12 +136,19 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         ? currentShieldData.defense
         : playerStats.noShieldDefense;
 
+        float baseHp = playerStats.maxHp;
+
+        float baseStamina = playerStats.maxStamina;
+
         Debug.Log($"baseAttackDamage : {baseAttackDamage}");
 
         playerStats.CalculateAttackDamage(baseAttackDamage);
         playerStats.CalculateDefense(baseDefense);
+        playerStats.CalculateMaxHpAndStanima(baseHp, baseStamina);
         //SetDefense();
         SetHpAndStamina();
+        IngameUIManager.Instance.SetHpSliderText();
+
     }
 
     public void CalculateStatCoefficients()
@@ -216,7 +222,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     public void SetHpAndStamina()
     {
-
+        playerStats.currentHp = playerStats.maxHp;
     }
 
     public async UniTask RefreshPlayerStatus(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
