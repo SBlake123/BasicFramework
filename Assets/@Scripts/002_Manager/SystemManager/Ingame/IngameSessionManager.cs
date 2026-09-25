@@ -11,10 +11,11 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 {
     public Player player;
     public Canvas hudCanvas;
-    public float checkpointIntervalSeconds = 30f;
     public VirtualJoystick movingVirtualJoystick;
     public AimVirtualJoystick aimVirtualJoystick;
+
     public bool IsRaidActive { get; private set; }
+
     public event Action OnRaidExtracted;
     public event Action OnRaidFailed;
 

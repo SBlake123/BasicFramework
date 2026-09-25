@@ -4,7 +4,34 @@ using UnityEngine;
 
 public class MonsterSpawnArea : MonoBehaviour
 {
-    [SerializeField] private Vector2 size = new Vector2(5f, 3f);
+
+    //[SerializeField] public int areaNumber = 0;
+    //[SerializeField] public int spawnPointNumber = 0;
+    [SerializeField] private Vector2 size = new Vector2(0f, 0f);
+    [SerializeField] private LayerMask spawnBlockingMask;
+    public Transform spawnAreaTrf;
+    private float checkRadius = 0.5f;
+    private int maxAttempts = 30;
+
+    public bool TryGetSpawnPosition(out Vector3 position)
+    {
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            Vector3 candidate = GetRandomPosition();
+
+            bool overlaps = Physics.CheckSphere(candidate, checkRadius, spawnBlockingMask, QueryTriggerInteraction.Ignore);
+
+            if (overlaps)
+                continue;
+
+            position = candidate;
+            return true;
+        }
+
+        // 모든 시도에서 빈 공간을 찾지 못했다.
+        position = default;
+        return false;
+    }
 
     public Vector3 GetRandomPosition()
     {
