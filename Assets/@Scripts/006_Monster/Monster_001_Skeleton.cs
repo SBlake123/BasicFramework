@@ -113,7 +113,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
     private async UniTask OnIdle()
     {
         CancellationToken token = stateCts.Token;
-        Vector3 idleDestination = GetRandomSpawnPosition();
+        Vector3 idleDestination = GetRandomPosition();
 
         try
         {
@@ -131,7 +131,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
                 if (IsArrived(idleDestination))
                 {
-                    idleDestination = GetRandomSpawnPosition();
+                    idleDestination = GetRandomPosition();
                 }
 
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
@@ -301,7 +301,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         return Vector2.Distance(transform.position, destination) <= 0.05f;
     }
 
-    private Vector3 GetRandomSpawnPosition()
+    private Vector3 GetRandomPosition()
     {
         Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * monsterStats.leashRange;
         return spawnPosition + new Vector3(randomOffset.x, randomOffset.y, 0f);
