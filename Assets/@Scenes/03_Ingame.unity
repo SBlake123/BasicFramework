@@ -1103,6 +1103,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 4, y: 4}
+  spawnBlockingMask:
+    serializedVersion: 2
+    m_Bits: 2176
+  spawnAreaTrf: {fileID: 67243770}
 --- !u!1001 &77462945
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1176,6 +1180,10 @@ PrefabInstance:
     - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Name
       value: MonsterSkeleton (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3214310202825846891, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -312364,6 +312372,11 @@ MonoBehaviour:
   - {fileID: 975068593}
   - {fileID: 454765104}
   - {fileID: 5647443256548879448}
+  monsterSpawnAreaList:
+  - {fileID: 1487585874}
+  - {fileID: 1922867738}
+  - {fileID: 67243771}
+  - {fileID: 1155811633}
   screenGuard: {fileID: 1100102514}
   screenBlur: {fileID: 49813867}
   ingameUIManager: {fileID: 135975766}
@@ -312383,11 +312396,6 @@ MonoBehaviour:
   hudCanvas: {fileID: 1558365261}
   movingVirtualJoystick: {fileID: 209922004}
   aimVirtualJoystick: {fileID: 790786499}
-  monsterSpawnAreaList:
-  - {fileID: 1487585874}
-  - {fileID: 1922867738}
-  - {fileID: 67243771}
-  - {fileID: 1155811633}
 --- !u!1 &796014226
 GameObject:
   m_ObjectHideFlags: 0
@@ -312868,6 +312876,10 @@ PrefabInstance:
     - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Name
       value: MonsterSkeleton (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3214310202825846891, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -314060,6 +314072,10 @@ PrefabInstance:
     - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Name
       value: MonsterSkeleton (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3214310202825846891, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -318755,6 +318771,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 4, y: 4}
+  spawnBlockingMask:
+    serializedVersion: 2
+    m_Bits: 2176
+  spawnAreaTrf: {fileID: 1155811632}
 --- !u!1 &1156499894
 GameObject:
   m_ObjectHideFlags: 0
@@ -323570,6 +323590,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 4, y: 4}
+  spawnBlockingMask:
+    serializedVersion: 2
+    m_Bits: 2176
+  spawnAreaTrf: {fileID: 1487585873}
 --- !u!1 &1491861594
 GameObject:
   m_ObjectHideFlags: 0
@@ -330641,6 +330665,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 4, y: 4}
+  spawnBlockingMask:
+    serializedVersion: 2
+    m_Bits: 2176
+  spawnAreaTrf: {fileID: 1922867737}
 --- !u!1 &1938972392
 GameObject:
   m_ObjectHideFlags: 0
@@ -331777,6 +331805,10 @@ PrefabInstance:
     - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Name
       value: MonsterSkeleton (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3214310202825846891, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -336395,6 +336427,10 @@ PrefabInstance:
     - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Name
       value: MonsterSkeleton
+      objectReference: {fileID: 0}
+    - target: {fileID: 2419392658310588105, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3214310202825846891, guid: fe0f437fd88901a4aa01e5f2421d2552, type: 3}
       propertyPath: m_Materials.Array.data[0]

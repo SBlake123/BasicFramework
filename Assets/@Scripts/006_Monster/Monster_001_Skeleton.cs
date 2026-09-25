@@ -38,12 +38,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         CharacterContactMovement.Move(movementBody, Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterStats.moveSpeed));
     }
 
-    public void Awake()
-    {
-        Init().Forget();
-    }
-
-    public async UniTask Init()
+    public override async UniTask Init()
     {
         stateCts = new CancellationTokenSource();
         spawnPosition = transform.position;
@@ -244,9 +239,36 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     protected override async UniTask OnDeath()
     {
-        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() => Destroy(gameObject));
+        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() => { ResetForPool(); ObjectPool.Instance.PushToPool(gameObject); }) ;
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
+    }
+
+    void ResetForPool()
+    {
+        // 진행 중인 상태 행동을 취소한다.
+        stateCts?.Cancel();
+        stateCts?.Dispose();
+        stateCts = null;
+
+        // 이동 목적지를 지운다.
+        moveDestination = null;
+
+        // 이 Transform에 걸린 트윈을 중단한다.
+        transform.DOKill();
+
+        // 공격 도중 취소되었어도 공격 판정은 반드시 끈다.
+        if (attackHitBoxTrf != null)
+            attackHitBoxTrf.gameObject.SetActive(false);
+
+        isAttack = false;
+
+        // 이전 플레이어 참조를 지운다.
+        target = null;
+
+        // 반납 중에는 죽은 상태를 유지한다.
+        isDeath = true;
+        monsterState = MonsterState.DEAD;
     }
 
     private bool CanDetectTarget()

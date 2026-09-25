@@ -47,7 +47,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
     public StateBasePage[] pages;
 
-    public List<MonsterSpawnData> monsterSpawnDataList = new List<MonsterSpawnData>();
+    public List<MonsterSpawnData> monsterSpawnDataList { get; set; } = new List<MonsterSpawnData>();
     public List<MonsterSpawnArea> monsterSpawnAreaList = new List<MonsterSpawnArea>();
 
     public GameObject screenGuard;
@@ -181,7 +181,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
                     GameObject obj = await ObjectPool.Instance.PopFromPool((monster.monsterId), monsterSpawnAreaList[i].spawnAreaTrf);
                     obj.transform.position = spawnPosition;
-
+                    obj.GetComponent<Monster_000_Base>().Init().Forget();
                     //角力 积己
 
 
@@ -205,6 +205,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
                         GameObject obj = await ObjectPool.Instance.PopFromPool((monster.monsterId), monsterSpawnAreaList[i].spawnAreaTrf);
                         obj.transform.position = spawnPosition;
+                        obj.GetComponent<Monster_000_Base>().Init().Forget();
 
                         //角力 积己
 

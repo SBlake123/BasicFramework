@@ -20,7 +20,7 @@ public class MonsterStats
     public float maxHp = 100f;
     public float attackDamage = 10f;
     public float moveSpeed = 2f;
-    public float detectionRange = 20f;
+    public float detectionRange = 5f;
     public float attackRange = 0.8f;
     public float attackAngle = 2f;
     public float attackPreparation = 0.5f;
@@ -29,12 +29,15 @@ public class MonsterStats
     public float leashRange = 3f;
 }
 
+[RequireComponent(typeof(PooledObject))]
 // XY-plane prototype. Movement intentionally has no pathfinding yet.
 public abstract class Monster_000_Base : MonoBehaviour
 {
     public MonsterStats monsterStats { get; set; } = new MonsterStats();
 
     public Transform damageTrf;
+
+    public abstract UniTask Init();
 
     public abstract UniTask ChangeState(int state);
 
