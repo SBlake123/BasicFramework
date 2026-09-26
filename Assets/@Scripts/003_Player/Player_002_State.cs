@@ -22,6 +22,7 @@ public partial class Player : MonoBehaviour
     {
         UniTask EnterAsync(Player player, CancellationToken token);
     }
+
     private readonly Dictionary<PlayerState, IPlayerState> stateMap = new()
     {
         { PlayerState.IDLE, new IdleState() },
