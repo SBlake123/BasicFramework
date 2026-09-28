@@ -8,10 +8,7 @@ using DG.Tweening;
 
 public partial class Monster_101_Fallen : Monster_000_Base
 {
-    public interface IMonsterState
-    {
-        UniTask EnterAsync(Player player, CancellationToken token);
-    }
+    
 
     private readonly Dictionary<MonsterState, IMonsterState> stateMap = new()
     {
@@ -22,46 +19,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
         { MonsterState.DEAD, new DeadState() }
     };
 
-    public class IdleState : IMonsterState
-    {
-        public async UniTask EnterAsync(Player player, CancellationToken token)
-        {
-            
-        }
-    }
-
-    public class AttackState : IMonsterState
-    {
-        public async UniTask EnterAsync(Player player, CancellationToken token)
-        {
-            //Attack에 관한 메소드
-
-        }
-    }
-
-    public class DodgeState : IMonsterState
-    {
-        public async UniTask EnterAsync(Player player, CancellationToken token)
-        {
-
-        }
-    }
-
-    public class DeadState : IMonsterState
-    {
-        public async UniTask EnterAsync(Player player, CancellationToken token)
-        {
-
-        }
-    }
-
-    public class ReturnState : IMonsterState
-    {
-        public async UniTask EnterAsync(Player player, CancellationToken token)
-        {
-
-        }
-    }
+   
 
     public override async UniTask ChangeState(int state)
     {
