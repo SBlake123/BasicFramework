@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterSkinSkeleton : MonsterSkinBase
+public class MonsterSkinFallen : MonsterSkinBase
 {
     public override bool needSprRelocation => true;
     public override async UniTask PlayIdle()
@@ -12,7 +12,7 @@ public class MonsterSkinSkeleton : MonsterSkinBase
     }
     public override async UniTask PlayAttack()
     {
-      
+
     }
 
     public override async UniTask PlayDeath()

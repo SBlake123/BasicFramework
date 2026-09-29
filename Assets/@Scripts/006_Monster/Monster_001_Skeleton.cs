@@ -12,13 +12,13 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public Transform attackHitBoxTrf;
 
-    public Rigidbody movementBody;
 
     private void FixedUpdate()
     {
         if (movementBody == null) return;
         if (!moveDestination.HasValue)
         {
+            CharacterContactMovement.Stop(movementBody);
             return;
         }
         Vector3 delta = moveDestination.Value - movementBody.position;
@@ -28,7 +28,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public override async UniTask Init()
     {
-        
+        await base.Init();
     }
 
     public override async UniTask ChangeState(int state)
@@ -90,10 +90,15 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         await UniTask.WaitForFixedUpdate();
     }
 
+    float resumeMoveTime = 0f;
+    bool isWaiting = false;
+
     private async UniTask OnIdle()
     {
         CancellationToken token = stateCts.Token;
         Vector3 idleDestination = GetRandomPosition();
+
+        monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
 
         try
         {
@@ -105,13 +110,32 @@ public partial class Monster_001_Skeleton : Monster_000_Base
                     return;
                 }
 
-                monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
-                UpdateFacingDirection();
-                MoveTo(idleDestination);
-
-                if (IsArrived(idleDestination))
+                if (isWaiting)
                 {
+                    if (Time.time < resumeMoveTime)
+                    {
+                        await UniTask.Yield(PlayerLoopTiming.Update, token);
+                        continue;
+                    }
+
+                    isWaiting = false;
                     idleDestination = GetRandomPosition();
+                    monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
+                }
+
+                if (IsArrived(idleDestination) || !CanMoveCheck(idleDestination))
+                {
+                    moveDestination = null;
+                    CharacterContactMovement.Stop(movementBody);
+                    monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_IDLE);
+
+                    isWaiting = true;
+                    resumeMoveTime = Time.time + 2f;
+                }
+                else
+                {
+                    MoveTo(idleDestination);
+                    UpdateFacingDirection();
                 }
 
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
@@ -119,6 +143,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         }
         catch (OperationCanceledException)
         {
+
         }
     }
 
@@ -143,7 +168,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
                     return;
                 }
 
-                monsterSkinSkeleton.anim.Play("SkeletonMove");
+                monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
                 UpdateFacingDirection();
                 MoveTo(target.position);
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
@@ -230,7 +255,4 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
     }
-
-
-
 }

@@ -5,4 +5,5 @@ using UnityEngine;
 public class GAnimName : MonoBehaviour
 {
     public static readonly string SKELETON_MOVE = "SkeletonMove";
+    public static readonly string SKELETON_IDLE = "SkeletonIdle";
 }

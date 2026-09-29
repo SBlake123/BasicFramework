@@ -41,7 +41,10 @@ public abstract class Monster_000_Base : MonoBehaviour
 
     public Transform facingObjectParentTrf;
 
+    public Rigidbody movementBody;
+
     [SerializeField] protected Transform target;
+    [SerializeField] protected LayerMask obstacleLayers;
 
     protected Vector3 spawnPosition;
 
@@ -84,7 +87,21 @@ public abstract class Monster_000_Base : MonoBehaviour
             return;
         }
 
-        var directionX = target.position.x - transform.position.x;
+        Vector3 facingPosition;
+
+        if (monsterState == MonsterState.IDLE || monsterState == MonsterState.RETURN)
+        {
+            if (!moveDestination.HasValue) return;
+            facingPosition = moveDestination.Value;
+        }
+        else
+        {
+            if (target == null) return;
+            facingPosition = target.position;
+        }
+
+        float directionX = facingPosition.x - transform.position.x;
+        if (Mathf.Abs(directionX) < 0.001f) return;
 
         var facingDirection = directionX > 0f ? 1 : -1;
 
@@ -111,6 +128,29 @@ public abstract class Monster_000_Base : MonoBehaviour
         }
 
         return Vector2.Distance(transform.position, target.position) <= monsterStats.attackRange;
+    }
+    protected bool CanMoveCheck(Vector3 destination)
+    {
+        Vector3 origin = transform.position;
+        destination.z = origin.z;
+
+        Vector3 offset = destination - origin;
+        float distance = offset.magnitude;
+
+        if (distance > 0.001f)
+        {
+            Vector3 direction = offset / distance;
+            float checkDistance = Mathf.Min(distance, monsterStats.moveSpeed * Time.fixedDeltaTime + 1f);
+
+            if (Physics.Raycast(origin, direction, checkDistance, obstacleLayers, QueryTriggerInteraction.Ignore))
+            {
+                moveDestination = null;
+                return false;
+            }
+        }
+
+        moveDestination = destination;
+        return true;
     }
     protected void MoveTo(Vector3 destination)
     {
@@ -143,5 +183,12 @@ public abstract class Monster_000_Base : MonoBehaviour
         monsterState = MonsterState.DEAD;
 
         ObjectPool.Instance.PushToPool(gameObject);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        stateCts?.Cancel();
+        stateCts?.Dispose();
+        stateCts = null;
     }
 }

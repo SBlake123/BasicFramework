@@ -203,11 +203,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageTrf: {fileID: 8749504135392961610}
-  monsterSkinSkeleton: {fileID: 4593281409347318127}
   facingObjectParentTrf: {fileID: 6810998051285949748}
-  attackHitBoxTrf: {fileID: 5850584347612037121}
-  target: {fileID: 0}
   movementBody: {fileID: 5346532124983806867}
+  target: {fileID: 0}
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  monsterSkinSkeleton: {fileID: 4593281409347318127}
+  attackHitBoxTrf: {fileID: 5850584347612037121}
 --- !u!54 &5346532124983806867
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -442,7 +445,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8630090209623870740}
   - component: {fileID: 5624349906499127472}
-  - component: {fileID: 799759346595574073}
   m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
@@ -486,15 +488,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6, y: 0.9140756, z: 0.2}
   m_Center: {x: 0, y: -0.042962193, z: 0}
---- !u!114 &799759346595574073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7560781711553839643}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71156897aae4167488a886a6c3a3e055, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
