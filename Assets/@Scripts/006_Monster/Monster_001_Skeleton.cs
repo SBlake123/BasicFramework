@@ -9,28 +9,16 @@ using DG.Tweening;
 public partial class Monster_001_Skeleton : Monster_000_Base
 {
     public MonsterSkinSkeleton monsterSkinSkeleton;
-    public Transform facingObjectParentTrf;
+
     public Transform attackHitBoxTrf;
 
-    private MonsterState monsterState = MonsterState.IDLE;
-
-    private CancellationTokenSource stateCts;
-
-    [SerializeField] private Transform target;
-    
     public Rigidbody movementBody;
-    private Vector3 spawnPosition;
-    private Vector3? moveDestination;
-
-    bool isAttack;
-    bool isDeath;
 
     private void FixedUpdate()
     {
         if (movementBody == null) return;
         if (!moveDestination.HasValue)
         {
-
             return;
         }
         Vector3 delta = moveDestination.Value - movementBody.position;
@@ -40,15 +28,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public override async UniTask Init()
     {
-        stateCts = new CancellationTokenSource();
-        spawnPosition = transform.position;
-        target = IngameSessionManager.Instance.player.GetComponent<Transform>();
-        await OnStateChange();
-    }
-
-    public void SetTarget(Transform newTarget)
-    {
-        target = newTarget;
+        
     }
 
     public override async UniTask ChangeState(int state)
@@ -239,98 +219,18 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     protected override async UniTask OnDeath()
     {
-        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() => { ResetForPool(); ObjectPool.Instance.PushToPool(gameObject); }) ;
+        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            ResetForPool(() =>
+            {
+                if (attackHitBoxTrf != null)
+                    attackHitBoxTrf.gameObject.SetActive(false);
+            });
+        });
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
     }
 
-    void ResetForPool()
-    {
-        // 진행 중인 상태 행동을 취소한다.
-        stateCts?.Cancel();
-        stateCts?.Dispose();
-        stateCts = null;
 
-        // 이동 목적지를 지운다.
-        moveDestination = null;
-
-        // 이 Transform에 걸린 트윈을 중단한다.
-        transform.DOKill();
-
-        // 공격 도중 취소되었어도 공격 판정은 반드시 끈다.
-        if (attackHitBoxTrf != null)
-            attackHitBoxTrf.gameObject.SetActive(false);
-
-        isAttack = false;
-
-        // 이전 플레이어 참조를 지운다.
-        target = null;
-
-        // 반납 중에는 죽은 상태를 유지한다.
-        isDeath = true;
-        monsterState = MonsterState.DEAD;
-    }
-
-    private bool CanDetectTarget()
-    {
-        if (target == null)
-        {
-            return false;
-        }
-
-        return Vector2.Distance(transform.position, target.position) <= monsterStats.detectionRange;
-    }
-
-    private bool CanAttackTarget()
-    {
-        if (target == null)
-        {
-            return false;
-        }
-
-        return Vector2.Distance(transform.position, target.position) <= monsterStats.attackRange;
-    }
-
-    private void MoveTo(Vector3 destination)
-    {
-        moveDestination = new Vector3(destination.x, destination.y, transform.position.z);
-    }
-
-    private bool IsArrived(Vector3 destination)
-    {
-        return Vector2.Distance(transform.position, destination) <= 0.05f;
-    }
-
-    private Vector3 GetRandomPosition()
-    {
-        Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * monsterStats.leashRange;
-        return spawnPosition + new Vector3(randomOffset.x, randomOffset.y, 0f);
-    }
-
-    private void UpdateFacingDirection()
-    {
-        if (isAttack || target == null || facingObjectParentTrf == null)
-        {
-            return;
-        }
-
-        var directionX = target.position.x - transform.position.x;
-
-        var facingDirection = directionX > 0f ? 1 : -1;
-
-        facingObjectParentTrf.localScale = new Vector3(
-            facingDirection,
-            facingObjectParentTrf.localScale.y,
-            facingObjectParentTrf.localScale.z
-        );
-    }
-
-    private void OnDestroy()
-    {
-        stateCts?.Cancel();
-        stateCts?.Dispose();
-    }
-
-    
 
 }
