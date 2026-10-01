@@ -248,17 +248,24 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public async UniTask<T> LoadAsset<T>(string key) where T : UnityEngine.Object //, Transform parent = null, Vector3? position = null, Quaternion? rotation = null) where T : UnityEngine.Object
     {
+        //key = RefineKey();
+
+        //isAssetLoaded = false;
+
+        //if (key == "") return null;
+
+        //lastKey = key;
+
+        //Addressables.LoadAssetAsync<T>(key).Completed += OnAssetLoaded;
+
+        //await UniTask.WaitUntil(() => isAssetLoaded);
+
         key = RefineKey();
+        if (string.IsNullOrEmpty(key)) return null;
 
-        isAssetLoaded = false;
+        var handle = Addressables.LoadAssetAsync<T>(key);
 
-        if (key == "") return null;
-
-        lastKey = key;
-
-        Addressables.LoadAssetAsync<T>(key).Completed += OnAssetLoaded;
-
-        await UniTask.WaitUntil(() => isAssetLoaded);
+        return await handle;
 
         //if (obj is GameObject _obj && typeof(T) == typeof(GameObject))
         //{
@@ -267,7 +274,7 @@ public class ResourceManager : Singleton<ResourceManager>
 
         try
         {
-            Debug.Log(key);
+            //Debug.Log(key);
             return (T)obj;
         }
         catch (InvalidCastException)

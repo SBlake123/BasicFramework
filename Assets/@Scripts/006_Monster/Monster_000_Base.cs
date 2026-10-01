@@ -12,7 +12,9 @@ public enum MonsterState
     CHASE,
     ATTACK,
     RETURN,
-    DEAD
+    DEAD,
+    SPECIAL_ATTACK,
+    COOLDOWN
 }
 
 [Serializable]
@@ -22,7 +24,7 @@ public class MonsterStats
     public float maxHp = 100f;
     public float attackDamage = 10f;
     public float moveSpeed = 2f;
-    public float detectionRange = 5f;
+    public float detectionRange = 20f;
     public float attackRange = 0.8f;
     public float attackAngle = 2f;
     public float attackPreparation = 0.5f;
@@ -35,6 +37,13 @@ public class MonsterStats
 // XY-plane prototype. Movement intentionally has no pathfinding yet.
 public abstract class Monster_000_Base : MonoBehaviour
 {
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(monsterStats.detectionRange, monsterStats.detectionRange, 0f));
+    }
+
     public MonsterStats monsterStats { get; set; } = new MonsterStats();
 
     public Transform damageTrf;
@@ -120,14 +129,16 @@ public abstract class Monster_000_Base : MonoBehaviour
 
         return Vector2.Distance(transform.position, target.position) <= monsterStats.detectionRange;
     }
-    protected bool CanAttackTarget()
+    protected bool CanAttackTarget(float attackRange = 0)
     {
+        if (attackRange == 0) attackRange = monsterStats.attackRange;
+
         if (target == null)
         {
             return false;
         }
 
-        return Vector2.Distance(transform.position, target.position) <= monsterStats.attackRange;
+        return Vector2.Distance(transform.position, target.position) <= attackRange;
     }
     protected bool CanMoveCheck(Vector3 destination)
     {

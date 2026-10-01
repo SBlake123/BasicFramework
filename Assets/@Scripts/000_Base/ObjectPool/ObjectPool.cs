@@ -57,7 +57,7 @@ public class ObjectPool : MonoSingleton<ObjectPool>
 
     public async UniTask<GameObject> PopFromPool(string _objName, Transform parent = null, bool isActive = true)
     {
-        Debug.Log($"_objName: {_objName}");
+        //Debug.Log($"_objName: {_objName}");
 
         GameObject _obj;
 

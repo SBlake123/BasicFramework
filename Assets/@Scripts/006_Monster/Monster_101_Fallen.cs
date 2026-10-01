@@ -6,21 +6,59 @@ using System.Threading;
 using UnityEngine;
 using DG.Tweening;
 
+
 public partial class Monster_101_Fallen : Monster_000_Base
 {
 
     public MonsterSkinFallen monsterSkinFallen;
 
     public Transform attackHitBoxTrf;
-    protected override async UniTask OnStateChange()
-    {
+    public float moveSpeed { get; set; }
 
+    public void Start()
+    {
+        Init();
     }
+    private void FixedUpdate()
+    {
+        if (movementBody == null) return;
+        if (!moveDestination.HasValue)
+        {
+            CharacterContactMovement.Stop(movementBody);
+            return;
+        }
+        Vector3 delta = moveDestination.Value - movementBody.position;
+        delta.z = 0;
+        CharacterContactMovement.Move(movementBody, Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, moveSpeed));
+    }
+
+    public override async UniTask Init()
+    {
+        await base.Init();
+        moveSpeed = monsterStats.moveSpeed;
+    }
+
     public override async UniTask ChangeState(int state)
+    {
+        if (monsterState != (MonsterState)state)
+        {
+            moveDestination = null;
+            stateCts?.Cancel();
+            stateCts?.Dispose();
+            stateCts = new CancellationTokenSource();
+
+            monsterState = (MonsterState)state;
+
+            //Debug.Log($"MonsterState : {state}");
+            Debug.Log($"FallenState{monsterState}");
+            await OnStateChange();
+        }
+    }
+
+    protected override async UniTask OnStateChange()
     {
         switch (monsterState)
         {
-
             case MonsterState.IDLE:
                 {
                     await OnIdle();
@@ -42,6 +80,20 @@ public partial class Monster_101_Fallen : Monster_000_Base
                 }
                 break;
 
+            case MonsterState.SPECIAL_ATTACK: //롤링 어택
+                {
+                    //챱챱 때리기
+                    await OnRollingAttack();
+                }
+                break;
+
+            case MonsterState.COOLDOWN:
+                {
+                    //챱챱 때리기
+                    await OnCooldown();
+                }
+                break;
+
             case MonsterState.RETURN:
                 {
                     await OnReturn();
@@ -58,15 +110,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
         await UniTask.WaitForFixedUpdate();
     }
 
-    public override async UniTask Init()
-    {
-        
-    }
 
-    public override async UniTask TakeDamage(int attackDamage)
-    {
-        
-    }
 
     float resumeMoveTime = 0f;
     bool isWaiting = false;
@@ -77,7 +121,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
         CancellationToken token = stateCts.Token;
         Vector3 idleDestination = GetRandomPosition();
 
-        //monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
+        monsterSkinFallen.anim.Play(GAnimName.MOVE);
 
         try
         {
@@ -99,14 +143,14 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
                     isWaiting = false;
                     idleDestination = GetRandomPosition();
-                    //monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
+                    monsterSkinFallen.anim.Play(GAnimName.MOVE);
                 }
 
                 if (IsArrived(idleDestination) || !CanMoveCheck(idleDestination))
                 {
                     moveDestination = null;
                     CharacterContactMovement.Stop(movementBody);
-                    //monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_IDLE);
+                    monsterSkinFallen.anim.Play(GAnimName.MOVE);
 
                     isWaiting = true;
                     resumeMoveTime = Time.time + 2f;
@@ -130,6 +174,10 @@ public partial class Monster_101_Fallen : Monster_000_Base
     {
         CancellationToken token = stateCts.Token;
 
+        monsterSkinFallen.anim.Play(GAnimName.MOVE);
+
+        ChoiceNextAttack(out MonsterState nextAttackState, out float nextAttackRange);
+
         try
         {
             while (!token.IsCancellationRequested)
@@ -140,13 +188,13 @@ public partial class Monster_101_Fallen : Monster_000_Base
                     return;
                 }
 
-                if (CanAttackTarget())
+                if (CanAttackTarget(nextAttackRange))
                 {
-                    ChangeState((int)MonsterState.ATTACK).Forget();
+                    ChangeState((int)nextAttackState).Forget();
                     return;
                 }
 
-                //monsterSkinSkeleton.anim.Play("SkeletonMove");
+
                 UpdateFacingDirection();
                 MoveTo(target.position);
                 await UniTask.Yield(PlayerLoopTiming.Update, token);
@@ -158,9 +206,60 @@ public partial class Monster_101_Fallen : Monster_000_Base
         }
     }
 
+    void ChoiceNextAttack(out MonsterState nextAttackState, out float nextAttackRange)
+    {
+        //MonsterState selectedState = UnityEngine.Random.Range(0, 2) == 0 ? MonsterState.ATTACK : MonsterState.SPECIAL_ATTACK;
+        MonsterState selectedState = MonsterState.SPECIAL_ATTACK;
+
+        switch (selectedState)
+        {
+            case MonsterState.ATTACK:
+                {
+                    nextAttackRange = monsterStats.attackRange;
+                    break;
+                }
+
+            case MonsterState.SPECIAL_ATTACK:
+                {
+                    nextAttackRange = 10f;
+                    break;
+                }
+
+            default:
+                {
+                    nextAttackRange = monsterStats.attackRange;
+                    break;
+                }
+        }
+
+        nextAttackState = selectedState;
+    }
+
     protected async UniTask OnReturn()
     {
+        CancellationToken token = stateCts.Token;
 
+        try
+        {
+            monsterSkinFallen.anim.Play(GAnimName.MOVE);
+
+            while (!token.IsCancellationRequested)
+            {
+
+                MoveTo(spawnPosition);
+                UpdateFacingDirection();
+                if (IsArrived(spawnPosition))
+                {
+                    ChangeState((int)MonsterState.IDLE).Forget();
+                    return;
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     protected override async UniTask OnAttack()
@@ -185,11 +284,70 @@ public partial class Monster_101_Fallen : Monster_000_Base
                     return;
                 }
 
-                await AttackAsync(IngameSessionManager.Instance.player, stateCts.Token);
+                await AttackAsync(stateCts.Token);
 
                 await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackWindow), cancellationToken: token);
                 await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackRecovery), cancellationToken: token);
             }
+        }
+
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    protected async UniTask OnRollingAttack()
+    {
+        CancellationToken token = stateCts.Token;
+
+        try
+        {
+            Vector3 destination = target.position;
+            Vector2 attackDirection = destination - transform.position;
+            float nextShotTime = Time.time;
+
+            MoveTo(target.position);
+            monsterSkinFallen.anim.Play(GAnimName.ROLLING_ATTACK);
+            moveSpeed = 4.5f;
+
+            while (!IsArrived(destination))
+            {
+                token.ThrowIfCancellationRequested();
+
+                if (Time.time >= nextShotTime)
+                {
+                    await RollingAttackAsync(stateCts.Token);
+                    nextShotTime = Time.time + 0.7f;
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
+            }
+
+            moveDestination = null;
+            CharacterContactMovement.Stop(movementBody);
+
+            
+            token.ThrowIfCancellationRequested();
+            ChangeState((int)MonsterState.COOLDOWN).Forget();
+        }
+
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    protected async UniTask OnCooldown()
+    {
+        CancellationToken token = stateCts.Token;
+
+        try
+        {
+            monsterSkinFallen.anim.Play(GAnimName.IDLE);
+            UpdateFacingDirection();
+            await UniTask.Delay(TimeSpan.FromSeconds(3f), cancellationToken: token);
+            token.ThrowIfCancellationRequested();
+
+            ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.IDLE)).Forget();
         }
 
         catch (OperationCanceledException)
