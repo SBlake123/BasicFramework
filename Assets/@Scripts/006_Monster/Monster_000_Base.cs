@@ -14,6 +14,7 @@ public enum MonsterState
     RETURN,
     DEAD,
     SPECIAL_ATTACK,
+    SUNKEN_ATTACK,
     COOLDOWN
 }
 

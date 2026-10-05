@@ -13,7 +13,10 @@ public partial class Monster_101_Fallen : Monster_000_Base
     public MonsterSkinFallen monsterSkinFallen;
 
     public Transform attackHitBoxTrf;
+
     public float moveSpeed { get; set; }
+
+    private float cooldownTerm { get; set; }
 
     public void Start()
     {
@@ -84,6 +87,13 @@ public partial class Monster_101_Fallen : Monster_000_Base
                 {
                     //챱챱 때리기
                     await OnRollingAttack();
+                }
+                break;
+
+            case MonsterState.SUNKEN_ATTACK: //롤링 어택
+                {
+                    //챱챱 때리기
+                    await OnSunkenAttack();
                 }
                 break;
 
@@ -209,7 +219,19 @@ public partial class Monster_101_Fallen : Monster_000_Base
     void ChoiceNextAttack(out MonsterState nextAttackState, out float nextAttackRange)
     {
         //MonsterState selectedState = UnityEngine.Random.Range(0, 2) == 0 ? MonsterState.ATTACK : MonsterState.SPECIAL_ATTACK;
-        MonsterState selectedState = MonsterState.SPECIAL_ATTACK;
+
+        int randomValue = UnityEngine.Random.Range(0, 10);
+
+        MonsterState selectedState = MonsterState.SUNKEN_ATTACK;//MonsterState.SPECIAL_ATTACK;
+
+        if (randomValue < 2)
+        {
+            selectedState = MonsterState.SPECIAL_ATTACK; //MonsterState.SPECIAL_ATTACK;
+        }
+        else
+        {
+            selectedState = MonsterState.SUNKEN_ATTACK; //MonsterState.SPECIAL_ATTACK;
+        } 
 
         switch (selectedState)
         {
@@ -222,6 +244,12 @@ public partial class Monster_101_Fallen : Monster_000_Base
             case MonsterState.SPECIAL_ATTACK:
                 {
                     nextAttackRange = 10f;
+                    break;
+                }
+
+            case MonsterState.SUNKEN_ATTACK:
+                {
+                    nextAttackRange = 5f;
                     break;
                 }
 
@@ -326,8 +354,9 @@ public partial class Monster_101_Fallen : Monster_000_Base
             moveDestination = null;
             CharacterContactMovement.Stop(movementBody);
 
-            
+
             token.ThrowIfCancellationRequested();
+            SettingCooldown(3f);
             ChangeState((int)MonsterState.COOLDOWN).Forget();
         }
 
@@ -344,7 +373,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
         {
             monsterSkinFallen.anim.Play(GAnimName.IDLE);
             UpdateFacingDirection();
-            await UniTask.Delay(TimeSpan.FromSeconds(3f), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(cooldownTerm), cancellationToken: token);
             token.ThrowIfCancellationRequested();
 
             ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.IDLE)).Forget();
@@ -367,5 +396,37 @@ public partial class Monster_101_Fallen : Monster_000_Base
         });
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
+    }
+
+    protected async UniTask OnSunkenAttack()
+    {
+        CancellationToken token = stateCts.Token;
+
+        try
+        {
+            monsterSkinFallen.anim.Play(GAnimName.IDLE);
+
+            for (int i = 0; i < 3; i++)
+            {
+                GameObject obj = await ObjectPool.Instance.PopFromPool("FallenSunken", parent: null, false);
+                obj.transform.position = target.position;
+                obj.SetActive(true);
+
+                await UniTask.WaitForSeconds(0.5f);
+            }
+
+            token.ThrowIfCancellationRequested();
+            SettingCooldown(2f);
+            ChangeState((int)MonsterState.COOLDOWN).Forget();
+        }
+
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    protected void SettingCooldown(float cooldownVal)
+    {
+        this.cooldownTerm = cooldownVal;
     }
 }
