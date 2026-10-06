@@ -72,7 +72,7 @@ public class IngameSceneManager : StateBaseSceneManager
         SceneAllocate();
         SubscribingEvent();
         SetDummyDataInSpawnData();
-        //await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
+        await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
         await ingameUIManager.Init();
         await IngameSessionManager.Instance.Init();
 
@@ -146,14 +146,20 @@ public class IngameSceneManager : StateBaseSceneManager
         },
         new MonsterSpawnData
         {
-            useWeight = true,
+            useWeight = false,
             totalSpawnCount = 3,
             monsters = new List<MonsterSpawnEntry>
             {
                 new MonsterSpawnEntry
                 {
                     monsterId = GPrefabName.SKELETON,
-                    value = 100
+                    value = 2
+                },
+
+                new MonsterSpawnEntry
+                {
+                    monsterId = GPrefabName.FALLEN,
+                    value = 1
                 }
             }
         }

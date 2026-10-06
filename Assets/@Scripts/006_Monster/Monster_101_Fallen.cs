@@ -39,6 +39,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
     {
         await base.Init();
         moveSpeed = monsterStats.moveSpeed;
+        monsterStats.maxHp = 200;
     }
 
     public override async UniTask ChangeState(int state)
@@ -420,8 +421,14 @@ public partial class Monster_101_Fallen : Monster_000_Base
             ChangeState((int)MonsterState.COOLDOWN).Forget();
         }
 
+        catch (MissingReferenceException)
+        {
+
+        }
+
         catch (OperationCanceledException)
         {
+
         }
     }
 

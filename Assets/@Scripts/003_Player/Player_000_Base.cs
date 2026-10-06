@@ -8,13 +8,13 @@ public partial class Player : MonoBehaviour
     public WeaponBase currentWeapon { get; set; }
     public ShieldBase currentShield { get; set; }
 
-    public BoxCollider playerHitBox;
+    public BoxCollider[] playerHitBoxArr;
     private void Update()
     {
         ReadMoveInput();
         MovePlayer();
         AimPlayer();
-        if (Input.GetKeyDown(playerInputKeyCode.playerAttack)) AttackPlayer().Forget();
+        if (hasAimInput) AttackPlayer().Forget();
     }
     private void FixedUpdate()
     {
@@ -42,5 +42,13 @@ public partial class Player : MonoBehaviour
 
         MoveInputChanged += UpdateMoveAnimation;
 
+    }
+
+    public void OnOffHitBox(bool enabled)
+    {
+        foreach(var item in playerHitBoxArr)
+        {
+            item.enabled = enabled;
+        }
     }
 }

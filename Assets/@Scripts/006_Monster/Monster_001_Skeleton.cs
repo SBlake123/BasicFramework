@@ -12,7 +12,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public Transform attackHitBoxTrf;
 
-
+    private float cooldownTerm;
     private void FixedUpdate()
     {
         if (movementBody == null) return;
@@ -29,6 +29,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
     public override async UniTask Init()
     {
         await base.Init();
+        monsterStats.detectionRange = 6f;     
     }
 
     public override async UniTask ChangeState(int state)
@@ -73,12 +74,22 @@ public partial class Monster_001_Skeleton : Monster_000_Base
                     await OnAttack();
                 }
                 break;
+
+            case MonsterState.COOLDOWN:
+                {
+                    //범위안에 들어왔을 때 공격이 가능한 상태일 시 공격한다.
+                    //공격이 끝나고 나서는 다시 공격하는 상태인지 판단해야 한다.
+                    await OnCooldown();
+                }
+                break;
+
             case MonsterState.RETURN:
                 {
                     //Return되는 경우는 플레이어가 사라진 상태에서 Chase 범위를 벗어났을 때 뿐.
                     await OnReturn();
                 }
                 break;
+
             case MonsterState.DEAD:
                 {
                     //죽는 단계는 끝이기 때문에 연결할 필요가 없다.
@@ -185,34 +196,85 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
         try
         {
-            while (!token.IsCancellationRequested)
-            {
-                if (!CanAttackTarget())
-                {
-                    ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
-                    return;
-                }
+            monsterSkinSkeleton.anim.Play(GAnimName.ATTACK);
 
-                await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackPreparation), cancellationToken: token);
+            GameObject obj = await ObjectPool.Instance.PopFromPool("SkeletonClaw", parent: null, false);
 
-                if (!CanAttackTarget())
-                {
-                    ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
-                    return;
-                }
+            await UniTask.WaitForSeconds(0.5f);
 
-                await AttackAsync(IngameSessionManager.Instance.player, stateCts.Token);
+            obj.transform.position = transform.position + (target.position - transform.position).normalized;
+            obj.SetActive(true);
 
-                // Player의 피해 함수가 만들어지면 이 위치에서 호출한다.
-
-                await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackWindow), cancellationToken: token);
-                await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackRecovery), cancellationToken: token);
-            }
+            token.ThrowIfCancellationRequested();
+            SettingCooldown(1f);
+            ChangeState((int)MonsterState.COOLDOWN).Forget();
         }
+
+        catch (OperationCanceledException)
+        {
+
+        }
+
+        catch (MissingReferenceException)
+        {
+
+        }
+
+        void SettingCooldown(float cooldownVal)
+        {
+            this.cooldownTerm = cooldownVal;
+        }
+
+        //try
+        //{
+        //    while (!token.IsCancellationRequested)
+        //    {
+        //        if (!CanAttackTarget())
+        //        {
+        //            ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
+        //            return;
+        //        }
+
+        //        await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackPreparation), cancellationToken: token);
+
+        //        if (!CanAttackTarget())
+        //        {
+        //            ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
+        //            return;
+        //        }
+
+        //        await AttackAsync(IngameSessionManager.Instance.player, stateCts.Token);
+
+        //        // Player의 피해 함수가 만들어지면 이 위치에서 호출한다.
+
+        //        await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackWindow), cancellationToken: token);
+        //        await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackRecovery), cancellationToken: token);
+        //    }
+        //}
+        //catch (OperationCanceledException)
+        //{
+        //}
+    }
+
+    protected async UniTask OnCooldown()
+    {
+        CancellationToken token = stateCts.Token;
+
+        try
+        {
+            monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_IDLE);
+            UpdateFacingDirection();
+            await UniTask.Delay(TimeSpan.FromSeconds(cooldownTerm), cancellationToken: token);
+            token.ThrowIfCancellationRequested();
+
+            ChangeState((int)MonsterState.IDLE).Forget();
+        }
+
         catch (OperationCanceledException)
         {
         }
     }
+
 
     private async UniTask OnReturn()
     {

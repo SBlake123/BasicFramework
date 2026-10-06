@@ -36,6 +36,7 @@ public partial class Player : MonoBehaviour
     bool isAttack = false;
     bool isDodging = false;
     bool isHit = false;
+    public bool isDead = false;
 
     CancellationTokenSource stateCts;
     // Update is called once per frame
@@ -47,6 +48,7 @@ public partial class Player : MonoBehaviour
             //Debug.Log($"Idle Start - Frame: {Time.frameCount}");
 
             player.AllStateBoolFalse();
+            player.lastMoveAnim = MoveAnim.None;
             player.MoveInputChanged?.Invoke(player.moveInput);
         }
     }
@@ -55,6 +57,8 @@ public partial class Player : MonoBehaviour
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
+
+
             //Attack에 관한 메소드
             player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;
@@ -100,9 +104,9 @@ public partial class Player : MonoBehaviour
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
             player.isDodging = true;
-            player.playerHitBox.enabled = false;
+            player.OnOffHitBox(false);
             player.playerSkinBase.PlayDodge();
-            
+
             while (true)
             {
                 var state = player.playerSkinBase.anim.GetCurrentAnimatorStateInfo(0);
@@ -111,7 +115,7 @@ public partial class Player : MonoBehaviour
 
                 await UniTask.WaitForFixedUpdate();
             }
-
+            Debug.Log("EndDodge");
             player.EndDodge();
             await player.ChangeState(PlayerState.IDLE);
         }
@@ -120,7 +124,7 @@ public partial class Player : MonoBehaviour
     public void EndDodge()
     {
         isDodging = false;
-        playerHitBox.enabled = true;
+        OnOffHitBox(true);
     }
 
     public class DeadState : IPlayerState
@@ -129,7 +133,17 @@ public partial class Player : MonoBehaviour
         {
             await player.OnDeath();
             PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10004), LanguageManager.Instance.GetLangScript(10002));
-            PopupManager.Instance.AddMethodToBtn(async () => await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE));
+            PopupManager.Instance.AddMethodToBtn(async () =>
+            {
+                GameManager.Instance.SetGameplayPaused(false);
+                await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
+            }, 
+            null,
+            async () =>
+            {
+                GameManager.Instance.SetGameplayPaused(false);
+                await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
+            });
         }
     }
 

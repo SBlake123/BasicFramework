@@ -18,8 +18,8 @@ TagManager:
   - Field
   - AttackEffect
   - ObstacleGround
-  - 
-  - 
+  - GroundHitChecker
+  - DodgePlayer
   - 
   - 
   - 

@@ -147,7 +147,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         playerStats.CalculateMaxHpAndStanima(baseHp, baseStamina);
         //SetDefense();
         SetHpAndStamina();
-        IngameUIManager.Instance.SetHpSliderText();
+        IngameUIManager.Instance.SetHpSlider();
 
     }
 

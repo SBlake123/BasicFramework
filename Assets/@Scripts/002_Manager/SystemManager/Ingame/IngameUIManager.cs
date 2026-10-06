@@ -37,22 +37,26 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
 
     private async UniTask OnInventoryClicked()
     {
-        InventoryRequested?.Invoke();
+        if (CanUIAction())
+            InventoryRequested?.Invoke();
     }
 
     private async UniTask OnAttackClicked()
     {
-        AttackRequested?.Invoke();
+        if (CanUIAction())
+            AttackRequested?.Invoke();
     }
 
     private async UniTask OnDodgeClicked()
     {
-        DodgeRequested?.Invoke();
+        if (CanUIAction())
+            DodgeRequested?.Invoke();
     }
 
     private async UniTask OnOptionClicked()
     {
-        OptionRequested?.Invoke();
+        if (CanUIAction())
+            OptionRequested?.Invoke();
     }
 
 
@@ -67,9 +71,17 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
         JoystickParent.gameObject.SetActive(isActive);
     }
 
-    public void SetHpSliderText()
+    public void SetHpSlider()
     {
         hpTmp.text = $"{IngameSessionManager.Instance.playerStats.currentHp}/{IngameSessionManager.Instance.playerStats.maxHp}";
+        hpSlider.value = (float)IngameSessionManager.Instance.playerStats.currentHp / IngameSessionManager.Instance.playerStats.maxHp;
+    }
+
+    private bool CanUIAction()
+    {
+        if (IngameSessionManager.Instance.player.isDead) return false;
+
+        return true;
     }
 
 }

@@ -55,7 +55,7 @@ public partial class Player : MonoBehaviour
     
     private bool CanInputAction()
     {
-        return !isDodging;
+        return !isDodging || isDead;
     }
 
     /// <summary>
@@ -188,6 +188,8 @@ public partial class Player : MonoBehaviour
 
     private async UniTask AttackPlayer()
     {
+        if (CanAttack() == false) return;
+
         OnAttackRequested();
         await ChangeState(PlayerState.ATTACK);
     }
@@ -276,6 +278,13 @@ public partial class Player : MonoBehaviour
         bool canMoveAnimPlay = false;
         if (!isAttack && !isDodging) canMoveAnimPlay = true;
         return canMoveAnimPlay;
+    }
+
+    private bool CanAttack()
+    {
+
+
+        return true;
     }
 
     // Legacy PlayerActionCheck() read keyboard input and moved the player in a

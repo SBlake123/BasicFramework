@@ -465,7 +465,7 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         */
     }
 
-    public void AddMethodToBtn(Action yesAction, Action noAction = null)//, Action backKeyAction = null)
+    public void AddMethodToBtn(Action yesAction, Action noAction = null, Action backAction = null)//, Action backKeyAction = null)
     {
         RemoveBtnListener();
 
@@ -477,10 +477,8 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
             });
             popup1Back.onClick.AddListener(async () => {
                 nowState = (int)POPUP_STATE.SELECT;
-                noAction?.Invoke(); setPopUpClose();
+                backAction?.Invoke(); setPopUpClose();
             });
-            //백 키 액션 등록
-            backKeyAction = yesAction;
         }
         else
         {
@@ -493,11 +491,9 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
                 noAction?.Invoke(); setPopUpClose();
             });
             popup2Back.onClick.AddListener(() => {
-                nowState = (int)POPUP_STATE.SELECT; 
-                noAction?.Invoke(); setPopUpClose();
+                nowState = (int)POPUP_STATE.SELECT;
+                backAction?.Invoke(); setPopUpClose();
             });
-            //백 키 액션 등록
-            backKeyAction = noAction;
         }
     }
 

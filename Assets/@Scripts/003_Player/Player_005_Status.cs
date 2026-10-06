@@ -32,7 +32,7 @@ public partial class Player : MonoBehaviour
         IngameSessionManager.Instance.playerStats.currentHp -= attackDamage;
 
         //체력 UI 표시하기
-        IngameUIManager.Instance.SetHpSliderText();
+        IngameUIManager.Instance.SetHpSlider();
         //죽음판정
         if (IngameSessionManager.Instance.playerStats.currentHp <= 0)
             ChangeState(PlayerState.DEAD).Forget();
@@ -41,9 +41,19 @@ public partial class Player : MonoBehaviour
     public async UniTask OnDeath()
     {
         playerSkinBase.PlayDie();
+        OnOffHitBox(false);
+        moveInput = Vector2.zero;
+        aimInput = Vector2.zero;
+        movingVirtualJoystickInput = Vector2.zero;
+        aimingVirtualJoystickInput = Vector2.zero;
+        desiredVelocity = Vector3.zero;
+        CharacterContactMovement.Stop(movementBody);
+        isDead = true;
 
         transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear);
 
-        await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
+        await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: destroyCancellationToken);
+
+        GameManager.Instance.SetGameplayPaused(true);
     }
 }

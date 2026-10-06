@@ -103,4 +103,10 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
 
     }
+
+    public void SetGameplayPaused(bool isPaused, Action callback = null)
+    {
+        Time.timeScale = isPaused ? 0f : 1f;
+        callback?.Invoke();
+    }
 }
