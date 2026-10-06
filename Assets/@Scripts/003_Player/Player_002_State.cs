@@ -34,7 +34,7 @@ public partial class Player : MonoBehaviour
     };
 
     bool isAttack = false;
-    bool isDodge = false;
+    bool isDodging = false;
     bool isHit = false;
 
     CancellationTokenSource stateCts;
@@ -99,9 +99,28 @@ public partial class Player : MonoBehaviour
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
-            player.isDodge = true;
+            player.isDodging = true;
+            player.playerHitBox.enabled = false;
+            player.playerSkinBase.PlayDodge();
+            
+            while (true)
+            {
+                var state = player.playerSkinBase.anim.GetCurrentAnimatorStateInfo(0);
 
+                if (state.IsName(GSkinSprName.DODGE) && state.normalizedTime >= 1f) break;
+
+                await UniTask.WaitForFixedUpdate();
+            }
+
+            player.EndDodge();
+            await player.ChangeState(PlayerState.IDLE);
         }
+    }
+
+    public void EndDodge()
+    {
+        isDodging = false;
+        playerHitBox.enabled = true;
     }
 
     public class DeadState : IPlayerState
@@ -156,7 +175,7 @@ public partial class Player : MonoBehaviour
 
             case PlayerState.DODGE:
                 {
-
+                    await stateMap[PlayerState.DODGE].EnterAsync(this, stateCts.Token);
                     break;
                 }
 
@@ -182,6 +201,6 @@ public partial class Player : MonoBehaviour
     void AllStateBoolFalse()
     {
         isAttack = false;
-        isDodge = false;
+        isDodging = false;
     }
 }

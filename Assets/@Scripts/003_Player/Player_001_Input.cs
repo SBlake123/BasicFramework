@@ -48,7 +48,6 @@ public partial class Player : MonoBehaviour
     private void OnDisable()
     {
         desiredVelocity = Vector3.zero;
-
     }
 
     private PlayerState playerState;
@@ -56,7 +55,7 @@ public partial class Player : MonoBehaviour
     
     private bool CanInputAction()
     {
-        return !nowEvading && !isHit;
+        return !isDodging;
     }
 
     /// <summary>
@@ -158,13 +157,15 @@ public partial class Player : MonoBehaviour
     private void MovePlayer()
     {
         //Debug.Log("Move");
+        
+        if (!CanInputAction())
+        {
+            return;
+        }
 
-        
-        
-        if (!CanInputAction() || moveInput == Vector2.zero)
+        if (moveInput == Vector2.zero)
         {
             desiredVelocity = Vector3.zero;
-
             return;
         }
         
@@ -191,9 +192,20 @@ public partial class Player : MonoBehaviour
         await ChangeState(PlayerState.ATTACK);
     }
 
+    private async UniTask DodgePlayer()
+    {
+        OnDodgeRequested();
+        await ChangeState(PlayerState.DODGE);
+    }
+
     private void OnAttackRequested()
     {
         isAttackRequested = true;
+    }
+
+    private void OnDodgeRequested()
+    {
+        isDodging = true;
     }
 
     private void UpdateMoveAnimation(Vector2 input)
@@ -262,7 +274,7 @@ public partial class Player : MonoBehaviour
     private bool CanMoveAnimPlay()
     {
         bool canMoveAnimPlay = false;
-        if (!isAttack && !isDodge) canMoveAnimPlay = true;
+        if (!isAttack && !isDodging) canMoveAnimPlay = true;
         return canMoveAnimPlay;
     }
 

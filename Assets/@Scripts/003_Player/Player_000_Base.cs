@@ -7,6 +7,8 @@ public partial class Player : MonoBehaviour
 {
     public WeaponBase currentWeapon { get; set; }
     public ShieldBase currentShield { get; set; }
+
+    public BoxCollider playerHitBox;
     private void Update()
     {
         ReadMoveInput();
@@ -17,7 +19,15 @@ public partial class Player : MonoBehaviour
     private void FixedUpdate()
     {
         if (movementBody != null)
+        {
+            if (isDodging)
+            {
+                CharacterContactMovement.Move(movementBody, lastLookDirection * 5f);
+                return;
+            }
+
             CharacterContactMovement.Move(movementBody, CanInputAction() ? desiredVelocity : Vector3.zero);
+        }
     }
 
     public async UniTask Init()
@@ -27,7 +37,8 @@ public partial class Player : MonoBehaviour
 
         movementBody = GetComponent<Rigidbody>();
         IngameUIManager.Instance.AttackRequested += async () => await AttackPlayer();
-        
+        IngameUIManager.Instance.DodgeRequested += async () => await DodgePlayer();
+
 
         MoveInputChanged += UpdateMoveAnimation;
 

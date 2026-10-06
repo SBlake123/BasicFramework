@@ -40,6 +40,8 @@ public partial class Player : MonoBehaviour
 
     public async UniTask OnDeath()
     {
+        playerSkinBase.PlayDie();
+
         transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear);
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);

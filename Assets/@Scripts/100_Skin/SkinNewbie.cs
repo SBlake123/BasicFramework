@@ -30,12 +30,14 @@ public class SkinNewbie : PlayerSkinBase
 
     }
 
-    public override void PlayDie()
-    {
-    }
-
     public override void PlayDodge()
     {
-        anim.Play("Dodge", 0, 0f);
+        anim.Play(GSkinSprName.DODGE);
+
+    }
+
+    public override void PlayDie()
+    {
+        anim.Play(GSkinSprName.DIE);
     }
 }

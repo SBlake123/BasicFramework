@@ -15,4 +15,7 @@ public static class GSkinSprName
     public static readonly string HIT_RED = "Hit Red";
      
     public static readonly string DIE = "Die";
+
+    public static readonly string DODGE = "Dodge";
+
 }

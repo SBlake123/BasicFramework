@@ -62,10 +62,8 @@ public class IngameSceneManager : StateBaseSceneManager
 
     private void Start()
     {
-        InitializeScene().Forget();
-        //InventoryClosed += ingameUIManager.
+        ChangeState((int)IngameSceneState.LOADING).Forget();
     }
-
     private async UniTask InitializeScene()
     {
         screenGuard.SetActive(true);
@@ -74,11 +72,10 @@ public class IngameSceneManager : StateBaseSceneManager
         SceneAllocate();
         SubscribingEvent();
         SetDummyDataInSpawnData();
-        await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
+        //await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
         await ingameUIManager.Init();
         await IngameSessionManager.Instance.Init();
-        await ChangeState((int)IngameSceneState.LOADING);
-        await ChangeState((int)IngameSceneState.INGAME);
+
 
         screenGuard.SetActive(false);
     }
@@ -289,7 +286,9 @@ public class IngameSceneManager : StateBaseSceneManager
                 break;
 
             case IngameSceneState.LOADING:
+                await InitializeScene();
                 await IngameSessionManager.Instance.BeginRaid();
+                await ChangeState((int)IngameSceneState.INGAME);
                 break;
 
             case IngameSceneState.INGAME:
