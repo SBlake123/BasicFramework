@@ -179,6 +179,11 @@ public partial class Monster_101_Fallen : Monster_000_Base
         {
 
         }
+
+        catch (MissingReferenceException)
+        {
+
+        }
     }
 
     protected async UniTask OnChase()
@@ -214,6 +219,10 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
         catch (OperationCanceledException)
         {
+        }
+        catch (MissingReferenceException)
+        {
+
         }
     }
 
@@ -289,6 +298,10 @@ public partial class Monster_101_Fallen : Monster_000_Base
         catch (OperationCanceledException)
         {
         }
+        catch (MissingReferenceException)
+        {
+
+        }
     }
 
     protected override async UniTask OnAttack()
@@ -322,6 +335,10 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
         catch (OperationCanceledException)
         {
+        }
+        catch (MissingReferenceException)
+        {
+
         }
     }
 
@@ -363,6 +380,10 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
         catch (OperationCanceledException)
         {
+        }
+        catch (MissingReferenceException)
+        {
+
         }
     }
 

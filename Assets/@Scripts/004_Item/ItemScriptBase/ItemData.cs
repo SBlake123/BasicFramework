@@ -19,9 +19,7 @@ public class ItemData
     public int maxStackAmount = 0;
     public int healAmount = 0;
 
-    //public float attackDamage;
-    //public float attackSpeed;
-    //public float attackRange;
+    public string itemExplanation = "";
 
     public virtual ItemData DeepCopy()
     {
@@ -31,7 +29,7 @@ public class ItemData
             itemName = itemName,
             itemNameId = itemNameId,
             icon = icon,
-            itemKey = itemKey,        
+            itemKey = itemKey,
 
             category = category,
             equipmentType = equipmentType,
@@ -40,10 +38,7 @@ public class ItemData
             canStack = canStack,
             maxStackAmount = maxStackAmount,
             healAmount = healAmount,
-
-            //attackDamage = attackDamage,
-            //attackSpeed = attackSpeed,
-            //attackRange = attackRange
+            itemExplanation = itemExplanation
         };
     }
 

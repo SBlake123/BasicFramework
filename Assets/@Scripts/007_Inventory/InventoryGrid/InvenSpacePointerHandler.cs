@@ -59,10 +59,14 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
 
     public void OnDrag(PointerEventData eventData)
     {
+        //설명 끄기
+        inventoryGrid_000_Base.Inventory_000_Base.itemConfigWindow.gameObject.SetActive(false);
+
         switch (inventoryGrid_000_Base.itemData)
         {
             case not null:
                 {
+                    
                     MoveDragObject(eventData);
                     break;
                 }
@@ -157,35 +161,78 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        //switch (inventoryGrid_000_Base.itemData)
-        //{
-        //    case not null:
-        //        {
-        //            //아이템 설명
-        //            break;
-        //        }
-        //    default:
-        //        {
+        switch (inventoryGrid_000_Base.itemData)
+        {
+            case not null:
+                {
 
-        //            break;
-        //        }
-        //}
+
+                    var window = inventoryGrid_000_Base.Inventory_000_Base.itemConfigWindow;
+
+
+                    RectTransform gridRect =
+                        (RectTransform)inventoryGrid_000_Base.transform;
+
+                    RectTransform windowRect =
+                        (RectTransform)window.transform;
+
+                    Canvas canvas = gridRect.GetComponentInParent<Canvas>().rootCanvas;
+
+                    Camera uiCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay
+                        ? null
+                        : canvas.worldCamera;
+
+                    // Grid 중심이 화면 위쪽인지 확인
+                    Vector3 gridCenter = gridRect.TransformPoint(gridRect.rect.center);
+                    Vector2 screenPosition =
+                        RectTransformUtility.WorldToScreenPoint(uiCamera, gridCenter);
+
+                    bool isUpperHalf = screenPosition.y >= Screen.height * 0.5f;
+
+                    Vector3[] corners = new Vector3[4];
+                    gridRect.GetWorldCorners(corners);
+
+                    // 위쪽: 창의 오른쪽 위를 기준으로 아래로 펼침
+                    // 아래쪽: 창의 오른쪽 아래를 기준으로 위로 펼침
+                    windowRect.pivot = new Vector2(1f, isUpperHalf ? 1f : 0f);
+
+                    window.gameObject.SetActive(true);
+
+                    // corners[1]: Grid 왼쪽 위 / corners[0]: Grid 왼쪽 아래
+                    windowRect.position = isUpperHalf ? corners[1] : corners[0];
+
+                    // 왼쪽으로 간격, 위/아래로 약간 이동
+                    windowRect.anchoredPosition += new Vector2(
+                        -10f,
+                        isUpperHalf ? -10f : 10f
+                    );
+
+                    inventoryGrid_000_Base.Inventory_000_Base.itemConfigWindow.gameObject.SetActive(true);
+                    break;
+                }
+            default:
+                {
+
+                    break;
+                }
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        //switch (inventoryGrid_000_Base.itemData)
-        //{
-        //    case not null:
-        //        {
-        //            //아이템 이미지 생성
-        //            break;
-        //        }
-        //    default:
-        //        {
+        switch (inventoryGrid_000_Base.itemData)
+        {
+            case not null:
+                {
+                    inventoryGrid_000_Base.Inventory_000_Base.itemConfigWindow.gameObject.SetActive(false);
 
-        //            break;
-        //        }
-        //}
+                    break;
+                }
+            default:
+                {
+
+                    break;
+                }
+        }
     }
 }

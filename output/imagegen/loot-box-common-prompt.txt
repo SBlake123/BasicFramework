@@ -1,0 +1,5 @@
+Tool: built-in image_gen, reference-image edit
+Reference: Assets/@Resources/Etc/UI/Sprites/Loot_Box_v2.png
+Asset: Assets/@Resources/Etc/UI/Sprites/Loot_Box_Common.png
+
+Edit the supplied loot-crate sprite into a very plain common-loot version. Preserve the exact box silhouette, proportions, camera angle, placement, large chunky pixel scale, olive body, and two broad dark vertical reinforcement bands. Remove the golden diamond emblem from the lid entirely, leaving a flat blank olive lid. Replace the elaborate golden latch with a tiny simple rectangular dull gray clasp, with no dangling loop or ornament. Reduce the corner caps to simple dark gray blocks with a single muted gray highlight; remove bright white glints. Use only a few flat muted colors and one-step shading. It must still be clearly the same approved crate design, just inexpensive, understated and very simple. No new detail, texture, scratches, bolts, text, gold, sparkle or glow. Keep crisp large square pixels. Preserve true transparent alpha background and a single complete centered object.

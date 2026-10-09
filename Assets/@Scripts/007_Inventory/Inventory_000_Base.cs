@@ -19,6 +19,8 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public InventoryGrid_000_Base selectedGrid { get; set; }
 
+    public Inventory_ItemConfigWindow itemConfigWindow;
+
     public TextMeshProUGUI damageMainTxt;
     public TextMeshProUGUI defenseMainTxt;
     public TextMeshProUGUI hpMainTxt;
@@ -303,7 +305,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         async UniTask ToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
         {
-            int targetGridIdx = invenGridList.IndexOf(targetGrid);
+            int targetGridIdx = targetGrid.gridIdx;
 
             if (targetGrid.itemData != null)
             {
@@ -427,6 +429,9 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         async UniTask ItemMoveOrChange(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
         {
+            InventoryCategory inventoryCategory = targetGrid.inventoryCategory;
+
+
             if (targetGrid.itemData == null)
             {
                 var data = startGrid.itemData.DeepCopy();
@@ -469,6 +474,13 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     }
 
+
+    public void SettingItemConfigWindow()
+    {
+        itemConfigWindow.itemName.text = "";
+        itemConfigWindow.itemSpec.text = "";
+        itemConfigWindow.itemExplanation.text = "";
+    }
 
 
 }
