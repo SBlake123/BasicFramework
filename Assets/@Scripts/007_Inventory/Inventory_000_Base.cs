@@ -13,8 +13,9 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public List<InventoryGrid_000_Base> invenGridList = new List<InventoryGrid_000_Base>();
     public InventoryGrid_000_Base weaponGrid;
-    public InventoryGrid_000_Base ArmorGrid;
-    public List<InventoryGrid_000_Base> AccessoryGridList = new List<InventoryGrid_000_Base>();
+    public InventoryGrid_000_Base shieldGrid;
+    public List<InventoryGrid_000_Base> accessoryGridList = new List<InventoryGrid_000_Base>();
+    public List<InventoryGrid_000_Base> lootingGridList = new List<InventoryGrid_000_Base>();
 
     public InventoryGrid_000_Base selectedGrid { get; set; }
 
@@ -45,13 +46,41 @@ public partial class Inventory_000_Base : MonoBehaviour
     public void InventoryInit()
     {
         weaponGrid.Inventory_000_Base = this;
-        ArmorGrid.Inventory_000_Base = this;
+        weaponGrid.inventoryCategory = InventoryCategory.PLAYER;
+        weaponGrid.gridCategory = GridCategory.WEAPON;
+        weaponGrid.gridIdx = 0;
 
-        foreach (var grid in AccessoryGridList)
+        shieldGrid.Inventory_000_Base = this;
+        shieldGrid.inventoryCategory = InventoryCategory.PLAYER;
+        shieldGrid.gridCategory = GridCategory.SHIELD;
+
+        shieldGrid.gridIdx = 0;
+
+
+        foreach (var grid in accessoryGridList)
+        {
+            grid.inventoryCategory = InventoryCategory.PLAYER;
+            grid.gridCategory = GridCategory.ACC;
+
+            grid.gridIdx = accessoryGridList.IndexOf(grid);
             grid.Inventory_000_Base = this;
+        }
 
         foreach (var grid in invenGridList)
+        {
+            grid.inventoryCategory = InventoryCategory.PLAYER;
+            grid.gridIdx = invenGridList.IndexOf(grid);
+            grid.gridCategory = GridCategory.STASH;
             grid.Inventory_000_Base = this;
+        }
+
+        foreach (var grid in lootingGridList)
+        {
+            grid.inventoryCategory = InventoryCategory.LOOTING;
+            grid.gridIdx = invenGridList.IndexOf(grid);
+            grid.gridCategory = GridCategory.STASH;
+            grid.Inventory_000_Base = this;
+        }
     }
 
 
@@ -84,10 +113,10 @@ public partial class Inventory_000_Base : MonoBehaviour
                 if (item.equipmentType == (int)EquipmentType.Weapon && item.gridIdx == 0)
                     grid = weaponGrid;
                 else if (item.equipmentType == (int)EquipmentType.Shield && item.gridIdx == 0)
-                    grid = ArmorGrid;
+                    grid = shieldGrid;
                 else if (item.equipmentType == (int)EquipmentType.Accessory &&
-                         item.gridIdx >= 0 && item.gridIdx < AccessoryGridList.Count)
-                    grid = AccessoryGridList[item.gridIdx];
+                         item.gridIdx >= 0 && item.gridIdx < accessoryGridList.Count)
+                    grid = accessoryGridList[item.gridIdx];
             }
 
             if (grid == null)
@@ -132,10 +161,10 @@ public partial class Inventory_000_Base : MonoBehaviour
             //Destroy(weaponGrid.itemImgParent.GetChild(0).gameObject);
         }
 
-        if (ArmorGrid.itemData != null)
+        if (shieldGrid.itemData != null)
         {
-            ArmorGrid.itemData = null;
-            ObjectPool.Instance.PushToPool(ArmorGrid.itemImgParent.GetChild(0).gameObject);
+            shieldGrid.itemData = null;
+            ObjectPool.Instance.PushToPool(shieldGrid.itemImgParent.GetChild(0).gameObject);
 
             //Destroy(ArmorGrid.itemImgParent.GetChild(0).gameObject);
         }
@@ -152,12 +181,12 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         }
 
-        for (int i = 0; i < AccessoryGridList.Count; i++)
+        for (int i = 0; i < accessoryGridList.Count; i++)
         {
-            if (AccessoryGridList[i].itemData != null)
+            if (accessoryGridList[i].itemData != null)
             {
-                AccessoryGridList[i].itemData = null;
-                ObjectPool.Instance.PushToPool(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
+                accessoryGridList[i].itemData = null;
+                ObjectPool.Instance.PushToPool(accessoryGridList[i].itemImgParent.GetChild(0).gameObject);
 
                 //Destroy(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
             }
@@ -178,9 +207,9 @@ public partial class Inventory_000_Base : MonoBehaviour
         IngameSessionManager.Instance.playerIngameData.invenItems.Clear();
 
         AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, weaponGrid);
-        AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, ArmorGrid);
+        AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, shieldGrid);
 
-        foreach (var item in AccessoryGridList)
+        foreach (var item in accessoryGridList)
         {
             AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, item);
         }
@@ -221,7 +250,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                 }
                 break;
 
-            case var grid when grid == ArmorGrid:
+            case var grid when grid == shieldGrid:
                 {
                     if (startGrid.itemData.equipmentType == (int)EquipmentType.Shield)
                     {
@@ -237,13 +266,13 @@ public partial class Inventory_000_Base : MonoBehaviour
                 }
                 break;
 
-            case var grid when AccessoryGridList.Contains(grid):
+            case var grid when accessoryGridList.Contains(grid):
                 {
                     if (startGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
                     {
                         Debug.Log("StashToAccessory");
 
-                        int targetGridIdx = AccessoryGridList.IndexOf(grid);
+                        int targetGridIdx = accessoryGridList.IndexOf(grid);
 
                         await ItemMoveOrChange(startGrid, targetGrid);
                         targetGrid.itemData.isEquip = (int)IsEquip.YES;
@@ -311,7 +340,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         }
                         break;
 
-                    case var grid when grid == ArmorGrid:
+                    case var grid when grid == shieldGrid:
                         {
                             if (targetGrid.itemData.equipmentType == (int)EquipmentType.Shield)
                             {
@@ -337,7 +366,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                         }
                         break;
 
-                    case var grid when AccessoryGridList.Contains(grid):
+                    case var grid when accessoryGridList.Contains(grid):
                         {
                             if (targetGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
                             {

@@ -7,18 +7,29 @@ using UnityEngine;
 
 public enum GridCategory
 {
-    Stash,
-    Weapon,
-    Armor,
-    Acc
+    STASH,
+    WEAPON,
+    SHIELD,
+    ACC
+}
+
+public enum InventoryCategory
+{
+    PLAYER,
+    LOOTING
 }
 
 
 [RequireComponent(typeof(InvenSpacePointerHandler))]
 public partial class InventoryGrid_000_Base : MonoBehaviour
 {
-    public Inventory_000_Base Inventory_000_Base;
+    public Inventory_000_Base Inventory_000_Base { get; set; }
+    public GridCategory gridCategory { get; set; }
+    public InventoryCategory inventoryCategory { get; set; }
     public ItemData itemData { get; set; }
 
+    public int gridIdx { get; set; }
+
     public RectTransform itemImgParent;
+
 }
