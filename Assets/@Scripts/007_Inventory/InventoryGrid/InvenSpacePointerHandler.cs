@@ -165,7 +165,7 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
         {
             case not null:
                 {
-
+                    inventoryGrid_000_Base.Inventory_000_Base.SettingItemConfigWindow(inventoryGrid_000_Base.itemData);
 
                     var window = inventoryGrid_000_Base.Inventory_000_Base.itemConfigWindow;
 

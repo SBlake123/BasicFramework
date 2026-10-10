@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -475,12 +476,64 @@ public partial class Inventory_000_Base : MonoBehaviour
     }
 
 
-    public void SettingItemConfigWindow()
+    public void SettingItemConfigWindow(ItemData itemData)
     {
-        itemConfigWindow.itemName.text = "";
-        itemConfigWindow.itemSpec.text = "";
-        itemConfigWindow.itemExplanation.text = "";
+        LanguageManager.Instance.GetLangScript(itemData.itemNameId, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemName);
+        SettingItemSpecText(itemData);
+        LanguageManager.Instance.GetLangScript(itemData.itemId + 100000, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemExplanation);
     }
 
+    public void SettingItemSpecText(ItemData itemData)
+    {
+        StringBuilder builder = new();
+
+        switch (itemData.equipmentType)
+        {
+            case (int)EquipmentType.Weapon:
+                {
+                    WeaponData weaponData = (WeaponData)itemData;
+                    AddStat(LanguageManager.Instance.GetLangScript(10020), weaponData.attackDamage);
+                    AddStat(LanguageManager.Instance.GetLangScript(10024), weaponData.attackSpeed);
+                    AddStat(LanguageManager.Instance.GetLangScript(10025), weaponData.attackRange);
+
+                    itemConfigWindow.itemSpec.text = builder.ToString();
+                }
+                break;
+
+            case (int)EquipmentType.Shield:
+                {
+                    ShieldData shieldData = (ShieldData)itemData;
+                    AddStat(LanguageManager.Instance.GetLangScript(10021), shieldData.defense);
+                    itemConfigWindow.itemSpec.text = builder.ToString();
+                }
+                break;
+
+            case (int)EquipmentType.Accessory:
+                {
+
+                }
+                break;
+
+            case (int)EquipmentType.None:
+                {
+
+                }
+                break;
+
+            default:
+                {
+
+                }
+                break;
+        }
+
+        void AddStat(string label, float value, string suffix = "")
+        {
+            if (value == 0f) return;
+
+            if (builder.Length > 0) builder.Append('\n');
+            builder.Append($"{label} : {value:0.##}{suffix}");
+        }
+    }
 
 }
