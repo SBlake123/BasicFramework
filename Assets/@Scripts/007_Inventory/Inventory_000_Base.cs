@@ -478,7 +478,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public void SettingItemConfigWindow(ItemData itemData)
     {
-        LanguageManager.Instance.GetLangScript(itemData.itemNameId, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemName);
+        LanguageManager.Instance.GetLangScript(itemData.itemId, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemName);
         SettingItemSpecText(itemData);
         LanguageManager.Instance.GetLangScript(itemData.itemId + 100000, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemExplanation);
     }

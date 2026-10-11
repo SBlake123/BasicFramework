@@ -19,10 +19,22 @@ public enum MonsterState
 }
 
 [Serializable]
+public class MonsterData
+{
+    public int currentHp = 0;
+    public string prefabName = "";
+    public int maxHp = 0;
+    public float attackDamage = 0f;
+    public float moveSpeed = 0f;
+    public float detectionRange = 0f;
+    public float leashRange = 0f;
+}
+
+[Serializable]
 public class MonsterStats
 {
     public int currentHp = 40;
-    public float maxHp = 100f;
+    public int maxHp = 100;
     public float attackDamage = 10f;
     public float moveSpeed = 2f;
     public float detectionRange = 20f;

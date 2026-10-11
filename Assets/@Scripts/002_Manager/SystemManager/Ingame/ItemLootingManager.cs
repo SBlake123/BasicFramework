@@ -1,9 +1,46 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
-public class ItemLootingManager : MonoBehaviour
+[Serializable]
+public class MonsterDropData
 {
+    public int monsterId { get; set; }
+    public string prefabName { get; set; }
+    public int itemId { get; set; }
+    public bool isWeight { get; set; }
+    public float weightRate { get; set; }
+    public float dropRate { get; set; }
+    public int minCount { get; set; }
+    public int maxCount { get; set; }
+}
+
+public class ItemLootingManager : MonoSingleton<ItemLootingManager>
+{
+    public async UniTask MakingItemLootingBox(string objName, int monsterIdx, Transform transform)
+    {
+        GameObject obj = await ObjectPool.Instance.PopFromPool(objName);
+
+        if (obj.TryGetComponent<LootingBox>(out var lootingBox))
+        {
+
+        }
+
+        obj.transform.position = transform.position;
+        obj.SetActive(true);
+
+    }
+
+    public async UniTask OpenItemLootingBox(LootingBox lootingBox)
+    {
+
+    }
+
+    //public Dictionary<int, List<ItemData>> lootingBoxDic = new Dictionary<int, List<ItemData>>();
+
     //너는 무슨 일을 해아하니?
     //몬스터가 죽었을 때, 상자를 만들어달라고 요청함,
     //그 몬스터가 어떤 몬스터인지에 따라 무슨 아이템을 줄 지 결정해야 함.

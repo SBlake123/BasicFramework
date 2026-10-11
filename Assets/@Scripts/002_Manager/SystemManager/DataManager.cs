@@ -32,6 +32,9 @@ public class DataManager : Singleton<DataManager>
     };
 
     public Dictionary<int, ItemData> itemDataDic { get; set; } = new Dictionary<int, ItemData>();
+    public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
+    public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
+    public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
 
     public async UniTask OnInitialize()
     {
