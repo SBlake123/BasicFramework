@@ -2,41 +2,19 @@
   {
     "monsterId": "30001",
     "prefabName": "MonsterSkeleton",
-    "itemId": "1001",
-    "isWeight": "TRUE",
-    "weightRate": "50",
-    "dropRate": "0.2",
-    "minCount": "0",
-    "maxCount": "1"
-  },
-  {
-    "monsterId": "30001",
-    "prefabName": "MonsterSkeleton",
-    "itemId": "2001",
-    "isWeight": "TRUE",
-    "weightRate": "50",
-    "dropRate": "0.2",
-    "minCount": "0",
-    "maxCount": "1"
+    "currentHp": "50",
+    "maxHp": "50",
+    "moveSpeed": "2",
+    "detectionRange": "7",
+    "leashRange": "3"
   },
   {
     "monsterId": "30002",
     "prefabName": "MonsterFallen",
-    "itemId": "1001",
-    "isWeight": "FALSE",
-    "weightRate": "0",
-    "dropRate": "0.8",
-    "minCount": "1",
-    "maxCount": "1"
-  },
-  {
-    "monsterId": "30002",
-    "prefabName": "MonsterFallen",
-    "itemId": "2001",
-    "isWeight": "FALSE",
-    "weightRate": "0",
-    "dropRate": "0.8",
-    "minCount": "1",
-    "maxCount": "1"
+    "currentHp": "250",
+    "maxHp": "250",
+    "moveSpeed": "2.5",
+    "detectionRange": "15",
+    "leashRange": "7"
   }
 ]

@@ -21,6 +21,7 @@ public class MonsterDropData
 public class ItemLootingManager : MonoSingleton<ItemLootingManager>
 {
     public event Func<UniTask> LootingBoxOpenRequested;
+    public event Func<UniTask> LootingBoxClosedRequested;
 
     public LootingBox nowLootingBox { get; set; }
 
@@ -32,6 +33,12 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
         {
             lootingBox.Init();
             SettingLootingItem(monsterIdx, lootingBox);
+        }
+
+        if (lootingBox.itemDataList.Count == 0)
+        {
+            ObjectPool.Instance.PushToPool(obj);
+            return;
         }
 
         obj.transform.position = transform.position;

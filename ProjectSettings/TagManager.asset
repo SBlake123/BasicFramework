@@ -54,3 +54,6 @@ TagManager:
   - name: WeaponEffect
     uniqueID: 2160931759
     locked: 0
+  - name: MonsterAttackEffect
+    uniqueID: 2465092323
+    locked: 0

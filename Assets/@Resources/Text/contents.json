@@ -1,9 +1,9 @@
 [
   {
     "idx": "1001",
-    "kr": "",
-    "en": "",
-    "jp": ""
+    "kr": "소드",
+    "en": "Sword",
+    "jp": "Sword"
   },
   {
     "idx": "1002",
@@ -76,6 +76,12 @@
     "kr": "",
     "en": "",
     "jp": ""
+  },
+  {
+    "idx": "2001",
+    "kr": "자수정 방패",
+    "en": "Amethyst Shield",
+    "jp": "Amethyst Shield"
   },
   {
     "idx": "10000",
@@ -292,6 +298,18 @@
     "kr": "자수정 방패",
     "en": "Amethyst Shield",
     "jp": "Amethyst Shield"
+  },
+  {
+    "idx": "30001",
+    "kr": "스켈레톤",
+    "en": "Skeleton",
+    "jp": "Skeleton"
+  },
+  {
+    "idx": "30002",
+    "kr": "타락자",
+    "en": "Fallen",
+    "jp": "Fallen"
   },
   {
     "idx": "101001",

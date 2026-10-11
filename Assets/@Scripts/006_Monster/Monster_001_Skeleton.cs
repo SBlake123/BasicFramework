@@ -23,13 +23,13 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         }
         Vector3 delta = moveDestination.Value - movementBody.position;
         delta.z = 0;
-        CharacterContactMovement.Move(movementBody, Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterStats.moveSpeed));
+        CharacterContactMovement.Move(movementBody, Vector3.ClampMagnitude(delta / Time.fixedDeltaTime, monsterData.moveSpeed));
     }
 
     public override async UniTask Init()
     {
         await base.Init();
-        monsterStats.detectionRange = 6f;     
+        monsterData.detectionRange = 6f;     
     }
 
     public override async UniTask ChangeState(int state)

@@ -28,7 +28,7 @@ public enum IngameSceneIdx
 [Serializable]
 public class MonsterSpawnEntry
 {
-    public string monsterId { get; set; }
+    public int monsterId { get; set; }
     public int value { get; set; } // true면 가중치, false면 마릿수
 }
 
@@ -117,7 +117,7 @@ public class IngameSceneManager : StateBaseSceneManager
             {
                 new MonsterSpawnEntry
                 {
-                    monsterId = GPrefabName.SKELETON,
+                    monsterId = 30001,
                     value = 1
                 }
             }
@@ -129,7 +129,7 @@ public class IngameSceneManager : StateBaseSceneManager
             {
                 new MonsterSpawnEntry
                 {
-                    monsterId = GPrefabName.SKELETON,
+                    monsterId = 30001,
                     value = 2
                 }
             }
@@ -142,7 +142,7 @@ public class IngameSceneManager : StateBaseSceneManager
             {
                 new MonsterSpawnEntry
                 {
-                    monsterId = GPrefabName.SKELETON,
+                    monsterId = 30001,
                     value = 100
                 }
             }
@@ -155,13 +155,13 @@ public class IngameSceneManager : StateBaseSceneManager
             {
                 new MonsterSpawnEntry
                 {
-                    monsterId = GPrefabName.SKELETON,
+                    monsterId = 30001,
                     value = 2
                 },
 
                 new MonsterSpawnEntry
                 {
-                    monsterId = GPrefabName.FALLEN,
+                    monsterId = 30002,
                     value = 1
                 }
             }
@@ -185,9 +185,15 @@ public class IngameSceneManager : StateBaseSceneManager
 
                     MonsterSpawnEntry monster = SelectMonsterByWeight(monsterSpawnDataList[i]);
 
-                    GameObject obj = await ObjectPool.Instance.PopFromPool((monster.monsterId), monsterSpawnAreaList[i].spawnAreaTrf);
+                    string monsterName = DataManager.Instance.GetData(monster.monsterId, DataManager.Instance.monsterDataDic).prefabName;
+
+                    GameObject obj = await ObjectPool.Instance.PopFromPool((monsterName), monsterSpawnAreaList[i].spawnAreaTrf);
                     obj.transform.position = spawnPosition;
-                    obj.GetComponent<Monster_000_Base>().Init().Forget();
+
+                    Monster_000_Base monsterBase = obj.GetComponent<Monster_000_Base>();
+
+                    monsterBase.SettingMonsterData(monster.monsterId);
+                    monsterBase.Init().Forget();
                     //실제 생성
 
 
@@ -209,9 +215,15 @@ public class IngameSceneManager : StateBaseSceneManager
                     {
                         if (!monsterSpawnAreaList[i].TryGetSpawnPosition(out Vector3 spawnPosition)) continue;
 
-                        GameObject obj = await ObjectPool.Instance.PopFromPool((monster.monsterId), monsterSpawnAreaList[i].spawnAreaTrf);
+                        string monsterName = DataManager.Instance.GetData(monster.monsterId, DataManager.Instance.monsterDataDic).prefabName;
+
+                        GameObject obj = await ObjectPool.Instance.PopFromPool((monsterName), monsterSpawnAreaList[i].spawnAreaTrf);
                         obj.transform.position = spawnPosition;
-                        obj.GetComponent<Monster_000_Base>().Init().Forget();
+
+                        Monster_000_Base monsterBase = obj.GetComponent<Monster_000_Base>();
+
+                        monsterBase.SettingMonsterData(monster.monsterId);
+                        monsterBase.Init().Forget();
 
                         //실제 생성
 
@@ -303,6 +315,8 @@ public class IngameSceneManager : StateBaseSceneManager
             case IngameSceneState.INGAME:
                 {
                     SetGameplayPaused(false);
+
+
 
                     //그냥 게임창 상태로 복귀,
                     //그거는 켜야 됨 조이스틱

@@ -206,6 +206,26 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
+    private T CopyData<T>(T data) where T : class
+    {
+        if (data == null) return null;
+
+        string json = JsonConvert.SerializeObject(data, settings);
+        return (T)JsonConvert.DeserializeObject(json, data.GetType(), settings);
+    }
+
+    public T GetData<T>(int idx, Dictionary<int, T> dataDic) where T : class
+    {
+        return dataDic.TryGetValue(idx, out T data) ? CopyData(data) : null;
+    }
+
+    public List<T> GetDataList<T>(int idx, Dictionary<int, List<T>> dataDic) where T : class
+    {
+        if (!dataDic.TryGetValue(idx, out List<T> list)) return new List<T>();
+
+        return list.ConvertAll(data => CopyData(data));
+    }
+
     public T GetItemData<T>(int itemId) where T : ItemData
     {
         if (!itemDataDic.TryGetValue(itemId, out ItemData data))

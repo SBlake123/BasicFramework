@@ -21,7 +21,11 @@ public class LootingBox : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("BOXCLICK");
+        var player = IngameSessionManager.Instance.player;
+        if (player == null) return;
+        if (Vector2.Distance(transform.position, player.transform.position) > 1.5f) return;
+
+        
         ItemLootingManager.Instance.OpenItemLootingBox(this);        
     }
 }

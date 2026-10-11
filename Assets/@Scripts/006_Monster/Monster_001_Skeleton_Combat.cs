@@ -25,10 +25,10 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public void CalculateDamage(int attackDamage)
     {
-        monsterStats.currentHp -= attackDamage;
+        monsterData.currentHp -= attackDamage;
 
         //Á×À½ÆÇÁ¤
-        if (monsterStats.currentHp <= 0)
+        if (monsterData.currentHp <= 0)
             ChangeState((int)MonsterState.DEAD).Forget();
     }
 

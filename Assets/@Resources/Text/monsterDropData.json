@@ -5,7 +5,7 @@
     "itemId": "1001",
     "isWeight": "TRUE",
     "weightRate": "50",
-    "dropRate": "0.2",
+    "dropRate": "0.8",
     "minCount": "0",
     "maxCount": "1"
   },
@@ -15,7 +15,7 @@
     "itemId": "2001",
     "isWeight": "TRUE",
     "weightRate": "50",
-    "dropRate": "0.2",
+    "dropRate": "0.8",
     "minCount": "0",
     "maxCount": "1"
   },

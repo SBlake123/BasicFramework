@@ -1,12 +1,9 @@
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
-using System;
-using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
+using System.Text;
 using TMPro;
+using UnityEngine;
 
 public partial class Inventory_000_Base : MonoBehaviour
 {
@@ -21,6 +18,7 @@ public partial class Inventory_000_Base : MonoBehaviour
     public InventoryGrid_000_Base selectedGrid { get; set; }
 
     public Inventory_ItemConfigWindow itemConfigWindow;
+    public Transform lootingStash;
 
     public TextMeshProUGUI damageMainTxt;
     public TextMeshProUGUI defenseMainTxt;
@@ -41,6 +39,7 @@ public partial class Inventory_000_Base : MonoBehaviour
             InventoryInit();
         }
 
+        lootingStash.gameObject.SetActive(false);
         await InventoryItemSetting();
         SetInventoryStatusVal();
         isFirstSetting = false;
@@ -80,7 +79,7 @@ public partial class Inventory_000_Base : MonoBehaviour
         foreach (var grid in lootingGridList)
         {
             grid.inventoryCategory = InventoryCategory.LOOTING;
-            grid.gridIdx = invenGridList.IndexOf(grid);
+            grid.gridIdx = lootingGridList.IndexOf(grid);
             grid.gridCategory = GridCategory.STASH;
             grid.Inventory_000_Base = this;
         }
@@ -145,16 +144,16 @@ public partial class Inventory_000_Base : MonoBehaviour
         foreach (var item in ItemLootingManager.Instance.nowLootingBox.itemDataList)
         {
             if (item == null) continue;
+            if (item.gridIdx < 0 || item.gridIdx >= lootingGridList.Count) continue;
 
-            InventoryGrid_000_Base grid = null;
-
-            if (item.gridIdx >= 0 && item.gridIdx < invenGridList.Count)
-                grid = invenGridList[item.gridIdx];
-
+            InventoryGrid_000_Base grid = lootingGridList[item.gridIdx];
             grid.itemData = item;
+
             string prefabKey = string.Format(GScriptAddress.invenItem, item.itemKey);
             await MakeInvenItem(prefabKey, grid.itemImgParent);
         }
+
+        lootingStash.gameObject.SetActive(true);
     }
 
     public void SetInventoryStatusVal()
@@ -227,6 +226,26 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         }
     }
+
+    public void SaveLootingBoxItems()
+    {
+        LootingBox box = ItemLootingManager.Instance.nowLootingBox;
+        if (box == null) return;
+
+        box.itemDataList.Clear();
+
+        foreach (var grid in lootingGridList)
+        {
+            if (grid.itemData == null) continue;
+
+            ItemData item = grid.itemData.DeepCopy();
+            item.gridIdx = grid.gridIdx;
+            item.isEquip = 0;
+            box.itemDataList.Add(item);
+        }
+
+        ItemLootingManager.Instance.nowLootingBox = null;
+    }
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
         await ObjectPool.Instance.PopFromPool(ItemName, itemRect);
@@ -253,6 +272,8 @@ public partial class Inventory_000_Base : MonoBehaviour
         {
             AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, item);
         }
+
+        SaveLootingBoxItems();
 
         void AddGridItem(List<ItemData> itemdataList, InventoryGrid_000_Base inventoryGrid_000_Base)
         {
@@ -439,7 +460,7 @@ public partial class Inventory_000_Base : MonoBehaviour
             {
                 switch (startGrid)
                 {
-                    case var grid when invenGridList.Contains(grid):
+                    case var grid when invenGridList.Contains(grid) || lootingGridList.Contains(grid):
                         {
                             await ItemMoveOrChange(startGrid, targetGrid);
                         }

@@ -40,6 +40,7 @@ public class MonsterAttackData
     public float triggerRange { get; set; }
     public float damage { get; set; }
     public float cooldown { get; set; }
+    public float attackPreparation { get; set; }
 }
 
 [Serializable]
@@ -72,7 +73,6 @@ public abstract class Monster_000_Base : MonoBehaviour
 
     public MonsterData monsterData { get; set; } = new MonsterData();
     public List<MonsterAttackData> monsterAttackDataList { get; set; } = new List<MonsterAttackData>();
-    public MonsterStats monsterStats { get; set; } = new MonsterStats();
 
     public Transform damageTrf;
 
@@ -101,6 +101,12 @@ public abstract class Monster_000_Base : MonoBehaviour
         spawnPosition = transform.position;
         target = IngameSessionManager.Instance.player.GetComponent<Transform>();
         await OnStateChange();
+    }
+
+    public void SettingMonsterData(int monsterIdx)
+    {
+        monsterData = DataManager.Instance.GetData(monsterIdx, DataManager.Instance.monsterDataDic);
+        monsterAttackDataList = DataManager.Instance.GetDataList(monsterIdx, DataManager.Instance.monsterAttackDataDic);
     }
 
     public abstract UniTask ChangeState(int state);
@@ -179,7 +185,7 @@ public abstract class Monster_000_Base : MonoBehaviour
         if (distance > 0.001f)
         {
             Vector3 direction = offset / distance;
-            float checkDistance = Mathf.Min(distance, monsterStats.moveSpeed * Time.fixedDeltaTime + 1f);
+            float checkDistance = Mathf.Min(distance, monsterData.moveSpeed * Time.fixedDeltaTime + 1f);
 
             if (Physics.Raycast(origin, direction, checkDistance, obstacleLayers, QueryTriggerInteraction.Ignore))
             {
@@ -201,7 +207,7 @@ public abstract class Monster_000_Base : MonoBehaviour
     }
     protected Vector3 GetRandomPosition()
     {
-        Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * monsterStats.leashRange;
+        Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * monsterData.leashRange;
         return spawnPosition + new Vector3(randomOffset.x, randomOffset.y, 0f);
     }
     protected void ResetForPool(Action onReset = null)

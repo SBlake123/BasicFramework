@@ -38,8 +38,8 @@ public partial class Monster_101_Fallen : Monster_000_Base
     public override async UniTask Init()
     {
         await base.Init();
-        moveSpeed = monsterStats.moveSpeed;
-        monsterStats.maxHp = 200;
+        moveSpeed = monsterData.moveSpeed;
+        monsterData.maxHp = 200;
     }
 
     public override async UniTask ChangeState(int state)
@@ -247,7 +247,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
         {
             case MonsterState.ATTACK:
                 {
-                    nextAttackRange = monsterStats.attackRange;
+                    nextAttackRange = monsterAttackDataList[0].attackRange;
                     break;
                 }
 
@@ -265,7 +265,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
             default:
                 {
-                    nextAttackRange = monsterStats.attackRange;
+                    nextAttackRange = monsterAttackDataList[0].attackRange;
                     break;
                 }
         }
@@ -318,7 +318,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
                     return;
                 }
 
-                await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackPreparation), cancellationToken: token);
+                await UniTask.Delay(TimeSpan.FromSeconds(monsterAttackDataList[0].attackPreparation), cancellationToken: token);
 
                 if (!CanAttackTarget())
                 {
@@ -328,8 +328,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
                 await AttackAsync(stateCts.Token);
 
-                await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackWindow), cancellationToken: token);
-                await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackRecovery), cancellationToken: token);
+                await UniTask.Delay(TimeSpan.FromSeconds(monsterAttackDataList[0].cooldown), cancellationToken: token);
             }
         }
 
