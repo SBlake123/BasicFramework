@@ -66,9 +66,12 @@ public abstract class Monster_000_Base : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.matrix = transform.localToWorldMatrix;
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(monsterStats.detectionRange, monsterStats.detectionRange, 0f));
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(monsterData.detectionRange, monsterData.detectionRange, 0f));
     }
 
+
+    public MonsterData monsterData { get; set; } = new MonsterData();
+    public List<MonsterAttackData> monsterAttackDataList { get; set; } = new List<MonsterAttackData>();
     public MonsterStats monsterStats { get; set; } = new MonsterStats();
 
     public Transform damageTrf;
@@ -152,11 +155,11 @@ public abstract class Monster_000_Base : MonoBehaviour
             return false;
         }
 
-        return Vector2.Distance(transform.position, target.position) <= monsterStats.detectionRange;
+        return Vector2.Distance(transform.position, target.position) <= monsterData.detectionRange;
     }
     protected bool CanAttackTarget(float attackRange = 0)
     {
-        if (attackRange == 0) attackRange = monsterStats.attackRange;
+        if (attackRange == 0) attackRange = monsterAttackDataList[0].attackRange;
 
         if (target == null)
         {

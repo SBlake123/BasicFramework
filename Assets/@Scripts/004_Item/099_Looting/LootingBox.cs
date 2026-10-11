@@ -6,13 +6,14 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(PooledObject))]
 public class LootingBox : MonoBehaviour, IPointerClickHandler
 {
     public List<ItemData> itemDataList { get; set; } = new List<ItemData>();
 
-    public bool isSetting = false;
+    public bool isSetting { get; set; } = false;
 
-    public async UniTask Init()
+    public void Init()
     {
         itemDataList.Clear();
         isSetting = false;
@@ -20,6 +21,7 @@ public class LootingBox : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log("BOXCLICK");
         ItemLootingManager.Instance.OpenItemLootingBox(this);        
     }
 }

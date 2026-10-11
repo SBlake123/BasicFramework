@@ -314,6 +314,8 @@ public partial class Monster_001_Skeleton : Monster_000_Base
             });
         });
 
+        await ItemLootingManager.Instance.MakingItemLootingBox("Box_Common", monsterData.monsterId, transform);
+
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
     }
 }

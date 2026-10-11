@@ -10,6 +10,7 @@ public enum IngameSceneState
     LOADING,
     INGAME,
     INVENTORY,
+    LOOTING,
     OPTION,
     DEAD,
     EXTRACTING,
@@ -57,6 +58,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
     public event Action PlayerDied;
     public event Action InventoryClosed;
+    
 
     public IngameSceneState CurrentState { get; private set; } = IngameSceneState.NONE;
 
@@ -100,6 +102,7 @@ public class IngameSceneManager : StateBaseSceneManager
     {
         ingameUIManager.InventoryRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
         ingameUIManager.OptionRequested += async () => await ChangeState((int)IngameSceneState.OPTION);
+        ItemLootingManager.Instance.LootingBoxOpenRequested += async () => await ChangeState((int)IngameSceneState.LOOTING);
         //ingameUIManager.AttackRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
     }
 
@@ -318,6 +321,19 @@ public class IngameSceneManager : StateBaseSceneManager
                 {
                     Ingame_002_Inventory ingame_002_Inventory = pages[(int)IngameSceneIdx.INVENTORY].GetComponent<Ingame_002_Inventory>();
                     await ingame_002_Inventory.Init();
+                    ingameUIManager.JoyStickUISetActive(false);
+                    ingame_002_Inventory.pageMain.SetActive(true);
+                }
+
+                break;
+
+            case IngameSceneState.LOOTING:
+                {
+                    Ingame_002_Inventory ingame_002_Inventory = pages[(int)IngameSceneIdx.INVENTORY].GetComponent<Ingame_002_Inventory>();
+                    await ingame_002_Inventory.Init();
+                    await ingame_002_Inventory.Inventory_000_Base.LootingBoxItemSetting();
+
+                    //looting Setting
                     ingameUIManager.JoyStickUISetActive(false);
                     ingame_002_Inventory.pageMain.SetActive(true);
                 }

@@ -12,7 +12,7 @@ public class MonsterAttackHitBox : MonoBehaviour
         if (other.GetComponentInParent<Player>() is Player player)
         {
             Debug.Log("Damage");
-            player.TakeDamage((int)monster_000_Base.monsterStats.attackDamage).Forget();
+            player.TakeDamage((int)monster_000_Base.monsterAttackDataList[0].damage).Forget();
         }
     }
 }

@@ -86,8 +86,6 @@ public partial class Inventory_000_Base : MonoBehaviour
         }
     }
 
-
-
     public async UniTask InventoryItemSetting()
     {
 
@@ -133,6 +131,25 @@ public partial class Inventory_000_Base : MonoBehaviour
                 Debug.LogWarning($"아이템 {item.itemId}의 대상 슬롯에 이미 아이템이 있음");
                 continue;
             }
+
+            grid.itemData = item;
+            string prefabKey = string.Format(GScriptAddress.invenItem, item.itemKey);
+            await MakeInvenItem(prefabKey, grid.itemImgParent);
+        }
+    }
+
+    public async UniTask LootingBoxItemSetting()
+    {
+        LootingItemInit();
+
+        foreach (var item in ItemLootingManager.Instance.nowLootingBox.itemDataList)
+        {
+            if (item == null) continue;
+
+            InventoryGrid_000_Base grid = null;
+
+            if (item.gridIdx >= 0 && item.gridIdx < invenGridList.Count)
+                grid = invenGridList[item.gridIdx];
 
             grid.itemData = item;
             string prefabKey = string.Format(GScriptAddress.invenItem, item.itemKey);
@@ -193,6 +210,21 @@ public partial class Inventory_000_Base : MonoBehaviour
 
                 //Destroy(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
             }
+        }
+    }
+
+    public void LootingItemInit()
+    {
+        for (int i = 0; i < lootingGridList.Count; i++)
+        {
+            if (lootingGridList[i].itemData != null)
+            {
+                lootingGridList[i].itemData = null;
+                ObjectPool.Instance.PushToPool(lootingGridList[i].itemImgParent.GetChild(0).gameObject);
+
+                //Destroy(invenGridList[i].itemImgParent.GetChild(0).gameObject);
+            }
+
         }
     }
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)

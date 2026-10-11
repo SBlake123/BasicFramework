@@ -1,0 +1,38 @@
+[
+  {
+    "monsterId": "30001",
+    "attackId": "Attack",
+    "weightRate": "100",
+    "attackRange": "1",
+    "triggerRange": "1",
+    "damage": "10",
+    "cooldown": "1"
+  },
+  {
+    "monsterId": "30002",
+    "attackId": "Attack",
+    "weightRate": "0",
+    "attackRange": "1",
+    "triggerRange": "1",
+    "damage": "10",
+    "cooldown": "1"
+  },
+  {
+    "monsterId": "30002",
+    "attackId": "RollingAttack",
+    "weightRate": "20",
+    "attackRange": "10",
+    "triggerRange": "10",
+    "damage": "15",
+    "cooldown": "3"
+  },
+  {
+    "monsterId": "30002",
+    "attackId": "SunkenAttack",
+    "weightRate": "80",
+    "attackRange": "5",
+    "triggerRange": "5",
+    "damage": "15",
+    "cooldown": "2"
+  }
+]

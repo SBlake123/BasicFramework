@@ -20,23 +20,98 @@ public class MonsterDropData
 
 public class ItemLootingManager : MonoSingleton<ItemLootingManager>
 {
+    public event Func<UniTask> LootingBoxOpenRequested;
+
+    public LootingBox nowLootingBox { get; set; }
+
     public async UniTask MakingItemLootingBox(string objName, int monsterIdx, Transform transform)
     {
         GameObject obj = await ObjectPool.Instance.PopFromPool(objName);
 
         if (obj.TryGetComponent<LootingBox>(out var lootingBox))
         {
-
+            lootingBox.Init();
+            SettingLootingItem(monsterIdx, lootingBox);
         }
 
         obj.transform.position = transform.position;
         obj.SetActive(true);
-
     }
 
     public async UniTask OpenItemLootingBox(LootingBox lootingBox)
     {
+        nowLootingBox = lootingBox;
 
+        LootingBoxOpenRequested?.Invoke();
+        //인벤토리에서 열어야 함.
+
+        //가지고 있는 
+    }
+
+    public void SettingLootingItem(int monsterIdx, LootingBox lootingBox)
+    {
+        if (!DataManager.Instance.monsterDropDataDic.TryGetValue(monsterIdx, out var drops)) return;
+
+        float totalWeight = 0f;
+
+        foreach (MonsterDropData drop in drops)
+        {
+            if (drop.isWeight)
+            {
+                if (drop.weightRate > 0f) totalWeight += drop.weightRate;
+            }
+            else
+            {
+                TryDropItem(drop);
+            }
+        }
+        if (totalWeight > 0f)
+        {
+            float roll = UnityEngine.Random.Range(0f, totalWeight);
+            float cumulativeWeight = 0f;
+            MonsterDropData selectedDrop = null;
+
+            foreach (MonsterDropData drop in drops)
+            {
+                if (!drop.isWeight || drop.weightRate <= 0f) continue;
+
+                selectedDrop = drop;
+                cumulativeWeight += drop.weightRate;
+                if (roll < cumulativeWeight) break;
+            }
+
+            if (selectedDrop != null) TryDropItem(selectedDrop);
+        }
+
+        lootingBox.isSetting = true;
+
+        void TryDropItem(MonsterDropData drop)
+        {
+            if (drop.dropRate <= 0f) return;
+            if (drop.dropRate < 1f && UnityEngine.Random.value >= drop.dropRate) return;
+
+            if (drop.minCount < 0 || drop.maxCount < drop.minCount)
+            {
+                Debug.LogError($"드롭 수량 설정 오류: monsterId={monsterIdx}, itemId={drop.itemId}");
+                return;
+            }
+
+            if (!DataManager.Instance.itemDataDic.TryGetValue(drop.itemId, out var template))
+            {
+                Debug.LogError($"아이템 데이터 없음: {drop.itemId}");
+                return;
+            }
+
+            int count = UnityEngine.Random.Range(drop.minCount, drop.maxCount + 1);
+
+            for (int i = 0; i < count; i++)
+            {
+                ItemData item = template.DeepCopy();
+                item.isEquip = 0;
+                item.gridIdx = lootingBox.itemDataList.Count;
+                lootingBox.itemDataList.Add(item);
+            }
+        }
     }
 
     //public Dictionary<int, List<ItemData>> lootingBoxDic = new Dictionary<int, List<ItemData>>();

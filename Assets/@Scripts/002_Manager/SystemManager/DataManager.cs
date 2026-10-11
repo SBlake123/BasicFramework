@@ -48,7 +48,9 @@ public class DataManager : Singleton<DataManager>
 
         //메소드 내용은 프로젝트마다 다르게 작성.
         await DataDicLoad("gameData", itemDataDic, item => item.itemId);
+        await DataDicLoad("monsterData", monsterDataDic, item => item.monsterId);
         await DataDicLoad("monsterDropData", monsterDropDataDic, item => item.monsterId);
+        await DataDicLoad("monsterAttackData", monsterAttackDataDic, item => item.monsterId);
         Debug.Log("gameData");
         await ApplyWeaponData("weaponData");
         Debug.Log("weaponData");
