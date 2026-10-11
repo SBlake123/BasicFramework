@@ -32,9 +32,10 @@ public class DataManager : Singleton<DataManager>
     };
 
     public Dictionary<int, ItemData> itemDataDic { get; set; } = new Dictionary<int, ItemData>();
+    public Dictionary<int, MonsterData> monsterDataDic { get; set; } = new Dictionary<int, MonsterData>();
     public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
-    public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
-    public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
+    public Dictionary<int, List<MonsterAttackData>> monsterAttackDataDic { get; set; } = new Dictionary<int, List<MonsterAttackData>>();
+
 
     public async UniTask OnInitialize()
     {
@@ -46,7 +47,8 @@ public class DataManager : Singleton<DataManager>
         Debug.Log("DataMAnager Initialize");
 
         //메소드 내용은 프로젝트마다 다르게 작성.
-        await DataDicLoad("gameData", itemDataDic);
+        await DataDicLoad("gameData", itemDataDic, item => item.itemId);
+        await DataDicLoad("monsterDropData", monsterDropDataDic, item => item.monsterId);
         Debug.Log("gameData");
         await ApplyWeaponData("weaponData");
         Debug.Log("weaponData");
@@ -55,20 +57,78 @@ public class DataManager : Singleton<DataManager>
 
     }
 
-    private async UniTask DataDicLoad(string jsonName, Dictionary<int, ItemData> saveDic)
+    //private async UniTask DataDicLoad(string jsonName, Dictionary<int, ItemData> saveDic)
+    //{
+    //    TextAsset _textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
+
+    //    Debug.Log(_textAsset.text);
+    //    var items = JsonConvert.DeserializeObject<List<ItemData>>(_textAsset.text, settings);
+
+    //    foreach (var item in items)
+    //    {
+    //        if (saveDic.ContainsKey(item.itemId)) continue;
+
+    //        saveDic.Add(item.itemId, item);
+    //    }
+    //}
+
+    private async UniTask DataDicLoad<T>(string jsonName, Dictionary<int, T> saveDic, Func<T, int> getId)
     {
         TextAsset _textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
 
         Debug.Log(_textAsset.text);
-        var items = JsonConvert.DeserializeObject<List<ItemData>>(_textAsset.text, settings);
+        var items = JsonConvert.DeserializeObject<List<T>>(_textAsset.text, settings);
 
-        foreach (var item in items)
-        {
-            if (saveDic.ContainsKey(item.itemId)) continue;
+        if (items == null) return;
 
-            saveDic.Add(item.itemId, item);
-        }
+        foreach (T item in items) 
+            saveDic.TryAdd(getId(item), item);
     }
+
+    private async UniTask DataDicLoad<T>(string jsonName, Dictionary<int, List<T>> saveDic, Func<T, int> getId)
+    {
+        TextAsset _textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
+
+        Debug.Log(_textAsset.text);
+        var items = JsonConvert.DeserializeObject<List<T>>(_textAsset.text, settings);
+
+        if (items == null) return;
+
+        foreach (T item in items)
+        {
+            int id = getId(item);
+
+            if (!saveDic.TryGetValue(id, out List<T> list))
+            {
+                list = new List<T>();
+                saveDic.Add(id, list);
+            }
+
+            list.Add(item);
+        }
+        //switch (typeof(T))
+        //{
+        //    case var type when type == typeof(ItemData):
+        //        {
+        //            foreach (var item in items)
+        //            {
+        //                if (saveDic.ContainsKey(getId(item))) continue;
+
+        //                saveDic.TryAdd(getId(item), item);
+        //            }
+        //        }
+        //        break;
+
+        //    case var type when type == typeof(MonsterData)
+        //                    || type == typeof(MonsterAttackData)
+        //                    || type == typeof(MonsterDropData):
+        //        {
+
+        //        }
+        //        break;
+        //}
+    }
+
 
     private async UniTask ApplyWeaponData(string jsonName)
     {
@@ -154,6 +214,6 @@ public class DataManager : Singleton<DataManager>
 
         Debug.LogError($"아이템 데이터 없음: {itemId}");
         return null;
-        
+
     }
 }
