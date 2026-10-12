@@ -17,7 +17,9 @@ public partial class Player : MonoBehaviour
 
         DamageVal damageVal = obj.GetComponent<DamageVal>();
 
-        damageVal.SetDamage(attackDamage);
+        int calculatingDamage = IngameSessionManager.Instance.CalculateDamageAfterDefense(attackDamage);
+
+        damageVal.SetDamage(calculatingDamage);
         damageVal.Play();
 
         //몬스터의 방어력 값 계산 후 적용
@@ -27,9 +29,11 @@ public partial class Player : MonoBehaviour
     {
         //int calculateDamage = attackDamage;
 
+        int calculatingDamage = IngameSessionManager.Instance.CalculateDamageAfterDefense(attackDamage);
+
         //방어력 계산 적용 후 빼야 함
 
-        IngameSessionManager.Instance.playerStats.currentHp -= attackDamage;
+        IngameSessionManager.Instance.playerStats.currentHp -= calculatingDamage;
 
         //체력 UI 표시하기
         IngameUIManager.Instance.SetHpSlider();

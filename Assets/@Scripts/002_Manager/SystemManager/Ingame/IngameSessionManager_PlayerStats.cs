@@ -339,6 +339,20 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
     }
 
+    public int CalculateDamageDealt()
+    {
+        return (int)(playerStats.attackDamage * UnityEngine.Random.Range(0.8f, 1.2f));
+    }
+
+    public int CalculateDamageAfterDefense(int damage)
+    {
+        int defenseConstant = 40;
+
+        float finalDamage = damage * defenseConstant / (defenseConstant + Mathf.Max(0f, playerStats.defense));
+
+        return (int)(finalDamage * UnityEngine.Random.Range(0.9f, 1.1f));
+    }
+
     //일단 인벤토리부터 해주자..
     //플레이어 현재 아이템, 상태, 스탯값 다 계산하기.
 

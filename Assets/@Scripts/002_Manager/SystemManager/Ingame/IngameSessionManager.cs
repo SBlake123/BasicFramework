@@ -14,11 +14,6 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     public VirtualJoystick movingVirtualJoystick;
     public AimVirtualJoystick aimVirtualJoystick;
 
-    public bool IsRaidActive { get; private set; }
-
-    public event Action OnRaidExtracted;
-    public event Action OnRaidFailed;
-
     public async UniTask Init()
     {
         ConnectVirtualJoystick();
@@ -39,17 +34,11 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     public async UniTask BeginRaid()
     {
-        if (IsRaidActive)
-        {
-            return;
-        }
-
         PlayerDataManager.Instance.PlayerLoad();
         SetPlayerData();
         SetDummyData();
         await SetPlayerEquipment();
         await SetPlayerStatus();
-        IsRaidActive = true;
 
         ConnectVirtualJoystick();
     }
