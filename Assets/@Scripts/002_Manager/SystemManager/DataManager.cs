@@ -32,6 +32,8 @@ public class DataManager : Singleton<DataManager>
     };
 
     public Dictionary<int, ItemData> itemDataDic { get; set; } = new Dictionary<int, ItemData>();
+    public Dictionary<int, ItemOptionData> itemOptionDataDic { get; set; } = new Dictionary<int, ItemOptionData>();
+
     public Dictionary<int, MonsterData> monsterDataDic { get; set; } = new Dictionary<int, MonsterData>();
     public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
     public Dictionary<int, List<MonsterAttackData>> monsterAttackDataDic { get; set; } = new Dictionary<int, List<MonsterAttackData>>();

@@ -116,8 +116,55 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
                 ItemData item = template.DeepCopy();
                 item.isEquip = 0;
                 item.gridIdx = lootingBox.itemDataList.Count;
+                SetDropItemOption(item);
                 lootingBox.itemDataList.Add(item);
             }
+        }
+
+        void SetDropItemOption(ItemData item)
+        {
+            int roll = UnityEngine.Random.Range(0, 200);
+            int section = 0;
+
+            if (roll < 100)
+                section = 0;
+            else if (roll < 195)
+                section = 1;
+            else if (roll < 200)
+                section = 2;
+
+            item.itemRarity = section;
+
+
+            
+            //section 값에 따라 붙을 수 있는 옵션 조사하기
+        }
+    }
+
+    public async UniTask CreatedItem(int itemId, ItemRarity itemRarity)
+    {
+        switch (itemRarity)
+        {
+            case ItemRarity.COMMON:
+                {
+
+                }
+                break;
+            case ItemRarity.UNCOMMON:
+                {
+
+                }
+                break;
+            case ItemRarity.RARE:
+                {
+
+                }
+                break;
+            case ItemRarity.UNIQUE:
+                {
+
+                }
+                break;
         }
     }
 

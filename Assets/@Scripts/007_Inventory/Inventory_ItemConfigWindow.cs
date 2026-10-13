@@ -9,5 +9,7 @@ public class Inventory_ItemConfigWindow : MonoBehaviour
 
     public TextMeshProUGUI itemSpec;
 
+    public TextMeshProUGUI itemAdditionalOption;
+
     public TextMeshProUGUI itemExplanation;
 }

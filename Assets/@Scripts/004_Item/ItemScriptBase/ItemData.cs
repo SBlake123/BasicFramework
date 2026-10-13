@@ -1,6 +1,14 @@
 using System;
 using UnityEngine;
 
+public enum ItemRarity
+{
+    COMMON,
+    UNCOMMON,
+    RARE,
+    UNIQUE
+}
+
 [CreateAssetMenu(fileName = "Item_", menuName = "BasicFramework/Item Data")]
 [Serializable]
 public class ItemData
@@ -9,6 +17,7 @@ public class ItemData
     public string itemName = "";
     public int itemNameId = 0;
     public int icon = 0;
+    public int itemRarity = 0;
     public string itemKey;
 
     public int category = 0;

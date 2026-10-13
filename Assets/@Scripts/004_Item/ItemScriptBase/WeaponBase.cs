@@ -12,7 +12,7 @@ public class WeaponData : ItemData
     public float attackSpeed = 0.3f;
     public float attackRange = 1f;
 
-    public List<ItemStatModifierData> additionalOptionsList = new List<ItemStatModifierData>();
+    public List<ItemOptionData> additionalOptionsList = new List<ItemOptionData>();
 
     public override ItemData DeepCopy()
     {

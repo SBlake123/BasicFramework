@@ -171,6 +171,24 @@ public class LanguageManager : Singleton<LanguageManager>
         return _text;
     }
 
+    public string GetColorLangScript(int idx, string colorCode, Dictionary<int, LanguageScript> scriptDic = null)
+    {
+        if (scriptDic == null) scriptDic = languageScriptDic;
+
+        string _text = GetString(idx, scriptDic);
+
+        _text = TextColorChange(_text, colorCode);
+
+        return _text;
+    }
+
+    public string TextColorChange(string str, string colorCode)
+    {
+        str = $"{colorCode}" + str + $"{GColorScript.COLOR_END}";
+
+        return str;
+    }
+
     public string ConvertToReadableFormat(long value)
     {
         if (value >= 100000000) // ¾ï ´ÜÀ§ (10^8)

@@ -160,41 +160,38 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
         //악세서리 추가
 
-        void ApplyOptions(List<ItemStatModifierData> options)
+        void ApplyOptions(List<ItemOptionData> options)
         {
             if (options == null)
                 return;
 
-            foreach (ItemStatModifierData option in options)
+            foreach (ItemOptionData option in options)
             {
-                switch (option.statType)
+                switch ((StatType)option.optionId)
                 {
-                    case StatType.ADDIDTIONAL_DAMAGE:
+                    case StatType.ADDITIONAL_DAMAGE:
                         {
-                            if (option.modifierType == ModifierType.FLAT)
-                                playerStats.attackFlatBonus += option.value;
-                            else
-                                playerStats.attackPercentBonus += option.value;
+
+                            playerStats.attackFlatBonus += option.value;
+
 
                             break;
                         }
 
                     case StatType.TOTAL_DAMAGE:
                         {
-                            if (option.modifierType == ModifierType.PERCENT)
-                                playerStats.attackPercentBonus += option.value;
-                            else
-                                playerStats.attackFlatBonus += option.value;
+
+                            playerStats.attackPercentBonus += option.value;
 
                             break;
                         }
 
                     case StatType.ADDIDTIONAL_DEFENSE:
                         {
-                            if (option.modifierType == ModifierType.FLAT)
-                                playerStats.defenseFlatBonus += option.value;
-                            else
-                                playerStats.defensePercentBonus += option.value;
+
+                            playerStats.defenseFlatBonus += option.value;
+
+
 
                             break;
                         }
@@ -207,6 +204,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                 }
             }
         }
+
+        
     }
 
     //public void SetAttackDamage()
