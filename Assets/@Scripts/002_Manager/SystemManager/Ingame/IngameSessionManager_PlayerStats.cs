@@ -196,6 +196,14 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                             break;
                         }
 
+                    case StatType.TOTAL_DEFENSE:
+                        {
+
+                            playerStats.defensePercentBonus += option.value;
+
+                            break;
+                        }
+
                     case StatType.ATTACK_RANGE:
                         {
                             // PlayerRuntimeStats에 공격 범위 필드를 만든 뒤 계산

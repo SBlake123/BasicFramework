@@ -18,6 +18,12 @@ public static class GColorScript
 
     public const string COLOR_WORDGRAY = "<color=#686868>";
 
+    public const string COLOR_UNCOMMON_BLUE = "<color=#7583D0>";
+
+    public const string COLOR_RARE_YELLOW = "<color=#F3CE35>";
+
+
+
     //public const string COLOR_EFFECTGREEN = "<color=#43FF5E>";
 
     //public const string COLOR_EFFECTRED = "<color=#43FF5E>";

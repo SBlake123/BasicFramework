@@ -32,8 +32,9 @@ public class DataManager : Singleton<DataManager>
     };
 
     public Dictionary<int, ItemData> itemDataDic { get; set; } = new Dictionary<int, ItemData>();
+    public List<ItemOptionData> itemOptionDataList { get; set; } = new List<ItemOptionData>();
     public Dictionary<int, ItemOptionData> itemOptionDataDic { get; set; } = new Dictionary<int, ItemOptionData>();
-
+    public Dictionary<int, List<ItemOptionData>> optionsByEquipmentType { get; set; } = new Dictionary<int, List<ItemOptionData>>();
     public Dictionary<int, MonsterData> monsterDataDic { get; set; } = new Dictionary<int, MonsterData>();
     public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
     public Dictionary<int, List<MonsterAttackData>> monsterAttackDataDic { get; set; } = new Dictionary<int, List<MonsterAttackData>>();
@@ -50,6 +51,9 @@ public class DataManager : Singleton<DataManager>
 
         //메소드 내용은 프로젝트마다 다르게 작성.
         await DataDicLoad("gameData", itemDataDic, item => item.itemId);
+        await DataDicLoad("itemOptionData", itemOptionDataDic, item => item.optionId);
+        //await DataListLoad("itemOptionData", itemOptionDataList);
+        GroupOptionsByEquipmentType();
         await DataDicLoad("monsterData", monsterDataDic, item => item.monsterId);
         await DataDicLoad("monsterDropData", monsterDropDataDic, item => item.monsterId);
         await DataDicLoad("monsterAttackData", monsterAttackDataDic, item => item.monsterId);
@@ -59,6 +63,33 @@ public class DataManager : Singleton<DataManager>
         await ApplyShieldData("shieldData");
         Debug.Log("shieldData");
 
+    }
+
+    void GroupOptionsByEquipmentType()
+    {
+        optionsByEquipmentType.Clear();
+
+        foreach (var item in itemOptionDataDic.Values)
+        {
+            if (item.allowedType == null) continue;
+
+            foreach (int type in item.allowedType)
+            {
+                if (!optionsByEquipmentType.TryGetValue(type, out var options))
+                {
+                    options = new List<ItemOptionData>();
+                    optionsByEquipmentType.Add(type, options);
+                }
+
+                if (!options.Contains(item))
+                {
+                    options.Add(item);
+                    Debug.Log(item.optionId);
+                }
+
+            }
+
+        }
     }
 
     //private async UniTask DataDicLoad(string jsonName, Dictionary<int, ItemData> saveDic)
@@ -75,6 +106,16 @@ public class DataManager : Singleton<DataManager>
     //        saveDic.Add(item.itemId, item);
     //    }
     //}
+
+    private async UniTask DataListLoad<T>(string jsonName, List<T> saveList)
+    {
+        TextAsset textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
+
+        var items = JsonConvert.DeserializeObject<List<T>>(textAsset.text, settings);
+        if (items == null) return;
+
+        saveList.AddRange(items);
+    }
 
     private async UniTask DataDicLoad<T>(string jsonName, Dictionary<int, T> saveDic, Func<T, int> getId)
     {

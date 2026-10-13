@@ -23,6 +23,15 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
     public event Func<UniTask> LootingBoxOpenRequested;
     public event Func<UniTask> LootingBoxClosedRequested;
 
+    public int commonWeightBonus = 10;
+    public int uncommonWeightBonus = 10;
+    public int rareWeightBonus = 115;
+    public int uniqueWeightBonus = 0;
+
+    public int uncommonOptionCnt = 1;
+    public int rareOptionMinCnt = 2;
+    public int rareOptionMaxCnt = 3;
+
     public LootingBox nowLootingBox { get; set; }
 
     public async UniTask MakingItemLootingBox(string objName, int monsterIdx, Transform transform)
@@ -123,21 +132,78 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
 
         void SetDropItemOption(ItemData item)
         {
-            int roll = UnityEngine.Random.Range(0, 200);
-            int section = 0;
+            int common = commonWeightBonus;
+            int uncommon = common + uncommonWeightBonus;
+            int rare = uncommon + rareWeightBonus;
+            int totalWeight = rare + uniqueWeightBonus;
 
-            if (roll < 100)
-                section = 0;
-            else if (roll < 195)
-                section = 1;
-            else if (roll < 200)
-                section = 2;
+            if (totalWeight <= 0) return;
 
-            item.itemRarity = section;
+            int roll = UnityEngine.Random.Range(0, totalWeight);
 
+            if (roll < common) item.itemRarity = (int)ItemRarity.COMMON;
+            else if (roll < uncommon) item.itemRarity = (int)ItemRarity.UNCOMMON;
+            else if (roll < rare) item.itemRarity = (int)ItemRarity.RARE;
+            else item.itemRarity = (int)ItemRarity.UNIQUE;
 
-            
+            AddRandomOptions(item, GetOptionCount((ItemRarity)item.itemRarity));
             //section 값에 따라 붙을 수 있는 옵션 조사하기
+        }
+
+        void AddRandomOptions(ItemData item, int count)
+        {
+            if (count <= 0) return;
+
+            List<ItemOptionData> itemOptions = new List<ItemOptionData>(DataManager.Instance.optionsByEquipmentType[item.equipmentType]);
+
+            itemOptions.RemoveAll(option => option.weight <= 0);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (itemOptions.Count == 0) break;
+
+                ItemOptionData selected = PickOptionByWeight(itemOptions);
+                ItemOptionData option = selected.DeepCopy();
+                option.SetValue(option.minValue, option.maxValue);
+
+                if (item is WeaponData weapon) weapon.additionalOptionsList.Add(option);
+                else if (item is ShieldData shield) shield.additionalOptionsList.Add(option);
+                else if (item is AccessoryData accessory) accessory.additionalOptionsList.Add(option);
+
+                itemOptions.RemoveAll(candidate => candidate.optionId == selected.optionId);
+            }
+            //}
+        }
+
+        ItemOptionData PickOptionByWeight(List<ItemOptionData> optionList)
+        {
+            int totalWeight = 0;
+            foreach (var option in optionList) totalWeight += option.weight;
+
+            int roll = UnityEngine.Random.Range(0, totalWeight);
+
+            foreach (var option in optionList)
+            {
+                if (roll < option.weight) return option;
+                roll -= option.weight;
+            }
+
+            return null;
+        }
+
+        int GetOptionCount(ItemRarity rarity)
+        {
+            switch (rarity)
+            {
+                case ItemRarity.UNCOMMON:
+                    return uncommonOptionCnt;
+
+                case ItemRarity.RARE:
+                    return UnityEngine.Random.Range(rareOptionMinCnt, rareOptionMaxCnt + 1); // 2~3개
+
+                default:
+                    return 0;
+            }
         }
     }
 

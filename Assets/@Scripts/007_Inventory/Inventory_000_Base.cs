@@ -531,8 +531,8 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public void SettingItemConfigWindow(ItemData itemData)
     {
-        LanguageManager.Instance.GetLangScript(itemData.itemId, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemName);
         SettingItemSpecText(itemData);
+        SettingItemAdditionalOptionText(itemData);
         LanguageManager.Instance.GetLangScript(itemData.itemId + 100000, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemExplanation);
     }
 
@@ -587,6 +587,53 @@ public partial class Inventory_000_Base : MonoBehaviour
             if (builder.Length > 0) builder.Append('\n');
             builder.Append($"{label} : {value:0.##}{suffix}");
         }
+    }
+
+    public void SettingItemAdditionalOptionText(ItemData itemData)
+    {
+        List<ItemOptionData> options = null;
+
+        if (itemData is WeaponData weapon) options = weapon.additionalOptionsList;
+        else if (itemData is ShieldData shield) options = shield.additionalOptionsList;
+        else if (itemData is AccessoryData accessory) options = accessory.additionalOptionsList;
+
+        switch(itemData.itemRarity)
+        {
+            case (int)ItemRarity.COMMON:
+                {
+                    itemConfigWindow.itemName.text = LanguageManager.Instance.GetColorLangScript(itemData.itemId, GColorScript.COLOR_WHITE, LanguageManager.Instance.languageScriptDic);
+                    break;
+                }
+            case (int)ItemRarity.UNCOMMON:
+                {
+                    itemConfigWindow.itemName.text = LanguageManager.Instance.GetColorLangScript(itemData.itemId, GColorScript.COLOR_UNCOMMON_BLUE, LanguageManager.Instance.languageScriptDic);
+                    break;
+                }
+            case (int)ItemRarity.RARE:
+                {
+                    itemConfigWindow.itemName.text = LanguageManager.Instance.GetColorLangScript(itemData.itemId, GColorScript.COLOR_RARE_YELLOW, LanguageManager.Instance.languageScriptDic);
+                    break;
+                }
+        }
+
+
+        StringBuilder builder = new();
+
+        if (options != null)
+        {
+            foreach (var option in options)
+            {
+                if (option == null) continue;
+
+                string format = LanguageManager.Instance.GetLangScript(option.optionId);
+
+                if (builder.Length > 0) builder.Append('\n');
+                builder.AppendFormat(format, option.value);
+            }
+        }
+
+        itemConfigWindow.itemAdditionalOption.text = builder.ToString();
+        itemConfigWindow.itemAdditionalOption.gameObject.SetActive(builder.Length > 0);
     }
 
 }

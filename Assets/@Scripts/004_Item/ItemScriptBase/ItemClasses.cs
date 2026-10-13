@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,8 @@ public enum StatType
 {
     ADDITIONAL_DAMAGE = 90001,
     TOTAL_DAMAGE = 90002,
-    ADDIDTIONAL_DEFENSE = 90004,
+    ADDIDTIONAL_DEFENSE = 91001,
+    TOTAL_DEFENSE = 91002,
     ATTACK_RANGE = 90005,
 }
 public enum DamageElement
@@ -39,6 +41,17 @@ public class ItemOptionData
     public string description { get; set; }
     public ModifierType modifierType { get; set; }
     public DamageElement element { get; set; }
+
+    [JsonIgnore]
+    public List<int> allowedType { get; set; } = new();
+
+    [JsonProperty("allowedType")]
+    private string AllowedTypeJson
+    {
+        get => JsonConvert.SerializeObject(allowedType);
+        set => allowedType = string.IsNullOrWhiteSpace(value) ? new List<int>() : JsonConvert.DeserializeObject<List<int>>(value) ?? new List<int>();
+    }
+
     public int weight { get; set; }
     public int value { get; set; }
     public int minValue { get; set; }
@@ -54,11 +67,13 @@ public class ItemOptionData
             element = element,
             value = value,
             minValue = minValue,
-            maxValue = maxValue
+            maxValue = maxValue,
+            description = description,
+            allowedType = allowedType == null ? null : new List<int>(allowedType)
         };
     }
 
-    void SetValue(int minValue, int maxValue)
+    public void SetValue(int minValue, int maxValue)
     {
         if (minValue > maxValue)
             throw new System.ArgumentException("ÃÖ¼Ú°ªÀÌ ÃÖ´ñ°ªº¸´Ù Å®´Ï´Ù.");

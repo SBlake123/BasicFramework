@@ -5,6 +5,7 @@
     "itemNameId": "20001",
     "icon": "0",
     "itemKey": "Sword",
+    "itemRarity": "0",
     "category": "2",
     "equipmentType": "1",
     "isEquip": "0",
@@ -12,7 +13,13 @@
     "canStack": "0",
     "maxStackAmount": "0",
     "healAmount": "0",
-    "itemExplanation": "모험가에게 가장 기본적으로 필요한 무기 중 하나."
+    "itemExplanation": "모험가에게 가장 기본적으로 필요한 무기 중 하나.",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1002",
@@ -20,6 +27,7 @@
     "itemNameId": "20002",
     "icon": "0",
     "itemKey": "AmethystShield",
+    "itemRarity": "0",
     "category": "2",
     "equipmentType": "2",
     "isEquip": "0",
@@ -27,7 +35,13 @@
     "canStack": "0",
     "maxStackAmount": "0",
     "healAmount": "0",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1003",
@@ -35,6 +49,7 @@
     "itemNameId": "20003",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -42,7 +57,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1004",
@@ -50,6 +71,7 @@
     "itemNameId": "20004",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -57,7 +79,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1005",
@@ -65,6 +93,7 @@
     "itemNameId": "20005",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -72,7 +101,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1006",
@@ -80,6 +115,7 @@
     "itemNameId": "20006",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -87,7 +123,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1007",
@@ -95,6 +137,7 @@
     "itemNameId": "20007",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -102,7 +145,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1008",
@@ -110,6 +159,7 @@
     "itemNameId": "20008",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -117,7 +167,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1009",
@@ -125,6 +181,7 @@
     "itemNameId": "20009",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -132,7 +189,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1010",
@@ -140,6 +203,7 @@
     "itemNameId": "20010",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -147,7 +211,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1011",
@@ -155,6 +225,7 @@
     "itemNameId": "20011",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -162,7 +233,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1012",
@@ -170,6 +247,7 @@
     "itemNameId": "20012",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -177,7 +255,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1013",
@@ -185,6 +269,7 @@
     "itemNameId": "20013",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -192,7 +277,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1014",
@@ -200,6 +291,7 @@
     "itemNameId": "20014",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -207,7 +299,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "1015",
@@ -215,6 +313,7 @@
     "itemNameId": "20015",
     "icon": "0",
     "itemKey": "",
+    "itemRarity": "0",
     "category": "",
     "equipmentType": "",
     "isEquip": "",
@@ -222,7 +321,13 @@
     "canStack": "",
     "maxStackAmount": "",
     "healAmount": "",
-    "itemExplanation": ""
+    "itemExplanation": "",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   },
   {
     "itemId": "2001",
@@ -230,6 +335,7 @@
     "itemNameId": "20002",
     "icon": "0",
     "itemKey": "AmethystShield",
+    "itemRarity": "0",
     "category": "2",
     "equipmentType": "2",
     "isEquip": "0",
@@ -237,6 +343,12 @@
     "canStack": "0",
     "maxStackAmount": "0",
     "healAmount": "0",
-    "itemExplanation": "단단한 자수정으로 만들어져 방어력이 뛰어나다."
+    "itemExplanation": "단단한 자수정으로 만들어져 방어력이 뛰어나다.",
+    "": "",
+    "_1": "",
+    "_2": "",
+    "_3": "",
+    "_4": "",
+    "_5": ""
   }
 ]

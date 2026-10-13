@@ -23,6 +23,7 @@ public class WeaponData : ItemData
             itemNameId = itemNameId,
             icon = icon,
             itemKey = itemKey,
+            itemRarity = itemRarity,
 
             category = category,
             equipmentType = equipmentType,

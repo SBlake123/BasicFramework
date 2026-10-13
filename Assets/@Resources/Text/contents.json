@@ -312,6 +312,132 @@
     "jp": "Fallen"
   },
   {
+    "idx": "90001",
+    "kr": "추가 공격력 +{0}",
+    "en": "Additional Attack Damage +{0}",
+    "jp": "Additional Attack Damage +{0}"
+  },
+  {
+    "idx": "90002",
+    "kr": "추가 공격력 +{0}% 증가",
+    "en": "Additional Attack Damage +{0}%",
+    "jp": "Additional Attack Damage +{0}%"
+  },
+  {
+    "idx": "90003",
+    "kr": "화염 속성 공격력 +{0}",
+    "en": "Fire Damage +{0}",
+    "jp": "Fire Damage +{0}"
+  },
+  {
+    "idx": "90004",
+    "kr": "화염 속성 공격력 +{0}% 증가",
+    "en": "Fire Damage +{0}%",
+    "jp": "Fire Damage +{0}%"
+  },
+  {
+    "idx": "90005",
+    "kr": "냉기 속성 공격력 +{0}",
+    "en": "Ice Damage +{0}",
+    "jp": "Ice Damage +{0}"
+  },
+  {
+    "idx": "90006",
+    "kr": "냉기 속성 공격력 +{0}% 증가",
+    "en": "Ice Damage +{0}%",
+    "jp": "Ice Damage +{0}%"
+  },
+  {
+    "idx": "90007",
+    "kr": "독 속성 공격력 +{0}",
+    "en": "Poison Damage +{0}",
+    "jp": "Poison Damage +{0}"
+  },
+  {
+    "idx": "90008",
+    "kr": "독 속성 공격력 +{0}% 증가",
+    "en": "Poison Damage +{0}%",
+    "jp": "Poison Damage +{0}%"
+  },
+  {
+    "idx": "90009",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "90010",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "90011",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "90012",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "90013",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "90014",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "90015",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "91001",
+    "kr": "추가 방어력 +{0}",
+    "en": "Additional Defense +{0}",
+    "jp": "Additional Defense +{0}"
+  },
+  {
+    "idx": "91002",
+    "kr": "추가 방어력 +{0}% 증가",
+    "en": "Additional Defense +{0}%",
+    "jp": "Additional Defense +{0}%"
+  },
+  {
+    "idx": "92000",
+    "kr": "공격시 +{0}% 확률로 {1}",
+    "en": "{0}% chance on attack to {1}",
+    "jp": "{0}% chance on attack to {1}"
+  },
+  {
+    "idx": "95001",
+    "kr": "공격시 +{0}% 확률로 땅을 타는 불꽃 생성",
+    "en": "create flames that travel along the ground",
+    "jp": "create flames that travel along the ground"
+  },
+  {
+    "idx": "95002",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
+    "idx": "95003",
+    "kr": "",
+    "en": "",
+    "jp": ""
+  },
+  {
     "idx": "101001",
     "kr": "모험가에게 가장 기본적으로 필요한 무기 중 하나.",
     "en": "One of the most basic weapons an adventurer needs.",
