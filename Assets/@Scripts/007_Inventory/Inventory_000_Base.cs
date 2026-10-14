@@ -282,198 +282,107 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public async UniTask ItemMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
     {
-        switch (targetGrid)
+
+        bool isMovingItem;
+        //if (targetGrid.gridCategory == GridCategory.STASH)
+        //{
+        //    if (targetGrid.itemData == null)
+        //    {
+
+        //    }
+        //    else
+        //    {
+        //        if (targetGrid.itemData.equipmentType == (int)startGrid.gridCategory)
+        //        {
+
+        //        }
+        //        else return;
+        //    }
+        //}
+
+        //else if (startGrid.itemData.equipmentType == (int)targetGrid.gridCategory)
+        //{
+        //    if (targetGrid.itemData == null)
+        //    {
+
+        //    }
+        //    else
+        //    {
+        //        if (targetGrid.itemData.equipmentType == (int)startGrid.gridCategory)
+        //        {
+
+        //        }
+        //        else return;
+        //    }
+        //}
+
+        if (startGrid == targetGrid || startGrid.itemData == null) return;
+        if (!CanPlaceItem(targetGrid, startGrid.itemData)) return;
+        if (!CanPlaceItem(startGrid, targetGrid.itemData)) return;
+
+        //await ItemMoveOrChange(startGrid, targetGrid);
+
+        bool CanPlaceItem(InventoryGrid_000_Base grid, ItemData item)
         {
-            case var grid when grid == weaponGrid:
-                {
-                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
-                    {
-                        Debug.Log("StashToWeapon");
-                        await ItemMoveOrChange(startGrid, targetGrid);
-                        targetGrid.itemData.isEquip = (int)IsEquip.YES;
-                        targetGrid.itemData.gridIdx = 0;
+            if (item == null) return true;
+            if (grid.gridCategory == GridCategory.STASH) return true;
 
-                        await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
-
-
-                        //장착 무기 갱신
-                    }
-                }
-                break;
-
-            case var grid when grid == shieldGrid:
-                {
-                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Shield)
-                    {
-                        Debug.Log("StashToArmor");
-
-                        await ItemMoveOrChange(startGrid, targetGrid);
-                        targetGrid.itemData.isEquip = (int)IsEquip.YES;
-                        targetGrid.itemData.gridIdx = 0;
-
-                        await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Shield, IsEquip.YES);
-
-                    }
-                }
-                break;
-
-            case var grid when accessoryGridList.Contains(grid):
-                {
-                    if (startGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
-                    {
-                        Debug.Log("StashToAccessory");
-
-                        int targetGridIdx = accessoryGridList.IndexOf(grid);
-
-                        await ItemMoveOrChange(startGrid, targetGrid);
-                        targetGrid.itemData.isEquip = (int)IsEquip.YES;
-                        targetGrid.itemData.gridIdx = targetGridIdx;
-
-                        await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
-
-                    }
-                }
-                break;
-
-            default:
-                {
-                    await ToStashMoveCheck(startGrid, targetGrid);
-
-                    //int targetGridIdx = invenGridList.IndexOf(targetGrid);
-
-                    //await ItemMoveOrChange(startGrid, targetGrid);
-
-
-
-                }
-                break;
+            return item.equipmentType == (int)grid.gridCategory;
         }
 
+        isMovingItem = true;
 
-        //항상 장착 아이템 여부 확인하고 갱신해줘야함.
-
-        async UniTask ToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
+        try
         {
-            int targetGridIdx = targetGrid.gridIdx;
+            bool equipmentChanged = IsEquipmentSlot(startGrid) || IsEquipmentSlot(targetGrid);
 
-            if (targetGrid.itemData != null)
+            await ItemMoveOrChange(startGrid, targetGrid);
+
+            await UpdateEquipmentSlot(startGrid);
+            await UpdateEquipmentSlot(targetGrid);
+
+            if (equipmentChanged) await IngameSessionManager.Instance.RefreshPlayerStatus();
+        }
+        finally
+        {
+            isMovingItem = false;
+        }
+
+        bool IsEquipmentSlot(InventoryGrid_000_Base grid)
+        {
+            return grid == weaponGrid || grid == shieldGrid || accessoryGridList.Contains(grid);
+        }
+
+        async UniTask UpdateEquipmentSlot(InventoryGrid_000_Base grid)
+        {
+            var session = IngameSessionManager.Instance;
+            int accessoryIdx = accessoryGridList.IndexOf(grid);
+
+            bool isEquipmentSlot = grid == weaponGrid || grid == shieldGrid || accessoryIdx >= 0;
+
+            // 아이템이 있으면 현재 슬롯에 맞게 저장 정보 설정
+            if (grid.itemData != null)
             {
-                switch (startGrid)
-                {
-                    case var grid when grid == weaponGrid:
-                        {
-                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
-                            {
-                                Debug.Log("WeaponToStash");                
-                                await ItemMoveOrChange(startGrid, targetGrid);
-
-                                //장착하고, 아이템데이타 서로 교환하고, 인스턴시에이트 다시해서 각각에 채워넣기
-                                //startgrid에 있는 isEquip = 1, targetGrid에 있는 isEquip = 0;
-                                //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
-
-                                if(startGrid.itemData == null)
-                                {
-                                    await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Weapon, IsEquip.NO);
-
-
-                                    //없어진거임
-                                }
-                                else
-                                {
-                                    await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
-
-
-                                    //갱신 ㄱㄱ
-                                }
-
-
-                            }
-                        }
-                        break;
-
-                    case var grid when grid == shieldGrid:
-                        {
-                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Shield)
-                            {
-                                Debug.Log("ArmorToStash");
-                                await ItemMoveOrChange(startGrid, targetGrid);
-
-                                if (startGrid.itemData == null)
-                                {
-                                    await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Shield, IsEquip.NO);
-
-
-                                    //없어진거임
-                                }
-                                else
-                                {
-                                    await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Shield, IsEquip.YES);
-                                    //갱신 ㄱㄱ
-                                }
-
-                                
-
-                            }
-                        }
-                        break;
-
-                    case var grid when accessoryGridList.Contains(grid):
-                        {
-                            if (targetGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
-                            {
-                                Debug.Log("AccessoryToStash");
-                                await ItemMoveOrChange(startGrid, targetGrid);
-
-                                if (startGrid.itemData == null)
-                                {
-                                    await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Accessory, IsEquip.NO);
-
-
-                                    //없어진거임
-                                }
-                                else
-                                {
-                                    await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
-                                    //갱신 ㄱㄱ
-                                }
-
-                                
-                            }
-                        }
-                        break;
-
-                    default:
-                        {
-                            Debug.Log("StashToStash");
-                            //stash to stash
-                            await ItemMoveOrChange(startGrid, targetGrid);
-                        }
-                        break;
-                }
+                grid.itemData.isEquip = isEquipmentSlot ? (int)IsEquip.YES : (int)IsEquip.NO;
+                grid.itemData.gridIdx = accessoryIdx >= 0 ? accessoryIdx : isEquipmentSlot ? 0 : grid.gridIdx;
             }
-            else
+
+            if (!isEquipmentSlot) return;
+
+            // 악세서리는 해당 칸만 갱신. 빈 칸이면 기존 장착 정보 제거
+            if (accessoryIdx >= 0)
             {
-                switch (startGrid)
-                {
-                    case var grid when invenGridList.Contains(grid) || lootingGridList.Contains(grid):
-                        {
-                            await ItemMoveOrChange(startGrid, targetGrid);
-                        }
-                        break;
+                session.currentAccessoryDataArr[accessoryIdx] = grid.itemData?.DeepCopy();
+                return;
+            }
 
-                    default:
-                        {
-                            await ItemMoveOrChange(startGrid, targetGrid);
+            // 무기·방패는 기존 외형 갱신 기능 사용
+            EquipmentType equipmentType = grid == weaponGrid ? EquipmentType.Weapon : EquipmentType.Shield;
 
-                            await IngameSessionManager.Instance.RefreshPlayerStatus((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
-                        }
-                        break;
-                }
-                //targetgrid은 아이템 없는 빈 칸 stash에서 지금 
-            };
-
-            targetGrid.itemData.isEquip = (int)IsEquip.NO;
-            targetGrid.itemData.gridIdx = targetGridIdx;
+            if (grid.itemData == null)
+                await session.RefreshCurrentItem(grid, IsEquip.NO);
+            else
+                await session.RefreshCurrentItem(grid, IsEquip.YES);
         }
 
         async UniTask ItemMoveOrChange(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
@@ -520,6 +429,222 @@ public partial class Inventory_000_Base : MonoBehaviour
                 await MakeInvenItem(string.Format(GScriptAddress.invenItem, targetGrid.itemData.itemKey), targetGrid.itemImgParent);
             }
         }
+
+        //switch (targetGrid.gridCategory)
+        //{
+        //    case GridCategory.STASH:
+        //        {
+
+
+        //        }
+
+        //        break;
+        //}
+
+
+        //switch (targetGrid)
+        //{
+        //    case var grid when grid == weaponGrid:
+        //        {
+        //            if (startGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
+        //            {
+        //                Debug.Log("StashToWeapon");
+        //                await ItemMoveOrChange(startGrid, targetGrid);
+        //                targetGrid.itemData.isEquip = (int)IsEquip.YES;
+        //                targetGrid.itemData.gridIdx = 0;
+
+        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
+
+
+        //                //장착 무기 갱신
+        //            }
+        //        }
+        //        break;
+
+        //    case var grid when grid == shieldGrid:
+        //        {
+        //            if (startGrid.itemData.equipmentType == (int)EquipmentType.Shield)
+        //            {
+        //                Debug.Log("StashToArmor");
+
+        //                await ItemMoveOrChange(startGrid, targetGrid);
+        //                targetGrid.itemData.isEquip = (int)IsEquip.YES;
+        //                targetGrid.itemData.gridIdx = 0;
+
+        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Shield, IsEquip.YES);
+
+        //            }
+        //        }
+        //        break;
+
+        //    case var grid when accessoryGridList.Contains(grid):
+        //        {
+        //            if (accessoryGridList.Contains(startGrid))
+        //            {
+        //                Debug.Log("AccToAcc");
+        //                await ItemMoveOrChange(startGrid, targetGrid);
+
+        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
+        //            }
+
+        //            else if (startGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
+        //            {
+        //                Debug.Log("StashToAccessory");
+
+        //                int targetGridIdx = accessoryGridList.IndexOf(grid);
+
+        //                await ItemMoveOrChange(startGrid, targetGrid);
+        //                targetGrid.itemData.isEquip = (int)IsEquip.YES;
+        //                targetGrid.itemData.gridIdx = targetGridIdx;
+
+        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
+
+        //            }
+        //        }
+        //        break;
+
+        //    default:
+        //        {
+        //            await ToStashMoveCheck(startGrid, targetGrid);
+
+        //            //int targetGridIdx = invenGridList.IndexOf(targetGrid);
+
+        //            //await ItemMoveOrChange(startGrid, targetGrid);
+
+
+
+        //        }
+        //        break;
+        //}
+
+
+        //항상 장착 아이템 여부 확인하고 갱신해줘야함.
+
+        //async UniTask ToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
+        //{
+        //    int targetGridIdx = targetGrid.gridIdx;
+
+        //    if (targetGrid.itemData != null)
+        //    {
+        //        switch (startGrid)
+        //        {
+        //            case var grid when grid == weaponGrid:
+        //                {
+        //                    if (targetGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
+        //                    {
+        //                        Debug.Log("WeaponToStash");
+        //                        await ItemMoveOrChange(startGrid, targetGrid);
+
+        //                        //장착하고, 아이템데이타 서로 교환하고, 인스턴시에이트 다시해서 각각에 채워넣기
+        //                        //startgrid에 있는 isEquip = 1, targetGrid에 있는 isEquip = 0;
+        //                        //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
+
+        //                        if (startGrid.itemData == null)
+        //                        {
+        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Weapon, IsEquip.NO);
+
+
+        //                            //없어진거임
+        //                        }
+        //                        else
+        //                        {
+        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
+
+
+        //                            //갱신 ㄱㄱ
+        //                        }
+
+
+        //                    }
+        //                }
+        //                break;
+
+        //            case var grid when grid == shieldGrid:
+        //                {
+        //                    if (targetGrid.itemData.equipmentType == (int)EquipmentType.Shield)
+        //                    {
+        //                        Debug.Log("ArmorToStash");
+        //                        await ItemMoveOrChange(startGrid, targetGrid);
+
+        //                        if (startGrid.itemData == null)
+        //                        {
+        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Shield, IsEquip.NO);
+
+
+        //                            //없어진거임
+        //                        }
+        //                        else
+        //                        {
+        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Shield, IsEquip.YES);
+        //                            //갱신 ㄱㄱ
+        //                        }
+
+
+
+        //                    }
+        //                }
+        //                break;
+
+        //            case var grid when accessoryGridList.Contains(grid):
+        //                {
+        //                    if (targetGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
+        //                    {
+        //                        Debug.Log("AccessoryToStash");
+        //                        await ItemMoveOrChange(startGrid, targetGrid);
+
+        //                        if (startGrid.itemData == null)
+        //                        {
+        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Accessory, IsEquip.NO);
+
+
+        //                            //없어진거임
+        //                        }
+        //                        else
+        //                        {
+        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
+        //                            //갱신 ㄱㄱ
+        //                        }
+
+
+        //                    }
+        //                }
+        //                break;
+
+        //            default:
+        //                {
+        //                    Debug.Log("StashToStash");
+        //                    //stash to stash
+        //                    await ItemMoveOrChange(startGrid, targetGrid);
+        //                }
+        //                break;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        switch (startGrid)
+        //        {
+        //            case var grid when invenGridList.Contains(grid) || lootingGridList.Contains(grid):
+        //                {
+        //                    await ItemMoveOrChange(startGrid, targetGrid);
+        //                }
+        //                break;
+
+        //            default:
+        //                {
+        //                    await ItemMoveOrChange(startGrid, targetGrid);
+
+        //                    await IngameSessionManager.Instance.RefreshPlayerStatus((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
+        //                }
+        //                break;
+        //        }
+        //        //targetgrid은 아이템 없는 빈 칸 stash에서 지금 
+        //    };
+
+        //    targetGrid.itemData.isEquip = (int)IsEquip.NO;
+        //    targetGrid.itemData.gridIdx = targetGridIdx;
+        //}
+
+
 
     }
 
@@ -592,7 +717,7 @@ public partial class Inventory_000_Base : MonoBehaviour
         else if (itemData is ShieldData shield) options = shield.additionalOptionsList;
         else if (itemData is AccessoryData accessory) options = accessory.additionalOptionsList;
 
-        switch(itemData.itemRarity)
+        switch (itemData.itemRarity)
         {
             case (int)ItemRarity.COMMON:
                 {
