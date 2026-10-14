@@ -16,9 +16,11 @@ public enum StatType
 {
     ADDITIONAL_DAMAGE = 90001,
     TOTAL_DAMAGE = 90002,
-    ADDIDTIONAL_DEFENSE = 91001,
+    ADDITIONAL_DEFENSE = 91001,
     TOTAL_DEFENSE = 91002,
     ATTACK_RANGE = 90005,
+    ADDITIONAL_HEALTH = 92001,
+    TOTAL_HEALTH = 92002
 }
 public enum DamageElement
 {
@@ -33,6 +35,20 @@ public enum ModifierType
     FLAT,
     PERCENT
 }
+
+[Serializable]
+public class UniqueItemOptionData
+{
+    public int itemId { get; set; }
+    public string itemName { get; set; }
+    public int optionId { get; set; }
+    public int value0 { get; set; }
+    public int value1 { get; set; }
+    public int value2 { get; set; }
+    public int minValue { get; set; }
+    public int maxValue { get; set; }
+}
+
 
 [Serializable]
 public class ItemOptionData

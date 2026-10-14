@@ -6,18 +6,24 @@ using UnityEngine;
 [Serializable]
 public class PlayerRuntimeStats
 {
-    public int currentHp { get; set; }
-    public int maxHp { get; set; } = 60;
-    public int currentStamina { get; set; }
-    public int maxStamina { get; set; } = 100;
+    public float currentHp { get; set; }
+    public float maxHp { get; set; }
+    public float baseHp { get; set; } = 100f;
+    public float currentStamina { get; set; }
+    public float maxStamina { get; set; } 
+    public float baseStamina { get; set; } = 100f;
+
     public float attackDamage { get; set; }
-    public float noWeaponDamage { get; set; } = 1;
+    public float noWeaponDamage { get; set; } = 1f;
     public float defense { get; set; }
-    public float noShieldDefense { get; set; } = 1;
+    public float noShieldDefense { get; set; } = 1f;
     public float attackFlatBonus { get; set; }
     public float attackPercentBonus { get; set; }
     public float defenseFlatBonus { get; set; }
     public float defensePercentBonus { get; set; }
+    public float hpFlatBonus { get; set; }
+    public float hpPercentBonus { get; set; }
+
 
     public void ResetEquipmentBonus()
     {
@@ -26,22 +32,32 @@ public class PlayerRuntimeStats
 
         defenseFlatBonus = 0f;
         defensePercentBonus = 0f;
+
+        hpFlatBonus = 0f;
+        hpPercentBonus = 0f;
     }
 
     public void CalculateAttackDamage(float baseAttackDamage)
     {
-        attackDamage = (baseAttackDamage + attackFlatBonus) * (1f + attackPercentBonus);
+        attackDamage = (int)((baseAttackDamage + attackFlatBonus) * (1f + attackPercentBonus));
     }
 
     public void CalculateDefense(float baseDefense)
     {
-        defense = (baseDefense + defenseFlatBonus) * (1f + defensePercentBonus);
+        defense = (int)((baseDefense + defenseFlatBonus) * (1f + defensePercentBonus));
     }
 
     public void CalculateMaxHpAndStanima(float baseHp, float baseStamina)
     {
-        maxHp = (int)baseHp;
-        maxHp = (int)baseStamina;
+        bool wasFullHp = maxHp > 0f && currentHp >= maxHp;
+
+        float hpRatio = maxHp > 0f ? Mathf.Clamp01(currentHp / maxHp) : 0f;
+
+        maxHp = (int)((baseHp + hpFlatBonus) * (1f + hpPercentBonus));
+        maxStamina = (int)baseStamina;
+
+        currentHp = wasFullHp ? maxHp : maxHp * hpRatio;
+        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
     }
 }
 
@@ -71,17 +87,21 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     public void SetDummyData()
     {
-        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy());
-        playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy());
+        //playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy());
+        //playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy());
+        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(1001, 1, ItemRarity.UNCOMMON));
+        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(2001, 2, ItemRarity.RARE));
+        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(5000, 3, ItemRarity.UNIQUE));
+        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(7000, 4, ItemRarity.UNIQUE));
 
-        ItemData itemData_1 = DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy();
-        itemData_1.gridIdx = 10;
+        //ItemData itemData_1 = DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy();
+        //itemData_1.gridIdx = 10;
 
-        ItemData itemData_3 = DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy();
-        itemData_3.gridIdx = 11;
+        //ItemData itemData_3 = DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy();
+        //itemData_3.gridIdx = 11;
 
-        playerIngameData.invenItems.Add(itemData_3);
-        playerIngameData.invenItems.Add(itemData_1);
+        //playerIngameData.invenItems.Add(itemData_3);
+        //playerIngameData.invenItems.Add(itemData_1);
 
     }
 
@@ -136,9 +156,9 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         ? currentShieldData.defense
         : playerStats.noShieldDefense;
 
-        float baseHp = playerStats.maxHp;
+        float baseHp = playerStats.baseHp;
 
-        float baseStamina = playerStats.maxStamina;
+        float baseStamina = playerStats.baseStamina;
 
         Debug.Log($"baseAttackDamage : {baseAttackDamage}");
 
@@ -146,7 +166,6 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         playerStats.CalculateDefense(baseDefense);
         playerStats.CalculateMaxHpAndStanima(baseHp, baseStamina);
         //SetDefense();
-        SetHpAndStamina();
         IngameUIManager.Instance.SetHpSlider();
 
     }
@@ -157,6 +176,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
         ApplyOptions(currentWeaponData?.additionalOptionsList);
         ApplyOptions(currentShieldData?.additionalOptionsList);
+        ApplyOptions(currentAccessoryDataArr);
 
         //악세서리 추가
 
@@ -171,27 +191,21 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                 {
                     case StatType.ADDITIONAL_DAMAGE:
                         {
-
                             playerStats.attackFlatBonus += option.value;
-
 
                             break;
                         }
 
                     case StatType.TOTAL_DAMAGE:
                         {
-
-                            playerStats.attackPercentBonus += option.value;
+                            playerStats.attackPercentBonus += (float) option.value / 100;
 
                             break;
                         }
 
-                    case StatType.ADDIDTIONAL_DEFENSE:
+                    case StatType.ADDITIONAL_DEFENSE:
                         {
-
                             playerStats.defenseFlatBonus += option.value;
-
-
 
                             break;
                         }
@@ -199,7 +213,23 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     case StatType.TOTAL_DEFENSE:
                         {
 
-                            playerStats.defensePercentBonus += option.value;
+                            playerStats.defensePercentBonus += (float) option.value / 100;
+
+                            break;
+                        }
+
+                    case StatType.ADDITIONAL_HEALTH:
+                        {
+
+                            playerStats.hpFlatBonus += option.value;
+
+                            break;
+                        }
+
+                    case StatType.TOTAL_HEALTH:
+                        {
+
+                            playerStats.hpPercentBonus += (float) option.value / 100;
 
                             break;
                         }
@@ -300,10 +330,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
             case EquipmentType.Accessory:
                 {
                     ItemData currentAccessoryData = itemData.DeepCopy();
-                    currentAccessoryDataArr[currentAccessoryData.gridIdx] = null;
-
-
-
+   
                     currentAccessoryDataArr[currentAccessoryData.gridIdx] = currentAccessoryData;
                 }
                 break;

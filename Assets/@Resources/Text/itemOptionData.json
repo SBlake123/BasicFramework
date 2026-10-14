@@ -170,7 +170,27 @@
     "maxValue": "50"
   },
   {
-    "optionId": "92000",
+    "optionId": "92001",
+    "description": "추가 체력 +{0}",
+    "modifierType": "0",
+    "element": "0",
+    "weight": "5",
+    "allowedType": "[2,3]",
+    "minValue": "10",
+    "maxValue": "50"
+  },
+  {
+    "optionId": "92002",
+    "description": "추가 체력 +{0}% 증가",
+    "modifierType": "1",
+    "element": "0",
+    "weight": "2",
+    "allowedType": "[2,3]",
+    "minValue": "10",
+    "maxValue": "50"
+  },
+  {
+    "optionId": "93000",
     "description": "공격시 +{0}% 확률로 {1}",
     "modifierType": "0",
     "element": "0",

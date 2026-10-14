@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
+
+[Serializable]
 public class ShieldData : ItemData
 {
     public float defense;

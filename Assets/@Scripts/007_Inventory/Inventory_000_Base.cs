@@ -249,11 +249,6 @@ public partial class Inventory_000_Base : MonoBehaviour
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
         await ObjectPool.Instance.PopFromPool(ItemName, itemRect);
-
-        //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(ItemName), itemRect);
-
-        //var prefab = Resources.Load<GameObject>(ItemName);
-        //Instantiate(prefab, itemRect, false);
     }
 
     public async UniTask InventoryClosed()
@@ -614,8 +609,14 @@ public partial class Inventory_000_Base : MonoBehaviour
                     itemConfigWindow.itemName.text = LanguageManager.Instance.GetColorLangScript(itemData.itemId, GColorScript.COLOR_RARE_YELLOW, LanguageManager.Instance.languageScriptDic);
                     break;
                 }
+            case (int)ItemRarity.UNIQUE:
+                {
+                    itemConfigWindow.itemName.text = LanguageManager.Instance.GetColorLangScript(itemData.itemId, GColorScript.COLOR_UNIQUE_PINK, LanguageManager.Instance.languageScriptDic);
+                    break;
+                }
         }
 
+        options.Sort((a, b) => a.optionId.CompareTo(b.optionId));
 
         StringBuilder builder = new();
 

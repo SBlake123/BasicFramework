@@ -149,88 +149,131 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
             AddRandomOptions(item, GetOptionCount((ItemRarity)item.itemRarity));
             //section 값에 따라 붙을 수 있는 옵션 조사하기
         }
+    }
 
-        void AddRandomOptions(ItemData item, int count)
+    public ItemData CreateStashItem(int itemId, int gridIdx, ItemRarity itemRarity)
+    {
+        if (itemRarity == ItemRarity.UNIQUE) return CreateUniqueItem(itemId, gridIdx);
+
+        if (!DataManager.Instance.itemDataDic.TryGetValue(itemId, out var template))
         {
-            if (count <= 0) return;
-
-            List<ItemOptionData> itemOptions = new List<ItemOptionData>(DataManager.Instance.optionsByEquipmentType[item.equipmentType]);
-
-            itemOptions.RemoveAll(option => option.weight <= 0);
-
-            for (int i = 0; i < count; i++)
-            {
-                if (itemOptions.Count == 0) break;
-
-                ItemOptionData selected = PickOptionByWeight(itemOptions);
-                ItemOptionData option = selected.DeepCopy();
-                option.SetValue(option.minValue, option.maxValue);
-
-                if (item is WeaponData weapon) weapon.additionalOptionsList.Add(option);
-                else if (item is ShieldData shield) shield.additionalOptionsList.Add(option);
-                else if (item is AccessoryData accessory) accessory.additionalOptionsList.Add(option);
-
-                itemOptions.RemoveAll(candidate => candidate.optionId == selected.optionId);
-            }
-            //}
-        }
-
-        ItemOptionData PickOptionByWeight(List<ItemOptionData> optionList)
-        {
-            int totalWeight = 0;
-            foreach (var option in optionList) totalWeight += option.weight;
-
-            int roll = UnityEngine.Random.Range(0, totalWeight);
-
-            foreach (var option in optionList)
-            {
-                if (roll < option.weight) return option;
-                roll -= option.weight;
-            }
-
+            Debug.LogError($"아이템 데이터 없음: {itemId}");
             return null;
         }
 
-        int GetOptionCount(ItemRarity rarity)
+        ItemData item = template.DeepCopy();
+        item.itemRarity = (int)itemRarity;
+        item.isEquip = 0;
+        item.gridIdx = gridIdx; // 넣을 슬롯이 정해지면 지정
+
+        AddRandomOptions(item, GetOptionCount(itemRarity));
+
+        return item;
+
+        ItemData CreateUniqueItem(int itemId, int gridIdx)
         {
-            switch (rarity)
+            if (!DataManager.Instance.itemDataDic.TryGetValue(itemId, out var template))
             {
-                case ItemRarity.UNCOMMON:
-                    return uncommonOptionCnt;
-
-                case ItemRarity.RARE:
-                    return UnityEngine.Random.Range(rareOptionMinCnt, rareOptionMaxCnt + 1); // 2~3개
-
-                default:
-                    return 0;
+                Debug.LogError($"아이템 데이터 없음: {itemId}");
+                return null;
             }
+
+            if (!DataManager.Instance.uniqueItemOptionDataDic.TryGetValue(itemId, out var uniqueOptions))
+            {
+                Debug.LogError($"유니크 옵션 데이터 없음: {itemId}");
+                return null;
+            }
+
+            ItemData item = template.DeepCopy();
+            item.itemRarity = (int)ItemRarity.UNIQUE;
+            item.isEquip = 0;
+            item.gridIdx = gridIdx;
+
+            List<ItemOptionData> itemOptions;
+
+            if (item is WeaponData weapon) itemOptions = weapon.additionalOptionsList;
+            else if (item is ShieldData shield) itemOptions = shield.additionalOptionsList;
+            else if (item is AccessoryData accessory) itemOptions = accessory.additionalOptionsList;
+            else return null;
+
+            var uniqueItemOptions = new List<UniqueItemOptionData>(DataManager.Instance.uniqueItemOptionDataDic[itemId]);
+
+            foreach (var data in uniqueOptions)
+            {
+                if (!DataManager.Instance.itemOptionDataDic.TryGetValue(data.optionId, out var optionTemplate))
+                {
+                    Debug.LogError($"옵션 데이터 없음: itemId={itemId}, optionId={data.optionId}");
+                    return null;
+                }
+
+                ItemOptionData option = optionTemplate.DeepCopy();             
+
+                if (data.maxValue > 0) option.SetValue(data.minValue, data.maxValue);
+                else option.value = data.value0;
+
+                itemOptions.Add(option);
+            }
+
+            itemOptions.Sort((a, b) => a.optionId.CompareTo(b.optionId));
+
+            return item;
         }
     }
-
-    public async UniTask CreatedItem(int itemId, ItemRarity itemRarity)
+    void AddRandomOptions(ItemData item, int count)
     {
-        switch (itemRarity)
+        if (count <= 0) return;
+
+        if (!DataManager.Instance.optionsByEquipmentTypeDic.TryGetValue(item.equipmentType, out var options)) return;
+
+        var itemOptions = new List<ItemOptionData>(options);
+
+        itemOptions.RemoveAll(option => option.weight <= 0);
+
+        for (int i = 0; i < count; i++)
         {
-            case ItemRarity.COMMON:
-                {
+            if (itemOptions.Count == 0) break;
 
-                }
-                break;
+            ItemOptionData selected = PickOptionByWeight(itemOptions);
+            ItemOptionData option = selected.DeepCopy();
+            option.SetValue(option.minValue, option.maxValue);
+
+            if (item is WeaponData weapon) weapon.additionalOptionsList.Add(option);
+            else if (item is ShieldData shield) shield.additionalOptionsList.Add(option);
+            else if (item is AccessoryData accessory) accessory.additionalOptionsList.Add(option);
+
+            itemOptions.RemoveAll(candidate => candidate.optionId == selected.optionId);
+        }
+        //}
+    }
+
+    ItemOptionData PickOptionByWeight(List<ItemOptionData> optionList)
+    {
+        int totalWeight = 0;
+        foreach (var option in optionList) totalWeight += option.weight;
+
+        int roll = UnityEngine.Random.Range(0, totalWeight);
+
+        foreach (var option in optionList)
+        {
+            if (roll < option.weight) return option;
+            roll -= option.weight;
+        }
+
+        return null;
+    }
+
+    int GetOptionCount(ItemRarity rarity)
+    {
+        switch (rarity)
+        {
             case ItemRarity.UNCOMMON:
-                {
+                return uncommonOptionCnt;
 
-                }
-                break;
             case ItemRarity.RARE:
-                {
+                return UnityEngine.Random.Range(rareOptionMinCnt, rareOptionMaxCnt + 1); // 2~3개
 
-                }
-                break;
-            case ItemRarity.UNIQUE:
-                {
-
-                }
-                break;
+            default:
+                return 0;
         }
     }
 

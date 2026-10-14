@@ -1,0 +1,52 @@
+[
+  {
+    "itemId": "5000",
+    "itemName": "잿불가지",
+    "optionId": "90001",
+    "value0": "0",
+    "value1": "0",
+    "value2": "0",
+    "minValue": "20",
+    "maxValue": "40"
+  },
+  {
+    "itemId": "5000",
+    "itemName": "잿불가지",
+    "optionId": "90003",
+    "value0": "0",
+    "value1": "0",
+    "value2": "0",
+    "minValue": "10",
+    "maxValue": "20"
+  },
+  {
+    "itemId": "5000",
+    "itemName": "잿불가지",
+    "optionId": "95001",
+    "value0": "0",
+    "value1": "0",
+    "value2": "0",
+    "minValue": "30",
+    "maxValue": "40"
+  },
+  {
+    "itemId": "7000",
+    "itemName": "화염 덩굴",
+    "optionId": "92001",
+    "value0": "40",
+    "value1": "0",
+    "value2": "0",
+    "minValue": "0",
+    "maxValue": "0"
+  },
+  {
+    "itemId": "7000",
+    "itemName": "화염 덩굴",
+    "optionId": "95002",
+    "value0": "0",
+    "value1": "0",
+    "value2": "0",
+    "minValue": "0",
+    "maxValue": "0"
+  }
+]

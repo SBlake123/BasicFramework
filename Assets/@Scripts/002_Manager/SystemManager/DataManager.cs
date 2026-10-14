@@ -23,6 +23,13 @@ public class ShieldStatData
     public float defense;
 }
 
+[Serializable]
+public class AccessoryStatData
+{
+    public int itemId;
+    public string itemName;
+}
+
 public class DataManager : Singleton<DataManager>
 {
     JsonSerializerSettings settings = new JsonSerializerSettings
@@ -34,7 +41,9 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, ItemData> itemDataDic { get; set; } = new Dictionary<int, ItemData>();
     public List<ItemOptionData> itemOptionDataList { get; set; } = new List<ItemOptionData>();
     public Dictionary<int, ItemOptionData> itemOptionDataDic { get; set; } = new Dictionary<int, ItemOptionData>();
-    public Dictionary<int, List<ItemOptionData>> optionsByEquipmentType { get; set; } = new Dictionary<int, List<ItemOptionData>>();
+    public Dictionary<int, List<ItemOptionData>> optionsByEquipmentTypeDic { get; set; } = new Dictionary<int, List<ItemOptionData>>();
+    public Dictionary<int, List<UniqueItemOptionData>> uniqueItemOptionDataDic { get; set; } = new Dictionary<int, List<UniqueItemOptionData>>();
+
     public Dictionary<int, MonsterData> monsterDataDic { get; set; } = new Dictionary<int, MonsterData>();
     public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
     public Dictionary<int, List<MonsterAttackData>> monsterAttackDataDic { get; set; } = new Dictionary<int, List<MonsterAttackData>>();
@@ -52,6 +61,7 @@ public class DataManager : Singleton<DataManager>
         //메소드 내용은 프로젝트마다 다르게 작성.
         await DataDicLoad("gameData", itemDataDic, item => item.itemId);
         await DataDicLoad("itemOptionData", itemOptionDataDic, item => item.optionId);
+        await DataDicLoad("uniqueItemOptionData", uniqueItemOptionDataDic, item => item.itemId);
         //await DataListLoad("itemOptionData", itemOptionDataList);
         GroupOptionsByEquipmentType();
         await DataDicLoad("monsterData", monsterDataDic, item => item.monsterId);
@@ -62,12 +72,14 @@ public class DataManager : Singleton<DataManager>
         Debug.Log("weaponData");
         await ApplyShieldData("shieldData");
         Debug.Log("shieldData");
+        await ApplyAccessoryData("accessoryData");
+
 
     }
 
     void GroupOptionsByEquipmentType()
     {
-        optionsByEquipmentType.Clear();
+        optionsByEquipmentTypeDic.Clear();
 
         foreach (var item in itemOptionDataDic.Values)
         {
@@ -75,10 +87,10 @@ public class DataManager : Singleton<DataManager>
 
             foreach (int type in item.allowedType)
             {
-                if (!optionsByEquipmentType.TryGetValue(type, out var options))
+                if (!optionsByEquipmentTypeDic.TryGetValue(type, out var options))
                 {
                     options = new List<ItemOptionData>();
-                    optionsByEquipmentType.Add(type, options);
+                    optionsByEquipmentTypeDic.Add(type, options);
                 }
 
                 if (!options.Contains(item))
@@ -210,6 +222,40 @@ public class DataManager : Singleton<DataManager>
             };
 
             itemDataDic[stat.itemId] = weapon;
+        }
+    }
+
+    private async UniTask ApplyAccessoryData(string jsonName)
+    {
+        TextAsset textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
+
+        var accessoryStats = JsonConvert.DeserializeObject<List<AccessoryStatData>>(textAsset.text, settings);
+        if (accessoryStats == null) return;
+
+        foreach (var stat in accessoryStats)
+        {
+            if (!itemDataDic.TryGetValue(stat.itemId, out ItemData item)) continue;
+
+            var accessory = new AccessoryData
+            {
+                itemId = item.itemId,
+                itemName = item.itemName,
+                itemNameId = item.itemNameId,
+                icon = item.icon,
+                itemKey = item.itemKey,
+                itemRarity = item.itemRarity,
+
+                category = item.category,
+                equipmentType = item.equipmentType,
+                isEquip = item.isEquip,
+                gridIdx = item.gridIdx,
+                canStack = item.canStack,
+                maxStackAmount = item.maxStackAmount,
+                healAmount = item.healAmount,
+                itemExplanation = item.itemExplanation
+            };
+
+            itemDataDic[stat.itemId] = accessory;
         }
     }
 

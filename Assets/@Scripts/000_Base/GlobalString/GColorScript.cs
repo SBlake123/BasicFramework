@@ -22,6 +22,7 @@ public static class GColorScript
 
     public const string COLOR_RARE_YELLOW = "<color=#F3CE35>";
 
+    public const string COLOR_UNIQUE_PINK = "<color=#FF0A6B>";
 
 
     //public const string COLOR_EFFECTGREEN = "<color=#43FF5E>";

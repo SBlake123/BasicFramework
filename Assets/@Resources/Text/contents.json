@@ -84,6 +84,18 @@
     "jp": "Amethyst Shield"
   },
   {
+    "idx": "5000",
+    "kr": "잿불가지",
+    "en": "Ember Branch",
+    "jp": "Ember Branch"
+  },
+  {
+    "idx": "7000",
+    "kr": "화염 덩굴",
+    "en": "Infernal Vine",
+    "jp": "Infernal Vine"
+  },
+  {
     "idx": "10000",
     "kr": "새 게임",
     "en": "NEW GAME",
@@ -414,7 +426,19 @@
     "jp": "Additional Defense +{0}%"
   },
   {
-    "idx": "92000",
+    "idx": "92001",
+    "kr": "추가 체력 +{0}",
+    "en": "Health +{0}",
+    "jp": "Health +{0}"
+  },
+  {
+    "idx": "92002",
+    "kr": "추가 체력 +{0}% 증가",
+    "en": "Health +{0}%",
+    "jp": "Health +{0}%"
+  },
+  {
+    "idx": "93000",
     "kr": "공격시 +{0}% 확률로 {1}",
     "en": "{0}% chance on attack to {1}",
     "jp": "{0}% chance on attack to {1}"
@@ -422,8 +446,8 @@
   {
     "idx": "95001",
     "kr": "공격시 +{0}% 확률로 땅을 타는 불꽃 생성",
-    "en": "create flames that travel along the ground",
-    "jp": "create flames that travel along the ground"
+    "en": "{0}% chance on attack to spawn flames that travel along the ground.",
+    "jp": "{0}% chance on attack to spawn flames that travel along the ground."
   },
   {
     "idx": "95002",
@@ -490,5 +514,17 @@
     "kr": "",
     "en": "",
     "jp": ""
+  },
+  {
+    "idx": "105000",
+    "kr": "불길은 오래전에 꺼졌지만, 닿는 모든 것들을 재로 만드는 검",
+    "en": "The flames died out long ago, yet the blade still turns everything it touches to ash.",
+    "jp": "The flames died out long ago, yet the blade still turns everything it touches to ash."
+  },
+  {
+    "idx": "107000",
+    "kr": "불길이 덩굴처럼 몸을 휘감는 듯 하다. 설마 살아있나?",
+    "en": "The flames coil around its wielder like living vines. Could they actually be alive?",
+    "jp": "The flames coil around its wielder like living vines. Could they actually be alive?"
   }
 ]

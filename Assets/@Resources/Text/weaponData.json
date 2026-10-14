@@ -1,9 +1,16 @@
 [
   {
-    "itemId": 1001,
+    "itemId": "1001",
     "itemName": "소드",
-    "attackDamage": 10,
-    "attackSpeed": 1,
-    "attackRange": 1
+    "attackDamage": "10",
+    "attackSpeed": "1",
+    "attackRange": "1"
+  },
+  {
+    "itemId": "5000",
+    "itemName": "잿불가지",
+    "attackDamage": "50",
+    "attackSpeed": "1",
+    "attackRange": "1.5"
   }
 ]

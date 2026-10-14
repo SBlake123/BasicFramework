@@ -39,6 +39,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         SetDummyData();
         await SetPlayerEquipment();
         await SetPlayerStatus();
+        SetHpAndStamina();
+        IngameUIManager.Instance.SetHpSlider();
 
         ConnectVirtualJoystick();
     }
