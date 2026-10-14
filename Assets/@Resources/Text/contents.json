@@ -451,9 +451,9 @@
   },
   {
     "idx": "95002",
-    "kr": "",
-    "en": "",
-    "jp": ""
+    "kr": "착용자 주위 화염 데미지에 비례한 불꽃 고리 생성",
+    "en": "Creates a ring of fire around the wearer, with damage scaling based on Fire Damage.",
+    "jp": "Creates a ring of fire around the wearer, with damage scaling based on Fire Damage."
   },
   {
     "idx": "95003",
@@ -523,8 +523,8 @@
   },
   {
     "idx": "107000",
-    "kr": "불길이 덩굴처럼 몸을 휘감는 듯 하다. 설마 살아있나?",
-    "en": "The flames coil around its wielder like living vines. Could they actually be alive?",
-    "jp": "The flames coil around its wielder like living vines. Could they actually be alive?"
+    "kr": "이 화염은 덩굴처럼 몸을 휘감는 듯 하다. 설마 살아있나?",
+    "en": "This fire seems to coil around the body like vines. Could it actually be alive?",
+    "jp": "This fire seems to coil around the body like vines. Could it actually be alive?"
   }
 ]

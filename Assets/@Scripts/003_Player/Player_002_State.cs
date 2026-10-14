@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -57,8 +58,6 @@ public partial class Player : MonoBehaviour
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
-
-
             //Attack에 관한 메소드
             player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [Serializable]
 public class PlayerRuntimeStats
 {
@@ -70,6 +71,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     public PlayerProfileData playerIngameData { get; set; }
 
     public event Action playerStatsChanged;
+
+    public List<EquipmentEffectBase> specialAttributeList { get; set; } = new List<EquipmentEffectBase>();
 
     public void SetPlayerData()
     {
@@ -175,6 +178,15 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     {
         playerStats.ResetEquipmentBonus();
 
+        foreach (var item in specialAttributeList)
+        {
+            item.Release();
+        }
+
+        specialAttributeList.Clear();
+
+
+
         ApplyOptions(currentWeaponData?.additionalOptionsList);
         ApplyOptions(currentShieldData?.additionalOptionsList);
         
@@ -244,11 +256,42 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                             // PlayerRuntimeStats에 공격 범위 필드를 만든 뒤 계산
                             break;
                         }
+
+                    default:
+                        {
+                            CheckSpecialAttribute(option);
+                            break;
+                        }
                 }
             }
         }
 
         
+    }
+
+
+    async UniTask CheckSpecialAttribute(ItemOptionData itemOptionData)
+    {
+        switch (itemOptionData.optionId)
+        {
+            case 95001:
+                {
+                    FlameOnHitEffect flameOnHitEffect = new FlameOnHitEffect();
+                    flameOnHitEffect.Initialize(player, itemOptionData);
+
+                    specialAttributeList.Add(flameOnHitEffect);
+                }
+                break;
+            case 95002:
+                {
+                    BurningAuraEffect burningAuraEffect = new BurningAuraEffect();
+                    burningAuraEffect.Initialize(player, itemOptionData);
+
+                    specialAttributeList.Add(burningAuraEffect);
+                }
+                break;
+            default: break;
+        }
     }
 
     //public void SetAttackDamage()
