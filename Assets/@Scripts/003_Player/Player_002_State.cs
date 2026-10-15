@@ -65,6 +65,11 @@ public partial class Player : MonoBehaviour
 
             if (player.currentWeapon != null)
             {
+                foreach(var item in IngameSessionManager.Instance.specialAttributeList)
+                {
+                    item.TriggerAsync().Forget();
+                }
+
                 await player.currentWeapon.AttackAsync(player, token);
             }
             else

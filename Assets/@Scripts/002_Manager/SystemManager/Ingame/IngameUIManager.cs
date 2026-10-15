@@ -27,12 +27,17 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
     public Slider staminaSlider;
     public TextMeshProUGUI hpTmp;
 
+    public RectTransform escapeSliderWindow;
+    public Slider escapeSlider;
+
     public async UniTask Init()
     {
         dodgeBtn.onClick.AddListener(async () => await OnDodgeClicked());
         attackBtn.onClick.AddListener(async () => await OnAttackClicked());
         inventoryBtn.onClick.AddListener(async () => await OnInventoryClicked());
         optionBtn.onClick.AddListener(async () => await OnOptionClicked());
+
+        escapeSliderWindow.gameObject.SetActive(false);
     }
 
     private async UniTask OnInventoryClicked()

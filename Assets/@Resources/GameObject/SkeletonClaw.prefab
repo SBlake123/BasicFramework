@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5302375632114427744}
   - component: {fileID: -686939924006200541}
   - component: {fileID: 1372630162297364630}
-  m_Layer: 7
+  m_Layer: 15
   m_Name: SkeletonClaw
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -33,6 +33,8 @@ public class FallenSunken : MonoBehaviour
     {
         int damage = 15;
 
+        if ((hitLayers.value & (1 << other.gameObject.layer)) == 0) return;
+
         if (other.GetComponentInParent<Player>() is Player player)
         {
             col.enabled = false;

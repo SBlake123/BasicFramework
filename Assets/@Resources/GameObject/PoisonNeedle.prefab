@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7820005543953879936}
   - component: {fileID: 2288325265344619900}
   - component: {fileID: -665169272469082898}
-  m_Layer: 7
+  m_Layer: 15
   m_Name: PoisonNeedle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -57,6 +57,10 @@ public class FlameOnHitEffect : EquipmentEffectBase
 
         if (randomRange < option.value)
         {
+            GameObject obj = await ObjectPool.Instance.PopFromPool("Crawling_Flame", null, false);
+            obj.transform.position = player.transform.position;
+            obj.GetComponent<CrawlingFlame>().Init(player.lastLookDirection);
+            obj.SetActive(true);
             //발동
         }
         //30퍼센트 확률로
