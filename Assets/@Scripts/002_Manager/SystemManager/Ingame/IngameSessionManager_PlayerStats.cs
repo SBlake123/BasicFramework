@@ -92,11 +92,11 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     {
         //playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy());
         //playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy());
-        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(1001, 1, ItemRarity.UNCOMMON));
-        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(2001, 2, ItemRarity.RARE));
-        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(5000, 3, ItemRarity.UNIQUE));
-        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(7000, 4, ItemRarity.UNIQUE));
-        playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(7000, 5, ItemRarity.UNIQUE));
+        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(1001, 1, ItemRarity.UNCOMMON));
+        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(2001, 2, ItemRarity.RARE));
+        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(5000, 3, ItemRarity.UNIQUE));
+        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(7000, 4, ItemRarity.UNIQUE));
+        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(7000, 5, ItemRarity.UNIQUE));
 
         //ItemData itemData_1 = DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy();
         //itemData_1.gridIdx = 10;

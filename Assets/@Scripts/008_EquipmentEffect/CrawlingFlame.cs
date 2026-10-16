@@ -14,6 +14,8 @@ public class CrawlingFlame : MonoBehaviour
 
     public BoxCollider col;
 
+    public CrawlingFlameTail crawlingFlameTail;
+
     public void OnEnable()
     {
         PlaySequenceAsync().Forget();
@@ -23,15 +25,14 @@ public class CrawlingFlame : MonoBehaviour
     public Transform flameBody;
     public Transform boom;
 
-    public bool isMoving = true;
+    public bool isMoving { get; set; } = true;
     public float moveSpeed { get; set; } = 8f;
     private Tween swayTween;
 
 
-    [SerializeField] private float turnSpeed = 6f;
-
+    private float turnSpeed = 6f;
+    public Vector3 moveDirection { get; set; }
     private Vector3 forward;
-    private Vector3 moveDirection;
     private Vector3 wanderDirection;
     private float wanderTimer;
     private float currentSpeed;
@@ -42,6 +43,7 @@ public class CrawlingFlame : MonoBehaviour
     private float sideSpeed = 4f;
 
     private float detectionRange = 20f;
+    private float targetAngle = 180f;
     public LayerMask monsterLayers;
     public void Init(Vector2 lookDirection)
     {
@@ -57,6 +59,7 @@ public class CrawlingFlame : MonoBehaviour
         desiredSideSpeed = 0f;
         sideTimer = 0f;
         wanderTimer = 0f;
+        crawlingFlameTail.SetActive(true);
         FindInitialTarget();
 
     }
@@ -65,6 +68,7 @@ public class CrawlingFlame : MonoBehaviour
     {
         target = null;
         float closestDistance = float.MaxValue;
+        Vector2 lookDirection = new Vector2(forward.x, forward.y).normalized;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, detectionRange, monsterLayers, QueryTriggerInteraction.Collide);
 
@@ -73,7 +77,10 @@ public class CrawlingFlame : MonoBehaviour
             var monster = hit.GetComponentInParent<Monster_000_Base>();
             if (monster == null || !monster.gameObject.activeInHierarchy) continue;
 
-            float distance = (monster.transform.position - transform.position).sqrMagnitude;
+            Vector2 direction = monster.transform.position - transform.position;
+            if (Vector2.Angle(lookDirection, direction) > targetAngle * 0.5f) continue;
+
+            float distance = direction.sqrMagnitude;
             if (distance >= closestDistance) continue;
 
             closestDistance = distance;

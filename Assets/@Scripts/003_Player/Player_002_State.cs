@@ -133,6 +133,7 @@ public partial class Player : MonoBehaviour
         {
             player.isDodging = true;
             player.OnOffHitBox(false);
+            player.playerSkinBase.EquipItemActivate(false);
             player.playerSkinBase.PlayDodge();
 
             while (true)
@@ -145,6 +146,7 @@ public partial class Player : MonoBehaviour
             }
             Debug.Log("EndDodge");
             player.EndDodge();
+            player.playerSkinBase.EquipItemActivate(true);
             await player.ChangeState(PlayerState.IDLE);
         }
     }
@@ -152,6 +154,7 @@ public partial class Player : MonoBehaviour
     public void EndDodge()
     {
         isDodging = false;
+        
         OnOffHitBox(true);
     }
 

@@ -54,6 +54,27 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
         obj.SetActive(true);
     }
 
+    public async UniTask MakingItemLootingBox(string objName, List<ItemData> itemDataList, Transform transform)
+    {
+        GameObject obj = await ObjectPool.Instance.PopFromPool(objName);
+
+        if (obj.TryGetComponent<LootingBox>(out var lootingBox))
+        {
+            lootingBox.Init();
+        }
+
+        if (itemDataList != null)
+        {
+            foreach (var item in itemDataList)
+            {
+                lootingBox.itemDataList.Add(item);
+            }
+        }
+
+        obj.transform.position = transform.position;
+        obj.SetActive(true);
+    }
+
     public async UniTask OpenItemLootingBox(LootingBox lootingBox)
     {
         nowLootingBox = lootingBox;
@@ -130,25 +151,6 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
             }
         }
 
-        void SetDropItemOption(ItemData item)
-        {
-            int common = commonWeightBonus;
-            int uncommon = common + uncommonWeightBonus;
-            int rare = uncommon + rareWeightBonus;
-            int totalWeight = rare + uniqueWeightBonus;
-
-            if (totalWeight <= 0) return;
-
-            int roll = UnityEngine.Random.Range(0, totalWeight);
-
-            if (roll < common) item.itemRarity = (int)ItemRarity.COMMON;
-            else if (roll < uncommon) item.itemRarity = (int)ItemRarity.UNCOMMON;
-            else if (roll < rare) item.itemRarity = (int)ItemRarity.RARE;
-            else item.itemRarity = (int)ItemRarity.UNIQUE;
-
-            AddRandomOptions(item, GetOptionCount((ItemRarity)item.itemRarity));
-            //section 값에 따라 붙을 수 있는 옵션 조사하기
-        }
     }
 
     public ItemData CreateStashItem(int itemId, int gridIdx, ItemRarity itemRarity)
@@ -206,7 +208,7 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
                     return null;
                 }
 
-                ItemOptionData option = optionTemplate.DeepCopy();             
+                ItemOptionData option = optionTemplate.DeepCopy();
 
                 if (data.maxValue > 0) option.SetValue(data.minValue, data.maxValue);
                 else option.value = data.value0;
@@ -275,6 +277,27 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
             default:
                 return 0;
         }
+    }
+
+
+    void SetDropItemOption(ItemData item)
+    {
+        int common = commonWeightBonus;
+        int uncommon = common + uncommonWeightBonus;
+        int rare = uncommon + rareWeightBonus;
+        int totalWeight = rare + uniqueWeightBonus;
+
+        if (totalWeight <= 0) return;
+
+        int roll = UnityEngine.Random.Range(0, totalWeight);
+
+        if (roll < common) item.itemRarity = (int)ItemRarity.COMMON;
+        else if (roll < uncommon) item.itemRarity = (int)ItemRarity.UNCOMMON;
+        else if (roll < rare) item.itemRarity = (int)ItemRarity.RARE;
+        else item.itemRarity = (int)ItemRarity.UNIQUE;
+
+        AddRandomOptions(item, GetOptionCount((ItemRarity)item.itemRarity));
+        //section 값에 따라 붙을 수 있는 옵션 조사하기
     }
 
     //public Dictionary<int, List<ItemData>> lootingBoxDic = new Dictionary<int, List<ItemData>>();

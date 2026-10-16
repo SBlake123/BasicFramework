@@ -12,6 +12,8 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public Transform attackHitBoxTrf;
 
+    public BoxCollider boxCol;
+
     private float cooldownTerm;
     private void FixedUpdate()
     {
@@ -28,8 +30,9 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public override async UniTask Init()
     {
-        await base.Init();
+        boxCol.enabled = true;
         monsterData.detectionRange = 6f;     
+        await base.Init();
     }
 
     public override async UniTask ChangeState(int state)
@@ -313,6 +316,8 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     protected override async UniTask OnDeath()
     {
+        boxCol.enabled = false;
+
         transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
         {
             ResetForPool(() =>

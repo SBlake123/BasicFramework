@@ -7,6 +7,9 @@ public class CrawlingFlameBoom : MonoBehaviour
     public CrawlingFlame crawlingFlame;
 
     public SphereCollider sphereColider;
+
+    public SpriteRenderer sprRenderer;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.GetComponentInParent<Monster_000_Base>() is Monster_000_Base monster)

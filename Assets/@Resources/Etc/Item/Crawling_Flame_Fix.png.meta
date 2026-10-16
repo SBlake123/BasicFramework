@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 250
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -246,8 +246,8 @@ TextureImporter:
         serializedVersion: 2
         x: 56
         y: 93
-        width: 254
-        height: 316
+        width: 255
+        height: 324
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -267,8 +267,8 @@ TextureImporter:
         serializedVersion: 2
         x: 360
         y: 92
-        width: 236
-        height: 275
+        width: 255
+        height: 324
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -286,10 +286,10 @@ TextureImporter:
       name: Crawling_Flame_Fix_7
       rect:
         serializedVersion: 2
-        x: 669
+        x: 662
         y: 92
-        width: 238
-        height: 213
+        width: 255
+        height: 324
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -307,10 +307,10 @@ TextureImporter:
       name: Crawling_Flame_Fix_8
       rect:
         serializedVersion: 2
-        x: 984
+        x: 965
         y: 92
-        width: 224
-        height: 184
+        width: 255
+        height: 324
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -328,10 +328,10 @@ TextureImporter:
       name: Crawling_Flame_Fix_9
       rect:
         serializedVersion: 2
-        x: 1303
+        x: 1270
         y: 91
-        width: 168
-        height: 156
+        width: 233
+        height: 324
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -348,7 +348,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 8db05422217cc564aaf8774007d75c7d
     internalID: 0
     vertices: []
     indices: 

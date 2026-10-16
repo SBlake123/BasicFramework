@@ -23,11 +23,11 @@
     "itemId": "5000",
     "itemName": "잿불가지",
     "optionId": "95001",
-    "value0": "0",
+    "value0": "100",
     "value1": "0",
     "value2": "0",
-    "minValue": "30",
-    "maxValue": "40"
+    "minValue": "0",
+    "maxValue": "0"
   },
   {
     "itemId": "7000",

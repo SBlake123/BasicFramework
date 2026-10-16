@@ -14,14 +14,12 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
     public Transform attackHitBoxTrf;
 
+    public BoxCollider boxCol;
+
     public float moveSpeed { get; set; }
 
     private float cooldownTerm { get; set; }
 
-    public void Start()
-    {
-        Init();
-    }
     private void FixedUpdate()
     {
         if (movementBody == null) return;
@@ -37,9 +35,10 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
     public override async UniTask Init()
     {
-        await base.Init();
         moveSpeed = monsterData.moveSpeed;
+        boxCol.enabled = true;
         monsterData.maxHp = 200;
+        await base.Init();
     }
 
     public override async UniTask ChangeState(int state)
@@ -415,6 +414,8 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
     protected override async UniTask OnDeath()
     {
+        boxCol.enabled = false;
+
         transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
         {
             ResetForPool(() =>

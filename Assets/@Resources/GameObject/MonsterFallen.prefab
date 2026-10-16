@@ -396,6 +396,7 @@ MonoBehaviour:
     m_Bits: 128
   monsterSkinFallen: {fileID: 2836726385645980981}
   attackHitBoxTrf: {fileID: 4436085648514460405}
+  boxCol: {fileID: 3060902147992621291}
 --- !u!54 &3940358747021688284
 Rigidbody:
   m_ObjectHideFlags: 0

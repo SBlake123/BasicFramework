@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +12,58 @@ public class Portal : MonoBehaviour
     private float elapsedTime;
     private bool isEscaping;
 
+    public event Func<UniTask> EscapeSuccess;
+
+    public async UniTask Init()
+    {
+        EscapeCheck().Forget();
+    }
+
+    public async UniTask EscapeCheck()
+    {
+        try
+        {
+
+            while (true)
+            {
+                if (isEscaping) return;
+
+                playerColliders.RemoveWhere(col => col == null || !col.enabled || !col.gameObject.activeInHierarchy);
+
+                if (playerColliders.Count > 0)
+                {
+                    elapsedTime += Time.unscaledDeltaTime;
+                    IngameUIManager.Instance.escapeSlider.normalizedValue = Mathf.Clamp01(elapsedTime / escapeDelay);
+
+                    if (elapsedTime >= escapeDelay)
+                    {
+                        isEscaping = true;
+                        IngameUIManager.Instance.escapeSliderWindow.gameObject.SetActive(false);
+                        await Escape();
+                        return;
+                    }
+                }
+                else
+                {
+                    elapsedTime = 0f;
+                    IngameUIManager.Instance.escapeSlider.value = 0f;
+                    IngameUIManager.Instance.escapeSliderWindow.gameObject.SetActive(false);
+                }
+
+                await UniTask.NextFrame();
+            }
+        }
+        catch (NullReferenceException)
+        {
+
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponentInParent<Player>() == null) return;
+        var player = other.GetComponentInParent<Player>();
+        if (player == null) return;
+        if (Array.IndexOf(player.playerHitBoxArr, other) < 0) return;
 
         playerColliders.Add(other);
         IngameUIManager.Instance.escapeSliderWindow.gameObject.SetActive(true);
@@ -27,23 +78,9 @@ public class Portal : MonoBehaviour
         if (playerColliders.Count == 0) elapsedTime = 0f;
     }
 
-    private void Update()
+    private async UniTask Escape()
     {
-        if (isEscaping || playerColliders.Count == 0) return;
-
-        //IngameUIManager.Instance.
-
-        elapsedTime += Time.unscaledDeltaTime;
-        IngameUIManager.Instance.escapeSlider.value = elapsedTime / escapeDelay;
-        if (elapsedTime < escapeDelay) return;
-        IngameUIManager.Instance.escapeSliderWindow.gameObject.SetActive(false);
-
-        isEscaping = true;
-        Escape();
-    }
-
-    private void Escape()
-    {
+        EscapeSuccess?.Invoke();
         // Å»Ãâ Ã³¸®
     }
 

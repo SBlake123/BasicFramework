@@ -53,7 +53,7 @@ public class CrawlingFlameTail : MonoBehaviour
         }
 
         float pulse1 = Mathf.Sin(Time.time * 7f) * 0.1f;
-        float pulse2 = Mathf.Sin(Time.time * 8.3f + 1.5f) * 0.15f;
+        float pulse2 = Mathf.Sin(Time.time * 8.3f + 1.5f) * 0.14f;
 
         tail1.localScale = Vector3.Scale(tail1Scale, new Vector3(1f + pulse1, 1f - pulse1, 1f));
         tail2.localScale = Vector3.Scale(tail2Scale, new Vector3(1f + pulse2, 1f - pulse2, 1f));
@@ -72,5 +72,12 @@ public class CrawlingFlameTail : MonoBehaviour
         }
 
         return positions[positions.Count - 1];
+    }
+
+    public void SetActive(bool isActive)
+    {
+        head.gameObject.SetActive(isActive);
+        tail1.gameObject.SetActive(isActive);
+        tail2.gameObject.SetActive(isActive);
     }
 }

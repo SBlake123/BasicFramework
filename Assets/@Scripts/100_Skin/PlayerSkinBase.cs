@@ -46,6 +46,12 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
         mainSpr.flipX = false;
     }
 
+    public virtual void EquipItemActivate(bool isActive)
+    {
+        weaponTrf.gameObject.SetActive(isActive);
+        shieldTrf.gameObject.SetActive(isActive);
+    }
+
     public virtual void ChangePlayerSwingPivot()
     {
         if (upSwing)

@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 20
   m_Sprite: {fileID: 103411198, guid: 75cb892ce8f90ae4da2c78074d7c461a, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.8627451}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -143,6 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crawlingFlame: {fileID: 3623225028563907948}
   sphereColider: {fileID: 7559629726086139196}
+  sprRenderer: {fileID: 4030295839698524914}
 --- !u!1 &1568848234558041694
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,8 +483,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8140869, y: 0.5562706, z: 0.2}
-  m_Center: {x: 0.004486084, y: 0.2538948, z: 0}
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0.004486084, y: 0.2, z: 0}
 --- !u!114 &604378429839717063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,7 +498,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crawlingFlame: {fileID: 3623225028563907948}
-  boom: {fileID: 3715654103816163961}
+  boom: {fileID: 902808699004585316}
   layerMask:
     serializedVersion: 2
     m_Bits: 2432
@@ -569,11 +570,10 @@ MonoBehaviour:
     m_Bits: 0
   anim: {fileID: 2680042126307402626}
   col: {fileID: 9124621137959776160}
+  crawlingFlameTail: {fileID: 26672507724310657}
   target: {fileID: 0}
   flameBody: {fileID: 8880828377063967901}
   boom: {fileID: 3715654103816163961}
-  isMoving: 1
-  turnSpeed: 4
   monsterLayers:
     serializedVersion: 2
     m_Bits: 128

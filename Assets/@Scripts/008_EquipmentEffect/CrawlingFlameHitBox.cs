@@ -6,7 +6,7 @@ public class CrawlingFlameHitBox : MonoBehaviour
 {
     public CrawlingFlame crawlingFlame;
 
-    public Transform boom;
+    public CrawlingFlameBoom boom;
 
     public LayerMask layerMask;
 
@@ -20,6 +20,12 @@ public class CrawlingFlameHitBox : MonoBehaviour
         if (monster == null && !isGround) return;
 
         crawlingFlame.isMoving = false;
+
+        crawlingFlame.crawlingFlameTail.SetActive(false);
+
+        if (crawlingFlame.moveDirection.x > 0) boom.sprRenderer.flipX = false;
+
+        else boom.sprRenderer.flipX = true;
 
         boom.gameObject.SetActive(true);
 

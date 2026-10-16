@@ -100,7 +100,7 @@ public abstract class Monster_000_Base : MonoBehaviour
         isAttack = false;
         spawnPosition = transform.position;
         target = IngameSessionManager.Instance.player.GetComponent<Transform>();
-        await OnStateChange();
+        OnStateChange().Forget();
     }
 
     public void SettingMonsterData(int monsterIdx)

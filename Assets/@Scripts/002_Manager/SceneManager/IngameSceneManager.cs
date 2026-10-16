@@ -51,6 +51,8 @@ public class IngameSceneManager : StateBaseSceneManager
 
     public List<MonsterSpawnData> monsterSpawnDataList { get; set; } = new List<MonsterSpawnData>();
     public List<MonsterSpawnArea> monsterSpawnAreaList = new List<MonsterSpawnArea>();
+    public List<Transform> itemBoxAreaList = new List<Transform>();
+    public List<Portal> portalList = new List<Portal>();
 
     public GameObject screenGuard;
     public Image screenBlur;
@@ -59,7 +61,8 @@ public class IngameSceneManager : StateBaseSceneManager
 
     public event Action PlayerDied;
     public event Action InventoryClosed;
-    
+
+
 
     public IngameSceneState CurrentState { get; private set; } = IngameSceneState.NONE;
 
@@ -75,6 +78,7 @@ public class IngameSceneManager : StateBaseSceneManager
         SceneAllocate();
         SubscribingEvent();
         SetDummyDataInSpawnData();
+        await SetDummyDataInItemBoxAreaList();
         await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
         await ingameUIManager.Init();
         await IngameSessionManager.Instance.Init();
@@ -107,6 +111,12 @@ public class IngameSceneManager : StateBaseSceneManager
         ingameUIManager.OptionRequested += async () => await ChangeState((int)IngameSceneState.OPTION);
         ItemLootingManager.Instance.LootingBoxOpenRequested += async () => await ChangeState((int)IngameSceneState.LOOTING);
         //ingameUIManager.AttackRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
+
+        foreach (var item in portalList)
+        {
+            item.EscapeSuccess += async () => await ChangeState((int)IngameSceneState.GO_TO_TITLE);
+            item.Init();
+        }
     }
 
     void SetDummyDataInSpawnData()
@@ -170,6 +180,25 @@ public class IngameSceneManager : StateBaseSceneManager
             }
         }
     };
+    }
+
+    async UniTask SetDummyDataInItemBoxAreaList()
+    {
+        List<ItemData> itemData1 = new()
+        {
+            ItemLootingManager.Instance.CreateStashItem(1001, 0, ItemRarity.UNCOMMON),
+            ItemLootingManager.Instance.CreateStashItem(2001, 1, ItemRarity.RARE),
+        };
+
+        List<ItemData> itemData2 = new()
+        {
+            ItemLootingManager.Instance.CreateStashItem(5000, 0, ItemRarity.UNIQUE),
+            ItemLootingManager.Instance.CreateStashItem(7000, 1, ItemRarity.UNIQUE)
+        };
+
+        await ItemLootingManager.Instance.MakingItemLootingBox("Box_Common", itemData1, itemBoxAreaList[0]);
+        await ItemLootingManager.Instance.MakingItemLootingBox("Box_Common", itemData2, itemBoxAreaList[1]);
+
     }
 
     async UniTask SpawnMonsters(List<MonsterSpawnArea> monsterSpawnAreaList, List<MonsterSpawnData> monsterSpawnDataList)
@@ -311,7 +340,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.LOADING:
                 await InitializeScene();
-                
+
                 break;
 
             case IngameSceneState.INGAME:
