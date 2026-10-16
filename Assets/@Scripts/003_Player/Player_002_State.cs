@@ -58,6 +58,14 @@ public partial class Player : MonoBehaviour
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
+            if (player.lastAttackCooldown > 0)
+            {
+                await player.ChangeState(PlayerState.IDLE);
+                return;
+            }
+
+            
+            
             //Attack에 관한 메소드
             player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;
@@ -65,7 +73,9 @@ public partial class Player : MonoBehaviour
 
             if (player.currentWeapon != null)
             {
-                foreach(var item in IngameSessionManager.Instance.specialAttributeList)
+                player.lastAttackCooldown += IngameSessionManager.Instance.currentWeaponData.attackSpeed;
+                Debug.Log($"lastAttackCooldown : { player.lastAttackCooldown}");
+                foreach (var item in IngameSessionManager.Instance.specialAttributeList)
                 {
                     item.TriggerAsync().Forget();
                 }
@@ -79,6 +89,18 @@ public partial class Player : MonoBehaviour
 
             await player.ChangeState(PlayerState.IDLE);
 
+        }
+    }
+
+    float lastAttackCooldown = 0f;
+
+    public async UniTask CheckAttackCooldown()
+    {
+        while(true)
+        {
+            lastAttackCooldown -= Time.unscaledDeltaTime;
+            if (lastAttackCooldown <= 0f) lastAttackCooldown = 0f;
+            await UniTask.Yield(PlayerLoopTiming.TimeUpdate);
         }
     }
 

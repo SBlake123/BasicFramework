@@ -42,6 +42,8 @@ public partial class Player : MonoBehaviour
 
         MoveInputChanged += UpdateMoveAnimation;
 
+        CheckAttackCooldown().Forget();
+
     }
 
     public void OnOffHitBox(bool enabled)

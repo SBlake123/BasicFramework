@@ -51,9 +51,8 @@ public partial class TitleSceneManager : StateBaseSceneManager
         ScreenBlurInit();
         BackKeySetting().Forget();
         SceneAllocate();
-        await ChangeState((int)TitleSceneState.MAIN);
         await ScreenBlurFadeOut();
-
+        await ChangeState((int)TitleSceneState.MAIN);
         screenGuard.SetActive(false);
         await UniTask.WaitForFixedUpdate();
     }

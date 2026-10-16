@@ -13,6 +13,7 @@ public class Title_001_Main : StateBasePage
     public Button optionButton;
     public TextMeshProUGUI newGameBtnTxt;
     public TextMeshProUGUI continueBtnTxt;
+    public Transform buttonParentTrf;
 
 
     public List<RectTransform> skyRect = new List<RectTransform>();
@@ -26,6 +27,7 @@ public class Title_001_Main : StateBasePage
         BackgroundSetting().Forget();
         CanContinueCheck();
         AddListenerToButton();
+        buttonParentTrf.gameObject.SetActive(true);
         Debug.Log("ON_INIT");
     }
 

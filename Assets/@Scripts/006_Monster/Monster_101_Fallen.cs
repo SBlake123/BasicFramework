@@ -61,64 +61,72 @@ public partial class Monster_101_Fallen : Monster_000_Base
 
     protected override async UniTask OnStateChange()
     {
-        switch (monsterState)
+        try
         {
-            case MonsterState.IDLE:
-                {
-                    await OnIdle();
-                }
-                break;
+            switch (monsterState)
+            {
+                case MonsterState.IDLE:
+                    {
+                        await OnIdle();
+                    }
+                    break;
 
-            case MonsterState.CHASE:
-                {
-                    //그냥 쫓아가기 or 데굴데굴 구르기 신공
+                case MonsterState.CHASE:
+                    {
+                        //그냥 쫓아가기 or 데굴데굴 구르기 신공
 
-                    await OnChase();
-                }
-                break;
+                        await OnChase();
+                    }
+                    break;
 
-            case MonsterState.ATTACK:
-                {
-                    //챱챱 때리기
-                    await OnAttack();
-                }
-                break;
+                case MonsterState.ATTACK:
+                    {
+                        //챱챱 때리기
+                        await OnAttack();
+                    }
+                    break;
 
-            case MonsterState.SPECIAL_ATTACK: //롤링 어택
-                {
-                    //챱챱 때리기
-                    await OnRollingAttack();
-                }
-                break;
+                case MonsterState.SPECIAL_ATTACK: //롤링 어택
+                    {
+                        //챱챱 때리기
+                        await OnRollingAttack();
+                    }
+                    break;
 
-            case MonsterState.SUNKEN_ATTACK: //롤링 어택
-                {
-                    //챱챱 때리기
-                    await OnSunkenAttack();
-                }
-                break;
+                case MonsterState.SUNKEN_ATTACK: //롤링 어택
+                    {
+                        //챱챱 때리기
+                        await OnSunkenAttack();
+                    }
+                    break;
 
-            case MonsterState.COOLDOWN:
-                {
-                    //챱챱 때리기
-                    await OnCooldown();
-                }
-                break;
+                case MonsterState.COOLDOWN:
+                    {
+                        //챱챱 때리기
+                        await OnCooldown();
+                    }
+                    break;
 
-            case MonsterState.RETURN:
-                {
-                    await OnReturn();
-                }
-                break;
+                case MonsterState.RETURN:
+                    {
+                        await OnReturn();
+                    }
+                    break;
 
-            case MonsterState.DEAD:
-                {
-                    await OnDeath();
-                }
-                break;
+                case MonsterState.DEAD:
+                    {
+                        await OnDeath();
+                    }
+                    break;
+            }
+
+            await UniTask.WaitForFixedUpdate();
         }
+        catch (NullReferenceException)
+        {
 
-        await UniTask.WaitForFixedUpdate();
+        }
+        
     }
 
 
