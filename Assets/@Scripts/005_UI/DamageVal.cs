@@ -21,6 +21,8 @@ public class DamageVal : MonoBehaviour
 
     public void Play()
     {
+        transform.localScale = Vector3.one;
+
         gameObject.SetActive(true);
         transform.DOKill();
         transform.DOMoveY(transform.position.y + 20f, 0.8f).SetEase(Ease.Linear).OnComplete(() => ObjectPool.Instance.PushToPool(gameObject));

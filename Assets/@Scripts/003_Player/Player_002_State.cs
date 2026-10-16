@@ -145,8 +145,8 @@ public partial class Player : MonoBehaviour
                 await UniTask.WaitForFixedUpdate();
             }
             Debug.Log("EndDodge");
-            player.EndDodge();
             player.playerSkinBase.EquipItemActivate(true);
+            player.EndDodge();
             await player.ChangeState(PlayerState.IDLE);
         }
     }

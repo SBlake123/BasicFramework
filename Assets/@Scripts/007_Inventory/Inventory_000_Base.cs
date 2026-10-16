@@ -248,7 +248,10 @@ public partial class Inventory_000_Base : MonoBehaviour
     }
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
-        await ObjectPool.Instance.PopFromPool(ItemName, itemRect);
+        GameObject obj = await ObjectPool.Instance.PopFromPool(ItemName, itemRect);
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.identity;
+        obj.transform.localScale = Vector3.one;
     }
 
     public async UniTask InventoryClosed()
@@ -396,8 +399,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
                 targetGrid.itemData = data;
 
-                await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.invenItem, startGrid.itemData.itemKey), targetGrid.itemImgParent);
-
+                await MakeInvenItem(string.Format(GScriptAddress.invenItem, startGrid.itemData.itemKey), targetGrid.itemImgParent);
                 //Instantiate(startGrid.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
 
                 startGrid.itemData = null;

@@ -9,7 +9,7 @@ public class PlayerRuntimeStats
 {
     public float currentHp { get; set; }
     public float maxHp { get; set; }
-    public float baseHp { get; set; } = 100f;
+    public float baseHp { get; set; } = 50f;
     public float currentStamina { get; set; }
     public float maxStamina { get; set; } 
     public float baseStamina { get; set; } = 100f;

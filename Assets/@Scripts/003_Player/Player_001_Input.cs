@@ -55,7 +55,7 @@ public partial class Player : MonoBehaviour
     
     private bool CanInputAction()
     {
-        return !isDodging || isDead;
+        return !isDodging || !isDead;
     }
 
     /// <summary>
@@ -282,9 +282,7 @@ public partial class Player : MonoBehaviour
 
     private bool CanAttack()
     {
-
-
-        return true;
+        return !isDodging && !isDead && !isAttack;
     }
 
     // Legacy PlayerActionCheck() read keyboard input and moved the player in a
