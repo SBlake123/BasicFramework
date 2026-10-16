@@ -270,7 +270,7 @@ public partial class Player : MonoBehaviour
     {
         float angle = Mathf.Atan2(lastLookDirection.y, lastLookDirection.x) * Mathf.Rad2Deg;
 
-        playerSkinBase.weaponTrf.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
+        playerSkinBase.aimPivotTrf.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
     }
 
     private bool CanMoveAnimPlay()

@@ -75,6 +75,8 @@ public partial class Player : MonoBehaviour
             {
                 player.lastAttackCooldown += IngameSessionManager.Instance.currentWeaponData.attackSpeed;
                 Debug.Log($"lastAttackCooldown : { player.lastAttackCooldown}");
+                player.playerSkinBase.ChangePlayerSwingPivot();
+
                 foreach (var item in IngameSessionManager.Instance.specialAttributeList)
                 {
                     item.TriggerAsync().Forget();

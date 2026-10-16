@@ -123,8 +123,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                             this.currentWeaponData = (WeaponData)currentWeaponData;
 
 
-                            await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.weaponTrf);
-
+                            GameObject obj = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.swingPivotTrf);
+                            obj.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
                             //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
 
                             player.currentWeapon = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<WeaponBase>();
@@ -342,8 +342,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                             {
                                 this.currentWeaponData = null;
                                 player.currentWeapon = null;
-                                if (player.playerSkinBase.weaponTrf.childCount > 0)
-                                    ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                                if (player.playerSkinBase.swingPivotTrf.childCount > 0)
+                                    ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
                                 //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
 
 
@@ -351,12 +351,12 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                                 this.currentWeaponData = currentWeaponData;
                                 Debug.Log($"this.currentWeaponData.attackDamage : {this.currentWeaponData.attackDamage}");
 
-                                await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.weaponTrf);
-
+                                GameObject obj = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.swingPivotTrf);
+                                obj.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
 
                                 //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
 
-                                player.currentWeapon = player.playerSkinBase.weaponTrf.GetChild(0).GetComponent<WeaponBase>();
+                                player.currentWeapon = player.playerSkinBase.swingPivotTrf.GetChild(0).GetComponent<WeaponBase>();
                                 //데이터 기반으로 만들어야됨 player 위치에 
                                 //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
                                 //데이터 기반으로 만들어야됨 player 위치에 
@@ -403,8 +403,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                             {
                                 this.currentWeaponData = null;
                                 player.currentWeapon = null;
-                                if (player.playerSkinBase.weaponTrf.childCount > 0)
-                                    ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                                if (player.playerSkinBase.swingPivotTrf.childCount > 0)
+                                    ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
 
                                 //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
                                 //데이터 기반으로 만들어야됨 player 위치에 
@@ -445,8 +445,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                 {
                     this.currentWeaponData = null;
                     player.currentWeapon = null;
-                    if (player.playerSkinBase.weaponTrf.childCount > 0)
-                        ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                    if (player.playerSkinBase.swingPivotTrf.childCount > 0)
+                        ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
                     //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
 
 
@@ -454,12 +454,12 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                     this.currentWeaponData = currentWeaponData;
                     Debug.Log($"this.currentWeaponData.attackDamage : {this.currentWeaponData.attackDamage}");
 
-                    await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.weaponTrf);
-
+                    GameObject obj = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.swingPivotTrf);
+                    obj.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
 
                     //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
 
-                    player.currentWeapon = player.playerSkinBase.weaponTrf.GetChild(0).GetComponent<WeaponBase>();
+                    player.currentWeapon = player.playerSkinBase.swingPivotTrf.GetChild(0).GetComponent<WeaponBase>();
                     //데이터 기반으로 만들어야됨 player 위치에 
                 }
                 break;
@@ -503,8 +503,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                 {
                     this.currentWeaponData = null;
                     player.currentWeapon = null;
-                    if (player.playerSkinBase.weaponTrf.childCount > 0)
-                        ObjectPool.Instance.PushToPool(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+                    if (player.playerSkinBase.swingPivotTrf.childCount > 0)
+                        ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
 
                     //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
                     //데이터 기반으로 만들어야됨 player 위치에 

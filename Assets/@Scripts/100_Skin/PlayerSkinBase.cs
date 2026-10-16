@@ -12,6 +12,12 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
     public SpriteRenderer mainSpr;
     public Transform weaponTrf;
     public Transform shieldTrf;
+    public Transform aimPivotTrf;
+    public Transform swingPivotTrf;
+
+    public bool upSwing = true;
+    public float swingPivotAngleZ1 = 80f;
+    public float swingPivotAngleZ2 = 260f;
 
     //public Image mainImg;
 
@@ -38,6 +44,21 @@ public abstract class PlayerSkinBase : MonoBehaviour, IPlayerAttacker
         shieldTrf.localPosition = new Vector3(shieldPosition.x, shieldPosition.y, shieldPosition.z);
 
         mainSpr.flipX = false;
+    }
+
+    public virtual void ChangePlayerSwingPivot()
+    {
+        if (upSwing)
+        {
+            upSwing = false;
+            swingPivotTrf.transform.localRotation = Quaternion.Euler(0f, 0f, swingPivotAngleZ2);
+        }
+
+        else
+        {
+            upSwing = true;
+            swingPivotTrf.transform.localRotation = Quaternion.Euler(0f, 0f, swingPivotAngleZ1);
+        }
     }
 
 

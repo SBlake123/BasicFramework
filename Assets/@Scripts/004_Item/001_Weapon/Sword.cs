@@ -11,18 +11,19 @@ public class Sword : WeaponBase
 {
     public override async UniTask AttackAsync(Player player, CancellationToken token)
     {
-        weaponHitBox.SetActive(true);
         AttackEffectActive(player, destroyCancellationToken).Forget();
         
 
-        transform.localRotation = Quaternion.Euler(0f, 0f, -35f);
-        transform.DOLocalRotate(new Vector3(0f, 0f, 55f), 0.12f).SetEase(Ease.OutQuad).OnComplete(() => transform.localRotation = Quaternion.Euler(0f, 0f, 0f));
-        weaponHitBox.SetActive(false);
+        //transform.localRotation = Quaternion.Euler(0f, 0f, -35f);
+        //transform.DOLocalRotate(new Vector3(0f, 0f, 55f), 0.12f).SetEase(Ease.OutQuad).OnComplete(() => transform.localRotation = Quaternion.Euler(0f, 0f, 0f));
     }
 
     public async UniTask AttackEffectActive(Player player, CancellationToken token)
     {
-        var effect = Instantiate(attackEffect, attackEffect.transform.position, Quaternion.identity);
+        var effect = await ObjectPool.Instance.PopFromPool("AttackEffect", parent: null, false);
+        Vector3 direction = new Vector3(player.lastLookDirection.x, player.lastLookDirection.y, 0f).normalized;
+
+        effect.transform.position = player.transform.position + direction * 1f;
         UpdateEffectDirection(effect, player);
         effect.SetActive(true);
 
@@ -33,7 +34,7 @@ public class Sword : WeaponBase
         finally
         {
             if (effect != null)
-                Destroy(effect);
+                ObjectPool.Instance.PushToPool(effect.gameObject);
         }
     }
 
