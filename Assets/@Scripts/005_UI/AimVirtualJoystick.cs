@@ -131,10 +131,18 @@ public class AimVirtualJoystick : MonoBehaviour, IPointerDownHandler, IDragHandl
 
         // Clamp the center independently of the visual image size.
         Vector2 position = Vector2.ClampMagnitude(offset, JoystickMoveRadius());
-        Vector2 direction = position.normalized;
 
+        if (position.magnitude < JoystickMoveRadius() * 0.15f)
+        {
+            handleRect.anchoredPosition = position;
+            targetPlayer?.ClearAimingVirtualJoystickInput();
+            return;
+        }
+
+        Vector2 direction = position.normalized;     
         // The scene handle is a centered, direct child of the joystick background.
         handleRect.anchoredPosition = position;
+
         if (targetPlayer != null)
         {
             targetPlayer.SetAimingVirtualJoystickInput(direction);

@@ -21,7 +21,6 @@ public class MonsterDropData
 public class ItemLootingManager : MonoSingleton<ItemLootingManager>
 {
     public event Func<UniTask> LootingBoxOpenRequested;
-    public event Func<UniTask> LootingBoxClosedRequested;
 
     public int commonWeightBonus = 10;
     public int uncommonWeightBonus = 10;

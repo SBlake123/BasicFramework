@@ -163,27 +163,27 @@
   },
   {
     "idx": "10011",
-    "kr": "",
-    "en": "",
-    "jp": ""
+    "kr": "아이템을 버리시겠습니까?",
+    "en": "Are you sure you want to\\ndiscard this item?",
+    "jp": "Are you sure you want to\\ndiscard this item?"
   },
   {
     "idx": "10012",
-    "kr": "",
-    "en": "",
-    "jp": ""
+    "kr": "네",
+    "en": "Yes",
+    "jp": "Yes"
   },
   {
     "idx": "10013",
-    "kr": "",
-    "en": "",
-    "jp": ""
+    "kr": "아니오",
+    "en": "No",
+    "jp": "No"
   },
   {
     "idx": "10014",
-    "kr": "",
-    "en": "",
-    "jp": ""
+    "kr": "새 게임을 시작하시겠습니까?\\n(기존 데이터는 삭제됩니다)",
+    "en": "Would you like to start a new game?\\n(Existing save data will be deleted.)",
+    "jp": "Would you like to start a new game?\\n(Existing save data will be deleted.)"
   },
   {
     "idx": "10015",

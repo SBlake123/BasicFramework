@@ -46,17 +46,17 @@ public class MonsterAttackData
 [Serializable]
 public class MonsterStats
 {
-    public int currentHp = 40;
-    public int maxHp = 100;
-    public float attackDamage = 10f;
-    public float moveSpeed = 2f;
-    public float detectionRange = 20f;
-    public float attackRange = 1f;
-    public float attackAngle = 2f;
-    public float attackPreparation = 0.5f;
-    public float attackWindow = 0.001f;
-    public float attackRecovery = 0.2f;
-    public float leashRange = 3f;
+    public int currentHp { get; set; } = 40;
+    public int maxHp { get; set; } = 100;
+    public float attackDamage { get; set; } = 10f;
+    public float moveSpeed { get; set; } = 2f;
+    public float detectionRange { get; set; } = 20f;
+    public float attackRange { get; set; } = 1f;
+    public float attackAngle { get; set; } = 2f;
+    public float attackPreparation { get; set; } = 0.5f;
+    public float attackWindow { get; set; } = 0.001f;
+    public float attackRecovery { get; set; } = 0.2f;
+    public float leashRange { get; set; } = 3f;
 }
 
 [RequireComponent(typeof(PooledObject))]
@@ -69,7 +69,6 @@ public abstract class Monster_000_Base : MonoBehaviour
         Gizmos.matrix = transform.localToWorldMatrix;
         Gizmos.DrawWireCube(Vector3.zero, new Vector3(monsterData.detectionRange, monsterData.detectionRange, 0f));
     }
-
 
     public MonsterData monsterData { get; set; } = new MonsterData();
     public List<MonsterAttackData> monsterAttackDataList { get; set; } = new List<MonsterAttackData>();

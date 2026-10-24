@@ -22,16 +22,10 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
         {
             case not null:
                 {
-                    //var prefab = Resources.Load<GameObject>("Sword");
-                    //GameObject instance = ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.invenItem, inventoryGrid_000_Base.itemData.itemKey), IngameUIManager.Instance.hudCanvas.transform);
                     var instance = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.invenItem, inventoryGrid_000_Base.itemData.itemKey), IngameUIManager.Instance.hudCanvas.transform);
-                   // var instance = Instantiate(inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject, IngameUIManager.Instance.hudCanvas.transform, false);
 
-                    //var instance = Instantiate(prefab, IngameUIManager.Instance.hudCanvas.transform, false);
                     dragObject = instance.GetComponent<RectTransform>();
                     dragObject.SetAsLastSibling();
-
-                    // 드래그 이미지가 아래 슬롯의 포인터 이벤트를 막지 않도록 설정
 
                     CanvasGroup group;
 
@@ -56,7 +50,6 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                 }
         }
     }
-
     public void OnDrag(PointerEventData eventData)
     {
         //설명 끄기
@@ -77,7 +70,6 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                 }
         }
     }
-
     public void OnEndDrag(PointerEventData eventData)
     {
         switch (dragObject)
@@ -115,32 +107,6 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                 }
         }
     }
-
-    private void MoveDragObject(PointerEventData eventData)
-    {
-        if (dragObject == null) return;
-
-        var canvasRect = (RectTransform)IngameUIManager.Instance.hudCanvas.transform;
-
-        var camera = IngameUIManager.Instance.hudCanvas.renderMode == RenderMode.ScreenSpaceOverlay
-            ? null
-            : IngameUIManager.Instance.hudCanvas.worldCamera;
-
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(
-            canvasRect,
-            eventData.position,
-            camera,
-            out var position
-        );
-
-        dragObject.position = position;
-    }
-
-    private void MoveItem(InventoryGrid_000_Base targetGrid)
-    {
-        inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, targetGrid);       
-    }
-
     public void OnPointerClick(PointerEventData eventData)
     {
         switch (inventoryGrid_000_Base.itemData)
@@ -158,7 +124,6 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                 }
         }
     }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         switch (inventoryGrid_000_Base.itemData)
@@ -217,7 +182,6 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                 }
         }
     }
-
     public void OnPointerUp(PointerEventData eventData)
     {
         switch (inventoryGrid_000_Base.itemData)
@@ -234,5 +198,28 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                     break;
                 }
         }
+    }
+    private void MoveDragObject(PointerEventData eventData)
+    {
+        if (dragObject == null) return;
+
+        var canvasRect = (RectTransform)IngameUIManager.Instance.hudCanvas.transform;
+
+        var camera = IngameUIManager.Instance.hudCanvas.renderMode == RenderMode.ScreenSpaceOverlay
+            ? null
+            : IngameUIManager.Instance.hudCanvas.worldCamera;
+
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(
+            canvasRect,
+            eventData.position,
+            camera,
+            out var position
+        );
+
+        dragObject.position = position;
+    }
+    private void MoveItem(InventoryGrid_000_Base targetGrid)
+    {
+        inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, targetGrid);
     }
 }

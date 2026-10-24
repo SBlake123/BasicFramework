@@ -10,7 +10,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
     private string savePath => Path.Combine(Application.persistentDataPath, GScriptAddress.localSaveDataName);
 
 
-    //세이브 하는 경우 -> 강제 종료, 종료하겠습니다, 죽었을 때, 상태변화 할 때,
     public string saveJsonString { get; set; }
 
     public async UniTask OnInitialize()
@@ -57,7 +56,6 @@ public class SaveLoadManager : Singleton<SaveLoadManager>
         }
         catch (Exception ex)
         {
-            // 파일이 깨졌거나 위변조되어 복호화 에러가 날 경우 대비
             Debug.LogError($"[SaveLoadManager] 불러오기 실패 / 파일 손상: {ex.Message}");
             return null;
         }

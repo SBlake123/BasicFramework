@@ -103,7 +103,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
                     break;
             }
 
-            await UniTask.WaitForFixedUpdate();
+            await UniTask.NextFrame();
         }
         catch (NullReferenceException)
         {
@@ -235,36 +235,6 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         {
             this.cooldownTerm = cooldownVal;
         }
-
-        //try
-        //{
-        //    while (!token.IsCancellationRequested)
-        //    {
-        //        if (!CanAttackTarget())
-        //        {
-        //            ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
-        //            return;
-        //        }
-
-        //        await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackPreparation), cancellationToken: token);
-
-        //        if (!CanAttackTarget())
-        //        {
-        //            ChangeState((int)(CanDetectTarget() ? MonsterState.CHASE : MonsterState.RETURN)).Forget();
-        //            return;
-        //        }
-
-        //        await AttackAsync(IngameSessionManager.Instance.player, stateCts.Token);
-
-        //        // Player의 피해 함수가 만들어지면 이 위치에서 호출한다.
-
-        //        await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackWindow), cancellationToken: token);
-        //        await UniTask.Delay(TimeSpan.FromSeconds(monsterStats.attackRecovery), cancellationToken: token);
-        //    }
-        //}
-        //catch (OperationCanceledException)
-        //{
-        //}
     }
 
     protected async UniTask OnCooldown()

@@ -14,7 +14,8 @@ public class InventoryDiscardArea : MonoBehaviour, IDropHandler
         //handler.inventoryGrid_000_Base.
 
 
-        PopupManager.Instance.setPopUpCode(true, "아이템을 버리시겠습니까?", "네", "아니오");
+        PopupManager.Instance.setPopUpCode(true, LanguageManager.Instance.GetLangScript(10011), LanguageManager.Instance.GetLangScript(10012),
+                                                    LanguageManager.Instance.GetLangScript(10013));
         PopupManager.Instance.AddMethodToBtn(() => {
             ObjectPool.Instance.PushToPool(handler.inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject);
             handler.inventoryGrid_000_Base.itemData = null;

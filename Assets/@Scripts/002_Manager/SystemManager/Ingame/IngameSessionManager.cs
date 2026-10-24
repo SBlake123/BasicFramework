@@ -10,7 +10,6 @@ using UnityEngine;
 public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 {
     public Player player;
-    public Canvas hudCanvas;
     public VirtualJoystick movingVirtualJoystick;
     public AimVirtualJoystick aimVirtualJoystick;
 
@@ -18,31 +17,17 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     {
         ConnectVirtualJoystick();
         await player.Init();
+        await PlayerSessionInit();
     }
 
-    public void SetPlayer(Player loadedPlayer)
-    {
-        player = loadedPlayer;
-        ConnectVirtualJoystick();
-    }
-
-    public void SetHudCanvas(Canvas loadedHudCanvas)
-    {
-        hudCanvas = loadedHudCanvas;
-        ConnectVirtualJoystick();
-    }
-
-    public async UniTask BeginRaid()
+    public async UniTask PlayerSessionInit()
     {
         PlayerDataManager.Instance.PlayerLoad();
         SetPlayerData();
-        SetDummyData();
         await SetPlayerEquipment();
         await SetPlayerStatus();
         SetHpAndStamina();
         IngameUIManager.Instance.SetHpSlider();
-
-        ConnectVirtualJoystick();
     }
 
     private void ConnectVirtualJoystick()

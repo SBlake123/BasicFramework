@@ -27,9 +27,7 @@ public partial class InventoryGrid_000_Base : MonoBehaviour
     public GridCategory gridCategory { get; set; }
     public InventoryCategory inventoryCategory { get; set; }
     public ItemData itemData { get; set; }
-
     public int gridIdx { get; set; }
 
     public RectTransform itemImgParent;
-
 }

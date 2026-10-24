@@ -9,15 +9,15 @@ public partial class Player : MonoBehaviour
 {
     public async UniTask TakeDamage(int attackDamage)
     {
-        CalculateDamage(attackDamage);
+        int calculatingDamage = IngameSessionManager.Instance.CalculateDamageAfterDefense(attackDamage);
+
+        CalculateDamage(calculatingDamage);
 
         GameObject obj = await ObjectPool.Instance.PopFromPool(GPrefabName.ATTACK_EFFECT_BASE, (RectTransform)IngameUIManager.Instance.hudCanvas.transform, false);
 
         obj.transform.position = Camera.main.WorldToScreenPoint(damageTrf.transform.position);
 
         DamageVal damageVal = obj.GetComponent<DamageVal>();
-
-        int calculatingDamage = IngameSessionManager.Instance.CalculateDamageAfterDefense(attackDamage);
 
         damageVal.SetDamage(calculatingDamage);
         damageVal.Play();
@@ -29,21 +29,25 @@ public partial class Player : MonoBehaviour
     {
         //int calculateDamage = attackDamage;
 
-        int calculatingDamage = IngameSessionManager.Instance.CalculateDamageAfterDefense(attackDamage);
-
         //방어력 계산 적용 후 빼야 함
 
-        IngameSessionManager.Instance.playerStats.currentHp -= calculatingDamage;
+        IngameSessionManager.Instance.playerStats.currentHp -= attackDamage;
 
         //체력 UI 표시하기
         IngameUIManager.Instance.SetHpSlider();
         //죽음판정
         if (IngameSessionManager.Instance.playerStats.currentHp <= 0)
+        {
+            IngameSessionManager.Instance.playerStats.currentHp = 0;
+            IngameUIManager.Instance.SetHpSlider();
             ChangeState(PlayerState.DEAD).Forget();
+        }
     }
 
     public async UniTask OnDeath()
     {
+        isDead = true;
+        playerSkinBase.EquipItemActivate(false);
         playerSkinBase.PlayDie();
         OnOffHitBox(false);
         moveInput = Vector2.zero;
@@ -52,9 +56,6 @@ public partial class Player : MonoBehaviour
         aimingVirtualJoystickInput = Vector2.zero;
         desiredVelocity = Vector3.zero;
         CharacterContactMovement.Stop(movementBody);
-        isDead = true;
-
-        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear);
 
         await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: destroyCancellationToken);
 

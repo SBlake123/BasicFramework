@@ -17,22 +17,22 @@ public enum PlayerState
     DEAD
 }
 
+public interface IPlayerState
+{
+    UniTask EnterAsync(Player player, CancellationToken token);
+}
+
 public partial class Player : MonoBehaviour
 {
-    public interface IPlayerState
-    {
-        UniTask EnterAsync(Player player, CancellationToken token);
-    }
-
     private readonly Dictionary<PlayerState, IPlayerState> stateMap = new()
     {
         { PlayerState.IDLE, new IdleState() },
-        //{ PlayerState.MOVE, new MoveState()},
-        //{ PlayerState.HIT, new HitState() },
         { PlayerState.ATTACK, new AttackState() },
         { PlayerState.DODGE, new DodgeState() },
         { PlayerState.DEAD, new DeadState() }
     };
+
+    private PlayerState playerState;
 
     bool isAttack = false;
     bool isDodging = false;
@@ -40,6 +40,8 @@ public partial class Player : MonoBehaviour
     public bool isDead = false;
 
     CancellationTokenSource stateCts;
+
+    public event Action PlayerDied;
     // Update is called once per frame
 
     public class IdleState : IPlayerState
@@ -63,9 +65,7 @@ public partial class Player : MonoBehaviour
                 await player.ChangeState(PlayerState.IDLE);
                 return;
             }
-
-            
-            
+     
             //Attack에 관한 메소드
             player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;
@@ -74,8 +74,8 @@ public partial class Player : MonoBehaviour
             if (player.currentWeapon != null)
             {
                 player.lastAttackCooldown += IngameSessionManager.Instance.currentWeaponData.attackSpeed;
-                Debug.Log($"lastAttackCooldown : { player.lastAttackCooldown}");
                 player.playerSkinBase.ChangePlayerSwingPivot();
+                player.SetLastLookPosition();
 
                 foreach (var item in IngameSessionManager.Instance.specialAttributeList)
                 {
@@ -133,6 +133,7 @@ public partial class Player : MonoBehaviour
         {
             player.isDodging = true;
             player.OnOffHitBox(false);
+            player.dodgeDirection = player.lastLookDirection;
             player.playerSkinBase.EquipItemActivate(false);
             player.playerSkinBase.PlayDodge();
 
@@ -163,25 +164,13 @@ public partial class Player : MonoBehaviour
         public async UniTask EnterAsync(Player player, CancellationToken token)
         {
             await player.OnDeath();
-            PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10004), LanguageManager.Instance.GetLangScript(10002));
-            PopupManager.Instance.AddMethodToBtn(async () =>
-            {
-                GameManager.Instance.SetGameplayPaused(false);
-                await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
-            }, 
-            null,
-            async () =>
-            {
-                GameManager.Instance.SetGameplayPaused(false);
-                await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
-            });
+            player.PlayerDied?.Invoke();
         }
     }
 
     public async UniTask ChangeState(PlayerState state)
     {
-        if (playerState == state)
-            return;
+        if (isDead && state != PlayerState.DEAD) return;
 
         stateCts?.Cancel();
         stateCts = new CancellationTokenSource();

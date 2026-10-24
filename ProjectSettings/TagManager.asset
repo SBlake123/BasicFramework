@@ -45,6 +45,9 @@ TagManager:
   - name: Character
     uniqueID: 886366995
     locked: 0
+  - name: AboveCharacter
+    uniqueID: 4274244069
+    locked: 0
   - name: Weapon
     uniqueID: 2178732939
     locked: 0

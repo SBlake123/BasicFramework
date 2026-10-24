@@ -56,13 +56,8 @@ public class IngameSceneManager : StateBaseSceneManager
 
     public GameObject screenGuard;
     public Image screenBlur;
-
-    public IngameUIManager ingameUIManager;
-
-    public event Action PlayerDied;
+    
     public event Action InventoryClosed;
-
-
 
     public IngameSceneState CurrentState { get; private set; } = IngameSceneState.NONE;
 
@@ -80,9 +75,8 @@ public class IngameSceneManager : StateBaseSceneManager
         SetDummyDataInSpawnData();
         await SetDummyDataInItemBoxAreaList();
         await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
-        await ingameUIManager.Init();
+        await IngameUIManager.Instance.Init();
         await IngameSessionManager.Instance.Init();
-        await IngameSessionManager.Instance.BeginRaid();
         await ChangeState((int)IngameSceneState.INGAME);
         await ScreenBlurFadeOut();
 
@@ -107,14 +101,15 @@ public class IngameSceneManager : StateBaseSceneManager
 
     protected void SubscribingEvent()
     {
-        ingameUIManager.InventoryRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
-        ingameUIManager.OptionRequested += async () => await ChangeState((int)IngameSceneState.OPTION);
+        IngameUIManager.Instance.InventoryRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
+        IngameUIManager.Instance.OptionRequested += async () => await ChangeState((int)IngameSceneState.OPTION);
+        IngameSessionManager.Instance.player.PlayerDied += async () => await ChangeState((int)IngameSceneState.DEAD);
         ItemLootingManager.Instance.LootingBoxOpenRequested += async () => await ChangeState((int)IngameSceneState.LOOTING);
         //ingameUIManager.AttackRequested += async () => await ChangeState((int)IngameSceneState.INVENTORY);
 
         foreach (var item in portalList)
         {
-            item.EscapeSuccess += async () => await ChangeState((int)IngameSceneState.GO_TO_TITLE);
+            item.EscapeSuccess += async () => await ChangeState((int)IngameSceneState.EXTRACTING);
             item.Init();
         }
     }
@@ -197,7 +192,7 @@ public class IngameSceneManager : StateBaseSceneManager
         };
 
         await ItemLootingManager.Instance.MakingItemLootingBox("Box_Common", itemData1, itemBoxAreaList[0]);
-        await ItemLootingManager.Instance.MakingItemLootingBox("Box_Common", itemData2, itemBoxAreaList[1]);
+        await ItemLootingManager.Instance.MakingItemLootingBox("Box_Unique", itemData2, itemBoxAreaList[1]);
 
     }
 
@@ -351,7 +346,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
                     //그냥 게임창 상태로 복귀,
                     //그거는 켜야 됨 조이스틱
-                    ingameUIManager.InputUISetActive(true);
+                    IngameUIManager.Instance.InputUISetActive(true);
 
 
                     for (int i = 1; i < pages.Length; i++)
@@ -366,7 +361,7 @@ public class IngameSceneManager : StateBaseSceneManager
                 {
                     Ingame_002_Inventory ingame_002_Inventory = pages[(int)IngameSceneIdx.INVENTORY].GetComponent<Ingame_002_Inventory>();
                     await ingame_002_Inventory.Init();
-                    ingameUIManager.JoyStickUISetActive(false);
+                    IngameUIManager.Instance.JoyStickUISetActive(false);
                     ingame_002_Inventory.pageMain.SetActive(true);
                 }
 
@@ -379,7 +374,7 @@ public class IngameSceneManager : StateBaseSceneManager
                     await ingame_002_Inventory.Inventory_000_Base.LootingBoxItemSetting();
 
                     //looting Setting
-                    ingameUIManager.JoyStickUISetActive(false);
+                    IngameUIManager.Instance.JoyStickUISetActive(false);
                     ingame_002_Inventory.pageMain.SetActive(true);
                 }
 
@@ -397,13 +392,35 @@ public class IngameSceneManager : StateBaseSceneManager
 
 
             case IngameSceneState.EXTRACTING:
+                {
+                    Ingame_002_Inventory ingame_002_Inventory = pages[(int)IngameSceneIdx.INVENTORY].GetComponent<Ingame_002_Inventory>();
+                    PlayerDataManager.Instance.SaveToDisk(ingame_002_Inventory.Inventory_000_Base.ExtractingInvenItems());
+                    await ChangeState((int)IngameSceneState.RESULT);
+                }
 
-                await ChangeState((int)IngameSceneState.RESULT);
                 return;
 
             case IngameSceneState.DEAD:
+                {
+                    PlayerDataManager.Instance.DeleteData(false);
 
-                await ChangeState((int)IngameSceneState.RESULT);
+                    PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10004), LanguageManager.Instance.GetLangScript(10002));
+                    PopupManager.Instance.AddMethodToBtn(async () =>
+                    {
+                        await ChangeState((int)IngameSceneState.RESULT);
+                    },
+                    null,
+                    async () =>
+                    {
+                        await ChangeState((int)IngameSceneState.RESULT);
+                    });                   
+                }
+                break;
+
+            case IngameSceneState.RESULT:
+                {
+                    await ChangeState((int)IngameSceneState.GO_TO_TITLE);
+                }
                 return;
 
             case IngameSceneState.GO_TO_TITLE:

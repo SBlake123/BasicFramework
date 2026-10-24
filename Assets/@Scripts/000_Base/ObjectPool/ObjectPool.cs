@@ -110,8 +110,9 @@ public class ObjectPool : MonoSingleton<ObjectPool>
             //_obj = objectDictionary[_objName].Pop().gameObject;
             //_obj.SetActive(true);
             if (parent != null) _obj.transform.SetParent(parent);
-
             _obj.transform.localPosition = Vector3.zero;
+            _obj.transform.localRotation = Quaternion.identity;
+            _obj.transform.localScale = Vector3.one;
 
             return _obj;
         }
@@ -224,8 +225,9 @@ public class ObjectPool : MonoSingleton<ObjectPool>
             //_obj = objectDictionary[_objName].Pop().gameObject;
             //_obj.SetActive(true);
             if (parent != null) _obj.transform.SetParent(parent);
-
             _obj.transform.localPosition = Vector3.zero;
+            _obj.transform.localRotation = Quaternion.identity;
+            _obj.transform.localScale = Vector3.one;
 
             return _obj;
         }

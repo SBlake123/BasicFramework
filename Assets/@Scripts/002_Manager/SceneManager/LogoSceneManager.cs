@@ -13,7 +13,7 @@ public class LogoSceneManager : MonoSingleton<LogoSceneManager>
     {
         public string Name { get; }
         public Func<UniTask> Action { get; }
-        public bool IsEssential { get; } // true¸é ½ÇÆÐ ½Ã ¸ØÃã/Àç½Ãµµ, false¸é ·Î±× Âï°í °Ç³Ê¶Ü
+        public bool IsEssential { get; } 
         public int MaxRetryCount { get; }
 
         public InitStep(string name, Func<UniTask> action, bool isEssential = true, int maxRetryCount = 3)

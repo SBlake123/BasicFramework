@@ -21,7 +21,6 @@ public class Ingame_003_Option : StateBasePage
     public Slider volSlider;
     public Slider fxSlider;
 
-    private TitleSceneManager titleSceneManager;
     protected override async UniTask OnFirstSetting()
     {
         IngameSceneManager = (IngameSceneManager)stateBaseSceneManager;

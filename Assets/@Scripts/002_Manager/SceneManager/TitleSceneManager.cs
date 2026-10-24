@@ -53,8 +53,8 @@ public partial class TitleSceneManager : StateBaseSceneManager
         SceneAllocate();
         await ScreenBlurFadeOut();
         await ChangeState((int)TitleSceneState.MAIN);
+
         screenGuard.SetActive(false);
-        await UniTask.WaitForFixedUpdate();
     }
 
     protected override async UniTask BackKeySetting()
@@ -125,7 +125,7 @@ public partial class TitleSceneManager : StateBaseSceneManager
                     Title_003_NewGame title_003_NewGame = pages[(int)TitleSceneIdx.NEW_GAME].GetComponent<Title_003_NewGame>();
                     await title_003_NewGame.Init();
                     await title_003_NewGame.NewGameStart();
-                    title_003_NewGame.pageMain.SetActive(true);
+                    //title_003_NewGame.pageMain.SetActive(true);
                     Debug.Log("NEW_GAME");
                     break;
                 }

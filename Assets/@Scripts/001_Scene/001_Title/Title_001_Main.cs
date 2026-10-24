@@ -48,13 +48,19 @@ public class Title_001_Main : StateBasePage
 
     public void CanContinueCheck()
     {
-        var saveData = SaveLoadManager.Instance.Load();
+        //PlayerDataManager.Instance.DeleteData();
+
+        var saveData = PlayerDataManager.Instance.LoadFromDisk();
 
         if (saveData == null)
         {
             //로드 후 인게임 씬에 적용.
             //GameManager -> IngameDataManager
             //
+            continueGameButton.gameObject.SetActive(false);
+        }
+        else if (saveData.profileData == null)
+        {
             continueGameButton.gameObject.SetActive(false);
         }
     }

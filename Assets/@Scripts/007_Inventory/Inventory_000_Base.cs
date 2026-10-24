@@ -15,8 +15,6 @@ public partial class Inventory_000_Base : MonoBehaviour
     public List<InventoryGrid_000_Base> accessoryGridList = new List<InventoryGrid_000_Base>();
     public List<InventoryGrid_000_Base> lootingGridList = new List<InventoryGrid_000_Base>();
 
-    public InventoryGrid_000_Base selectedGrid { get; set; }
-
     public Inventory_ItemConfigWindow itemConfigWindow;
     public Transform lootingStash;
 
@@ -44,7 +42,6 @@ public partial class Inventory_000_Base : MonoBehaviour
         SetInventoryStatusVal();
         isFirstSetting = false;
     }
-
     public void InventoryInit()
     {
         weaponGrid.Inventory_000_Base = this;
@@ -84,7 +81,6 @@ public partial class Inventory_000_Base : MonoBehaviour
             grid.Inventory_000_Base = this;
         }
     }
-
     public async UniTask InventoryItemSetting()
     {
 
@@ -136,7 +132,6 @@ public partial class Inventory_000_Base : MonoBehaviour
             await MakeInvenItem(prefabKey, grid.itemImgParent);
         }
     }
-
     public async UniTask LootingBoxItemSetting()
     {
         LootingItemInit();
@@ -155,7 +150,6 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         lootingStash.gameObject.SetActive(true);
     }
-
     public void SetInventoryStatusVal()
     {
         LanguageManager.Instance.GetLangScript(10020, LanguageManager.Instance.languageScriptDic, damageMainTxt);
@@ -211,7 +205,6 @@ public partial class Inventory_000_Base : MonoBehaviour
             }
         }
     }
-
     public void LootingItemInit()
     {
         for (int i = 0; i < lootingGridList.Count; i++)
@@ -226,7 +219,6 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         }
     }
-
     public void SaveLootingBoxItems()
     {
         LootingBox box = ItemLootingManager.Instance.nowLootingBox;
@@ -253,7 +245,6 @@ public partial class Inventory_000_Base : MonoBehaviour
         obj.transform.localRotation = Quaternion.identity;
         obj.transform.localScale = Vector3.one;
     }
-
     public async UniTask InventoryClosed()
     {
         IngameSessionManager.Instance.playerIngameData.invenItems.Clear();
@@ -282,42 +273,9 @@ public partial class Inventory_000_Base : MonoBehaviour
             itemdataList.Add(item);
         }
     }
-
     public async UniTask ItemMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
     {
-
         bool isMovingItem;
-        //if (targetGrid.gridCategory == GridCategory.STASH)
-        //{
-        //    if (targetGrid.itemData == null)
-        //    {
-
-        //    }
-        //    else
-        //    {
-        //        if (targetGrid.itemData.equipmentType == (int)startGrid.gridCategory)
-        //        {
-
-        //        }
-        //        else return;
-        //    }
-        //}
-
-        //else if (startGrid.itemData.equipmentType == (int)targetGrid.gridCategory)
-        //{
-        //    if (targetGrid.itemData == null)
-        //    {
-
-        //    }
-        //    else
-        //    {
-        //        if (targetGrid.itemData.equipmentType == (int)startGrid.gridCategory)
-        //        {
-
-        //        }
-        //        else return;
-        //    }
-        //}
 
         if (startGrid == targetGrid || startGrid.itemData == null) return;
         if (!CanPlaceItem(targetGrid, startGrid.itemData)) return;
@@ -649,15 +607,12 @@ public partial class Inventory_000_Base : MonoBehaviour
 
 
     }
-
-
     public void SettingItemConfigWindow(ItemData itemData)
     {
         SettingItemSpecText(itemData);
         SettingItemAdditionalOptionText(itemData);
         LanguageManager.Instance.GetLangScript(itemData.itemId + 100000, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemExplanation);
     }
-
     public void SettingItemSpecText(ItemData itemData)
     {
         StringBuilder builder = new();
@@ -666,6 +621,7 @@ public partial class Inventory_000_Base : MonoBehaviour
         {
             case (int)EquipmentType.Weapon:
                 {
+                    itemConfigWindow.itemSpec.gameObject.SetActive(true);
                     WeaponData weaponData = (WeaponData)itemData;
                     AddStat(LanguageManager.Instance.GetLangScript(10020), weaponData.attackDamage);
                     AddStat(LanguageManager.Instance.GetLangScript(10024), weaponData.attackSpeed);
@@ -677,6 +633,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
             case (int)EquipmentType.Shield:
                 {
+                    itemConfigWindow.itemSpec.gameObject.SetActive(true);
                     ShieldData shieldData = (ShieldData)itemData;
                     AddStat(LanguageManager.Instance.GetLangScript(10021), shieldData.defense);
                     itemConfigWindow.itemSpec.text = builder.ToString();
@@ -685,7 +642,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
             case (int)EquipmentType.Accessory:
                 {
-
+                    itemConfigWindow.itemSpec.gameObject.SetActive(false);
                 }
                 break;
 
@@ -710,7 +667,6 @@ public partial class Inventory_000_Base : MonoBehaviour
             builder.Append($"{label} : {value:0.##}{suffix}");
         }
     }
-
     public void SettingItemAdditionalOptionText(ItemData itemData)
     {
         List<ItemOptionData> options = null;
@@ -762,6 +718,34 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         itemConfigWindow.itemAdditionalOption.text = builder.ToString();
         itemConfigWindow.itemAdditionalOption.gameObject.SetActive(builder.Length > 0);
+    }
+    public List<ItemData> ExtractingInvenItems()
+    {
+        if (isFirstSetting)
+        {
+            return IngameSessionManager.Instance.playerIngameData.invenItems
+                .ConvertAll(item => item.DeepCopy());
+        }
+
+        List<ItemData> itemDataList = new List<ItemData>();
+
+        AddItem(weaponGrid);
+        AddItem(shieldGrid);
+
+        foreach (var grid in accessoryGridList)
+            AddItem(grid);
+
+        foreach (var grid in invenGridList)
+            AddItem(grid);
+
+        return itemDataList;
+
+        void AddItem(InventoryGrid_000_Base grid)
+        {
+            if (grid == null || grid.itemData == null) return;
+
+            itemDataList.Add(grid.itemData.DeepCopy());
+        }
     }
 
 }

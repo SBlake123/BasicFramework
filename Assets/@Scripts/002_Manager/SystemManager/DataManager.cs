@@ -39,11 +39,9 @@ public class DataManager : Singleton<DataManager>
     };
 
     public Dictionary<int, ItemData> itemDataDic { get; set; } = new Dictionary<int, ItemData>();
-    public List<ItemOptionData> itemOptionDataList { get; set; } = new List<ItemOptionData>();
     public Dictionary<int, ItemOptionData> itemOptionDataDic { get; set; } = new Dictionary<int, ItemOptionData>();
     public Dictionary<int, List<ItemOptionData>> optionsByEquipmentTypeDic { get; set; } = new Dictionary<int, List<ItemOptionData>>();
     public Dictionary<int, List<UniqueItemOptionData>> uniqueItemOptionDataDic { get; set; } = new Dictionary<int, List<UniqueItemOptionData>>();
-
     public Dictionary<int, MonsterData> monsterDataDic { get; set; } = new Dictionary<int, MonsterData>();
     public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
     public Dictionary<int, List<MonsterAttackData>> monsterAttackDataDic { get; set; } = new Dictionary<int, List<MonsterAttackData>>();
@@ -62,16 +60,12 @@ public class DataManager : Singleton<DataManager>
         await DataDicLoad("gameData", itemDataDic, item => item.itemId);
         await DataDicLoad("itemOptionData", itemOptionDataDic, item => item.optionId);
         await DataDicLoad("uniqueItemOptionData", uniqueItemOptionDataDic, item => item.itemId);
-        //await DataListLoad("itemOptionData", itemOptionDataList);
         GroupOptionsByEquipmentType();
         await DataDicLoad("monsterData", monsterDataDic, item => item.monsterId);
         await DataDicLoad("monsterDropData", monsterDropDataDic, item => item.monsterId);
         await DataDicLoad("monsterAttackData", monsterAttackDataDic, item => item.monsterId);
-        Debug.Log("gameData");
         await ApplyWeaponData("weaponData");
-        Debug.Log("weaponData");
         await ApplyShieldData("shieldData");
-        Debug.Log("shieldData");
         await ApplyAccessoryData("accessoryData");
 
 

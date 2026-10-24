@@ -34,6 +34,8 @@ public partial class Player : MonoBehaviour
     public Vector2 lastMoveDirection { get; private set; } = Vector2.right;
     public Vector2 lastAimDirection { get; private set; } = Vector2.right;
     public Vector2 lastLookDirection { get; private set; } = Vector2.right;
+    public Vector2 dodgeDirection { get; private set; } = Vector2.right;
+
 
     private bool isAttackRequested;
 
@@ -50,12 +52,9 @@ public partial class Player : MonoBehaviour
         desiredVelocity = Vector3.zero;
     }
 
-    private PlayerState playerState;
-
-    
     private bool CanInputAction()
     {
-        return !isDodging || !isDead;
+        return !isDodging && !isDead;
     }
 
     /// <summary>
@@ -63,6 +62,8 @@ public partial class Player : MonoBehaviour
     /// </summary>
     public void SetMovingVirtualJoystickInput(Vector2 direction)
     {
+        if (!CanInputAction()) return;
+
         movingVirtualJoystickInput = Vector2.ClampMagnitude(direction, 1f);
 
         if (movingVirtualJoystickInput.sqrMagnitude > 0.001f)
@@ -88,6 +89,8 @@ public partial class Player : MonoBehaviour
 
     public void SetAimingVirtualJoystickInput(Vector2 direction)
     {
+        if (!CanInputAction()) return;
+
         aimingVirtualJoystickInput = Vector2.ClampMagnitude(direction, 1f);
 
         if (aimingVirtualJoystickInput.sqrMagnitude > 0.001f)
@@ -168,8 +171,7 @@ public partial class Player : MonoBehaviour
             desiredVelocity = Vector3.zero;
             return;
         }
-        
-
+       
         //ChangeState(PlayerState.MOVE);
         UpdateMoveSpeed();
         UpdateSpriteDirection();
@@ -252,19 +254,6 @@ public partial class Player : MonoBehaviour
             playerSkinBase.PlayerSprRelocationLeft();
             UpdateWeaponRotation();
         }
-
-        //if (moveInput.x > 0f)
-        //{
-        //    isPlayerFacingRight = true;
-        //    playerSkinBase.PlayerSprRelocationRight();
-        //    UpdateWeaponRotation();
-        //}
-        //else if (moveInput.x < 0f)
-        //{
-        //    isPlayerFacingRight = false;
-        //    playerSkinBase.PlayerSprRelocationLeft();
-        //    UpdateWeaponRotation();
-        //}
     }
     public void UpdateWeaponRotation()
     {
@@ -276,7 +265,7 @@ public partial class Player : MonoBehaviour
     private bool CanMoveAnimPlay()
     {
         bool canMoveAnimPlay = false;
-        if (!isAttack && !isDodging) canMoveAnimPlay = true;
+        if (!isAttack && !isDodging && !isDead) canMoveAnimPlay = true;
         return canMoveAnimPlay;
     }
 

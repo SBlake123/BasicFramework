@@ -13,7 +13,6 @@ public class PlayerRuntimeStats
     public float currentStamina { get; set; }
     public float maxStamina { get; set; } 
     public float baseStamina { get; set; } = 100f;
-
     public float attackDamage { get; set; }
     public float noWeaponDamage { get; set; } = 1f;
     public float defense { get; set; }
@@ -24,7 +23,6 @@ public class PlayerRuntimeStats
     public float defensePercentBonus { get; set; }
     public float hpFlatBonus { get; set; }
     public float hpPercentBonus { get; set; }
-
 
     public void ResetEquipmentBonus()
     {
@@ -82,31 +80,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         {
             playerId = profile.playerId,
             money = profile.money,
-            playerHp = profile.playerHp,
-            playerStamina = profile.playerStamina,
             invenItems = profile.invenItems.ConvertAll(item => item.DeepCopy()),
         };
-    }
-
-    public void SetDummyData()
-    {
-        //playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy());
-        //playerIngameData.invenItems.Add(DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy());
-        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(1001, 1, ItemRarity.UNCOMMON));
-        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(2001, 2, ItemRarity.RARE));
-        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(5000, 3, ItemRarity.UNIQUE));
-        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(7000, 4, ItemRarity.UNIQUE));
-        //playerIngameData.invenItems.Add(ItemLootingManager.Instance.CreateStashItem(7000, 5, ItemRarity.UNIQUE));
-
-        //ItemData itemData_1 = DataManager.Instance.GetItemData<WeaponData>(1001).DeepCopy();
-        //itemData_1.gridIdx = 10;
-
-        //ItemData itemData_3 = DataManager.Instance.GetItemData<ShieldData>(2001).DeepCopy();
-        //itemData_3.gridIdx = 11;
-
-        //playerIngameData.invenItems.Add(itemData_3);
-        //playerIngameData.invenItems.Add(itemData_1);
-
     }
 
     public async UniTask SetPlayerEquipment()
@@ -121,13 +96,13 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                         {
                             ItemData currentWeaponData = item.DeepCopy();
                             this.currentWeaponData = (WeaponData)currentWeaponData;
-
+                            
 
                             GameObject obj = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.swingPivotTrf);
                             obj.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+                            player.currentWeapon = obj.GetComponent<WeaponBase>();
+                            player.currentWeapon.weaponData = this.currentWeaponData;
                             //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
-
-                            player.currentWeapon = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<WeaponBase>();
                         }
                         break;
 
@@ -136,11 +111,20 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                             ItemData currentShieldData = item.DeepCopy();
                             this.currentShieldData = (ShieldData)currentShieldData;
 
-                            await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
+                            GameObject obj = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
 
+                            player.currentShield = obj.GetComponent<ShieldBase>();
+                            player.currentShield.shieldData = this.currentShieldData;
                             //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
+                        }
+                        break;
 
-                            player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
+                    case EquipmentType.Accessory:
+                        {
+                            if (item.gridIdx < 0 || item.gridIdx >= currentAccessoryDataArr.Length)
+                                continue;
+
+                            currentAccessoryDataArr[item.gridIdx] = item.DeepCopy();
                         }
                         break;
                 }
@@ -150,7 +134,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     public async UniTask SetPlayerStatus()
     {
-        CalculateStatCoefficients();
+        await CalculateStatCoefficients();
 
         float baseAttackDamage = currentWeaponData != null
         ? currentWeaponData.attackDamage
@@ -174,7 +158,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     }
 
-    public void CalculateStatCoefficients()
+    public async UniTask CalculateStatCoefficients()
     {
         playerStats.ResetEquipmentBonus();
 
@@ -185,10 +169,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
         specialAttributeList.Clear();
 
-
-
-        ApplyOptions(currentWeaponData?.additionalOptionsList);
-        ApplyOptions(currentShieldData?.additionalOptionsList);
+        await ApplyOptions(currentWeaponData?.additionalOptionsList);
+        await ApplyOptions(currentShieldData?.additionalOptionsList);
         
         foreach (AccessoryData item in currentAccessoryDataArr)
         {
@@ -197,7 +179,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
         //악세서리 추가
 
-        void ApplyOptions(List<ItemOptionData> options)
+        async UniTask ApplyOptions(List<ItemOptionData> options)
         {
             if (options == null)
                 return;
@@ -259,7 +241,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
                     default:
                         {
-                            CheckSpecialAttribute(option);
+                            await CheckSpecialAttribute(option);
                             break;
                         }
                 }
@@ -277,7 +259,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
             case 95001:
                 {
                     FlameOnHitEffect flameOnHitEffect = new FlameOnHitEffect();
-                    flameOnHitEffect.Initialize(player, itemOptionData);
+                    await flameOnHitEffect.Initialize(player, itemOptionData);
 
                     specialAttributeList.Add(flameOnHitEffect);
                 }
@@ -285,7 +267,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
             case 95002:
                 {
                     BurningAuraEffect burningAuraEffect = new BurningAuraEffect();
-                    burningAuraEffect.Initialize(player, itemOptionData);
+                    await burningAuraEffect.Initialize(player, itemOptionData);
 
                     specialAttributeList.Add(burningAuraEffect);
                 }
@@ -312,20 +294,6 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     public async UniTask RefreshPlayerStatus()
     {
-        await SetPlayerStatus();
-        playerStatsChanged?.Invoke();
-    }
-
-    public async UniTask RefreshPlayerStatus(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
-    {
-        //await RefreshCurrentItem(itemData, equipmentType, isEquip);
-        await SetPlayerStatus();
-        playerStatsChanged?.Invoke();
-    }
-
-    public async UniTask RefreshPlayerStatus(EquipmentType equipmentType, IsEquip isEquip)
-    {
-       // await RefreshCurrentItem(equipmentType, isEquip);
         await SetPlayerStatus();
         playerStatsChanged?.Invoke();
     }
@@ -434,103 +402,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
     }
 
-    public async UniTask RefreshCurrentItem(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
-    {
-        if (itemData == null) return;
-        if (itemData.isEquip == (int)IsEquip.NO) return;
-
-        switch ((EquipmentType)itemData.equipmentType)
-        {
-            case EquipmentType.Weapon:
-                {
-                    this.currentWeaponData = null;
-                    player.currentWeapon = null;
-                    if (player.playerSkinBase.swingPivotTrf.childCount > 0)
-                        ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
-                    //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
-
-
-                    WeaponData currentWeaponData = (WeaponData)itemData.DeepCopy();
-                    this.currentWeaponData = currentWeaponData;
-                    Debug.Log($"this.currentWeaponData.attackDamage : {this.currentWeaponData.attackDamage}");
-
-                    GameObject obj = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.swingPivotTrf);
-                    obj.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
-
-                    //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
-
-                    player.currentWeapon = player.playerSkinBase.swingPivotTrf.GetChild(0).GetComponent<WeaponBase>();
-                    //데이터 기반으로 만들어야됨 player 위치에 
-                }
-                break;
-
-            case EquipmentType.Shield:
-                {
-                    this.currentShieldData = null;
-                    player.currentShield = null;
-
-                    if (player.playerSkinBase.shieldTrf.childCount > 0)
-                        ObjectPool.Instance.PushToPool(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
-
-                    //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
-
-                    ShieldData currentShieldData = (ShieldData)itemData.DeepCopy();
-                    this.currentShieldData = currentShieldData;
-
-                    await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
-
-                    //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
-
-                    player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
-                }
-                break;
-
-            case EquipmentType.Accessory:
-                {
-                    ItemData currentAccessoryData = itemData.DeepCopy();
-   
-                    currentAccessoryDataArr[currentAccessoryData.gridIdx] = currentAccessoryData;
-                }
-                break;
-        }
-    }
-
-    public async UniTask RefreshCurrentItem(EquipmentType equipmentType, IsEquip isEquip)
-    {
-        switch (equipmentType)
-        {
-            case EquipmentType.Weapon:
-                {
-                    this.currentWeaponData = null;
-                    player.currentWeapon = null;
-                    if (player.playerSkinBase.swingPivotTrf.childCount > 0)
-                        ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
-
-                    //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
-                    //데이터 기반으로 만들어야됨 player 위치에 
-                }
-                break;
-
-            case EquipmentType.Shield:
-                {
-                    this.currentShieldData = null;
-                    player.currentShield = null;
-
-                    if (player.playerSkinBase.shieldTrf.childCount > 0)
-                        ObjectPool.Instance.PushToPool(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
-
-                    //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
-                }
-                break;
-
-            case EquipmentType.Accessory:
-                {
-
-                }
-                break;
-        }
-    }
-
+    
     public int CalculateDamageDealt()
     {
         return (int)(playerStats.attackDamage * UnityEngine.Random.Range(0.8f, 1.2f));
@@ -550,4 +422,117 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     //아이템 장착 시 알림 받고 스탯, 장착한 값 다 계산해서 플레이어한테 무기 다시 생성
     //
+    #region Obsolete
+    //public async UniTask RefreshPlayerStatus(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
+    //{
+    //    //await RefreshCurrentItem(itemData, equipmentType, isEquip);
+    //    await SetPlayerStatus();
+    //    playerStatsChanged?.Invoke();
+    //}
+
+    //public async UniTask RefreshPlayerStatus(EquipmentType equipmentType, IsEquip isEquip)
+    //{
+    //    // await RefreshCurrentItem(equipmentType, isEquip);
+    //    await SetPlayerStatus();
+    //    playerStatsChanged?.Invoke();
+    //}
+
+    //public async UniTask RefreshCurrentItem(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
+    //{
+    //    if (itemData == null) return;
+    //    if (itemData.isEquip == (int)IsEquip.NO) return;
+
+    //    switch ((EquipmentType)itemData.equipmentType)
+    //    {
+    //        case EquipmentType.Weapon:
+    //            {
+    //                this.currentWeaponData = null;
+    //                player.currentWeapon = null;
+    //                if (player.playerSkinBase.swingPivotTrf.childCount > 0)
+    //                    ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
+    //                //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+
+
+    //                WeaponData currentWeaponData = (WeaponData)itemData.DeepCopy();
+    //                this.currentWeaponData = currentWeaponData;
+    //                Debug.Log($"this.currentWeaponData.attackDamage : {this.currentWeaponData.attackDamage}");
+
+    //                GameObject obj = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey), player.playerSkinBase.swingPivotTrf);
+    //                obj.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+
+    //                //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
+
+    //                player.currentWeapon = player.playerSkinBase.swingPivotTrf.GetChild(0).GetComponent<WeaponBase>();
+    //                //데이터 기반으로 만들어야됨 player 위치에 
+    //            }
+    //            break;
+
+    //        case EquipmentType.Shield:
+    //            {
+    //                this.currentShieldData = null;
+    //                player.currentShield = null;
+
+    //                if (player.playerSkinBase.shieldTrf.childCount > 0)
+    //                    ObjectPool.Instance.PushToPool(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+
+    //                //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+
+    //                ShieldData currentShieldData = (ShieldData)itemData.DeepCopy();
+    //                this.currentShieldData = currentShieldData;
+
+    //                await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey), player.playerSkinBase.shieldTrf);
+
+    //                //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
+
+    //                player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
+    //            }
+    //            break;
+
+    //        case EquipmentType.Accessory:
+    //            {
+    //                ItemData currentAccessoryData = itemData.DeepCopy();
+
+    //                currentAccessoryDataArr[currentAccessoryData.gridIdx] = currentAccessoryData;
+    //            }
+    //            break;
+    //    }
+    //}
+
+    //public async UniTask RefreshCurrentItem(EquipmentType equipmentType, IsEquip isEquip)
+    //{
+    //    switch (equipmentType)
+    //    {
+    //        case EquipmentType.Weapon:
+    //            {
+    //                this.currentWeaponData = null;
+    //                player.currentWeapon = null;
+    //                if (player.playerSkinBase.swingPivotTrf.childCount > 0)
+    //                    ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
+
+    //                //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
+    //                //데이터 기반으로 만들어야됨 player 위치에 
+    //            }
+    //            break;
+
+    //        case EquipmentType.Shield:
+    //            {
+    //                this.currentShieldData = null;
+    //                player.currentShield = null;
+
+    //                if (player.playerSkinBase.shieldTrf.childCount > 0)
+    //                    ObjectPool.Instance.PushToPool(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+
+    //                //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
+    //            }
+    //            break;
+
+    //        case EquipmentType.Accessory:
+    //            {
+
+    //            }
+    //            break;
+    //    }
+    //}
+
+    #endregion
 }
