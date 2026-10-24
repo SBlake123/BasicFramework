@@ -67,20 +67,25 @@ public class IngameSceneManager : StateBaseSceneManager
     }
     private async UniTask InitializeScene()
     {
-        screenGuard.SetActive(true);
-        ScreenBlurInit();
-        BackKeySetting().Forget();
-        SceneAllocate();
-        SubscribingEvent();
-        SetDummyDataInSpawnData();
-        await SetDummyDataInItemBoxAreaList();
-        await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
-        await IngameUIManager.Instance.Init();
-        await IngameSessionManager.Instance.Init();
-        await ChangeState((int)IngameSceneState.INGAME);
-        await ScreenBlurFadeOut();
+        try
+        {
+            screenGuard.SetActive(true);
+            ScreenBlurInit();
+            BackKeySetting().Forget();
+            SceneAllocate();
+            SubscribingEvent();
+            SetDummyDataInSpawnData();
+            await SetDummyDataInItemBoxAreaList();
+            await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
+            await IngameUIManager.Instance.Init();
+            await IngameSessionManager.Instance.Init();
+            await ChangeState((int)IngameSceneState.INGAME);
+            await ScreenBlurFadeOut();
 
-        screenGuard.SetActive(false);
+            screenGuard.SetActive(false);
+        }
+        catch (MissingReferenceException) { }
+        
     }
 
     protected override async UniTask BackKeySetting()
@@ -395,10 +400,19 @@ public class IngameSceneManager : StateBaseSceneManager
                 {
                     Ingame_002_Inventory ingame_002_Inventory = pages[(int)IngameSceneIdx.INVENTORY].GetComponent<Ingame_002_Inventory>();
                     PlayerDataManager.Instance.SaveToDisk(ingame_002_Inventory.Inventory_000_Base.ExtractingInvenItems());
-                    await ChangeState((int)IngameSceneState.RESULT);
+                    PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10015), LanguageManager.Instance.GetLangScript(10002));
+                    PopupManager.Instance.AddMethodToBtn(async () =>
+                    {
+                        await ChangeState((int)IngameSceneState.RESULT);
+                    },
+                    null,
+                    async () =>
+                    {
+                        await ChangeState((int)IngameSceneState.RESULT);
+                    });
                 }
 
-                return;
+                break;
 
             case IngameSceneState.DEAD:
                 {

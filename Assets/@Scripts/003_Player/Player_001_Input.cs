@@ -198,6 +198,11 @@ public partial class Player : MonoBehaviour
 
     private async UniTask DodgePlayer()
     {
+        if (CanDodge() == false) return;
+
+        IngameSessionManager.Instance.playerStats.currentStamina -= IngameSessionManager.Instance.dodgeStaminaCost;
+        IngameUIManager.Instance.SetStaminaSlider();
+
         OnDodgeRequested();
         await ChangeState(PlayerState.DODGE);
     }
@@ -274,6 +279,11 @@ public partial class Player : MonoBehaviour
         return !isDodging && !isDead && !isAttack;
     }
 
+    private bool CanDodge()
+    {
+        return !isDead && !isDodging && IngameSessionManager.Instance.playerStats.currentStamina
+                >= IngameSessionManager.Instance.dodgeStaminaCost;
+    }
     // Legacy PlayerActionCheck() read keyboard input and moved the player in a
     // UniTask loop. The same responsibility now lives in Update, ReadMoveInput,
     // and MovePlayer so keyboard and a virtual joystick use one movement path.

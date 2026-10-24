@@ -80,6 +80,14 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
     {
         hpTmp.text = $"{IngameSessionManager.Instance.playerStats.currentHp}/{IngameSessionManager.Instance.playerStats.maxHp}";
         hpSlider.value = (float)IngameSessionManager.Instance.playerStats.currentHp / IngameSessionManager.Instance.playerStats.maxHp;
+
+        if (hpSlider.value <= 0) hpSlider.fillRect.gameObject.SetActive(false);
+        else hpSlider.fillRect.gameObject.SetActive(true);
+    }
+
+    public void SetStaminaSlider()
+    {
+        staminaSlider.value = (float)IngameSessionManager.Instance.playerStats.currentStamina / IngameSessionManager.Instance.playerStats.maxStamina;
     }
 
     private bool CanUIAction()

@@ -35,8 +35,8 @@ public partial class Player : MonoBehaviour
     private PlayerState playerState;
 
     bool isAttack = false;
-    bool isDodging = false;
     bool isHit = false;
+    public bool isDodging = false;
     public bool isDead = false;
 
     CancellationTokenSource stateCts;

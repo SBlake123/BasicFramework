@@ -387,6 +387,8 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
         //gText.setText(body.transform.Find("Btn").transform.Find("Text").gameObject, strYes);
 
+        RefreshPopupLayout(popupBody1);
+
         popupBody1.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
         popupBody1.GetComponent<ContentSizeFitter>().SetLayoutVertical();
         Canvas.ForceUpdateCanvases();
@@ -417,6 +419,8 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         //gText.setText(body.transform.Find("TextBodyBg").transform.Find("TextBody").gameObject, strBody);
         //gText.setText(body.transform.Find("BtnParent").transform.Find("BtnYes").transform.Find("Text").gameObject, strYes);
         //gText.setText(body.transform.Find("BtnParent").transform.Find("BtnNo").transform.Find("Text").gameObject, strNo);
+
+        RefreshPopupLayout(popupBody2);
 
         popupBody2.GetComponent<ContentSizeFitter>().SetLayoutHorizontal();
         popupBody2.GetComponent<ContentSizeFitter>().SetLayoutVertical();
@@ -554,6 +558,26 @@ public static void setPopUpCodeAndBtn(int yesSceneState, int noSceneState, bool 
         //gText.setText(btnParent.transform.Find("BtnFirst").transform.Find("Text").gameObject, strFirst);
         //gText.setText(btnParent.transform.Find("BtnSecond").transform.Find("Text").gameObject, strSecond);
         //gText.setText(btnParent.transform.Find("BtnThird").transform.Find("Text").gameObject, strThird);
+    }
+
+    private async UniTask RefreshPopupLayout(GameObject body)
+    {
+        await UniTask.NextFrame(cancellationToken: destroyCancellationToken);
+
+        if (body == null || !body.activeInHierarchy) return;
+
+        Canvas.ForceUpdateCanvases();
+
+        var fitters = body.GetComponentsInChildren<ContentSizeFitter>();
+
+        for (int i = fitters.Length - 1; i >= 0; i--)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(
+                (RectTransform)fitters[i].transform);
+        }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(
+            (RectTransform)body.transform);
     }
 }
 

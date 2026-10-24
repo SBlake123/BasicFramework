@@ -72,6 +72,8 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
     public List<EquipmentEffectBase> specialAttributeList { get; set; } = new List<EquipmentEffectBase>();
 
+    public float dodgeStaminaCost = 40f;
+
     public void SetPlayerData()
     {
         var profile = PlayerDataManager.Instance.Profile;
@@ -147,8 +149,6 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         float baseHp = playerStats.baseHp;
 
         float baseStamina = playerStats.baseStamina;
-
-        Debug.Log($"baseAttackDamage : {baseAttackDamage}");
 
         playerStats.CalculateAttackDamage(baseAttackDamage);
         playerStats.CalculateDefense(baseDefense);
@@ -290,6 +290,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     public void SetHpAndStamina()
     {
         playerStats.currentHp = playerStats.maxHp;
+        playerStats.currentStamina = playerStats.maxStamina;
     }
 
     public async UniTask RefreshPlayerStatus()

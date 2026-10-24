@@ -27,6 +27,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         await SetPlayerEquipment();
         await SetPlayerStatus();
         SetHpAndStamina();
+        RestoreStamina().Forget();
         IngameUIManager.Instance.SetHpSlider();
     }
 
@@ -34,5 +35,42 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     {
         movingVirtualJoystick.SetTarget(player);
         aimVirtualJoystick.SetTarget(player);
+    }
+
+    private bool isRestoringStamina;
+
+    public async UniTask RestoreStamina()
+    {
+        if (isRestoringStamina) return;
+        isRestoringStamina = true;
+
+        const float recoveryPerSecond = 20f;
+        var token = destroyCancellationToken;
+
+        try
+        {
+            while (!player.isDead)
+            {
+                await UniTask.NextFrame(cancellationToken: token);
+
+                if (player.isDead) break;
+                if (player.isDodging) continue;
+
+                var stats = playerStats;
+
+                stats.currentStamina = Mathf.Min(
+                    stats.currentStamina + recoveryPerSecond * Time.deltaTime,
+                    stats.maxStamina);
+
+                IngameUIManager.Instance.SetStaminaSlider();
+            }
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+        }
+        finally
+        {
+            isRestoringStamina = false;
+        }
     }
 }

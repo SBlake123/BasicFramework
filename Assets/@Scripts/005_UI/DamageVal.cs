@@ -21,11 +21,23 @@ public class DamageVal : MonoBehaviour
 
     public void Play()
     {
-        transform.localScale = Vector3.one;
-
-        gameObject.SetActive(true);
         transform.DOKill();
-        transform.DOMoveY(transform.position.y + 20f, 0.8f).SetEase(Ease.Linear).OnComplete(() => ObjectPool.Instance.PushToPool(gameObject));
+        damageText.DOKill();
+
+        transform.localScale = Vector3.one;
+        damageText.alpha = 1f;
+        gameObject.SetActive(true);
+
+        damageText.DOFade(0f, 0.7f).SetDelay(0.3f).SetEase(Ease.Linear);
+
+        transform.DOMoveY(transform.position.y + 20f, 1f)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                damageText.DOKill();
+                ObjectPool.Instance.PushToPool(gameObject);
+            });
+
     }
 }
 
