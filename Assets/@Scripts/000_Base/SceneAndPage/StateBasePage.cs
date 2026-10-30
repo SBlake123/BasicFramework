@@ -16,10 +16,11 @@ public abstract class StateBasePage : MonoBehaviour
         if (isFirstSetting)
         {
             await OnFirstSetting();
+            isFirstSetting = false;
         }
         await OnAfterFirstSetting();
 
-        isFirstSetting = false;
+        
     }
 
     protected abstract UniTask OnFirstSetting();

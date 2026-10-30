@@ -16,15 +16,15 @@ public abstract class EquipmentEffectBase
 
 public class BurningAuraEffect : EquipmentEffectBase
 {
-
     public override async UniTask Initialize(Player owner, ItemOptionData option)
     {
         player = owner;
         this.option = option;
 
-        GameObject obj = await ObjectPool.Instance.PopFromPool("Burning_Aura", owner.specialAttributeTrf);
+        GameObject obj = await ObjectPool.Instance.PopFromPool(GPrefabName.BURNING_AURA, owner.specialAttributeTrf);
 
         objTrf = obj.transform;
+
         // 범위, 피해량 설정하고 주변 적에게 주기적으로 피해
     }
 
@@ -36,19 +36,23 @@ public class BurningAuraEffect : EquipmentEffectBase
 
     public override void Release()
     {
-        ObjectPool.Instance.PushToPool(objTrf.gameObject);
+        if (objTrf == null)
+            return;
 
+        ObjectPool.Instance.PushToPool(objTrf.gameObject);
+        objTrf = null;
         // 피해 처리 중단, 감지 대상 목록 초기화
     }
 }
 
 public class FlameOnHitEffect : EquipmentEffectBase
 {
-    public override async UniTask Initialize(Player owner, ItemOptionData option)
+    public override UniTask Initialize(Player owner, ItemOptionData option)
     {
         player = owner;
         this.option = option;
-        // 플레이어의 공격 적중 이벤트 구독
+
+        return UniTask.CompletedTask;
     }
 
     public override async UniTask TriggerAsync()
@@ -57,7 +61,7 @@ public class FlameOnHitEffect : EquipmentEffectBase
 
         if (randomRange < option.value)
         {
-            GameObject obj = await ObjectPool.Instance.PopFromPool("Crawling_Flame", null, false);
+            GameObject obj = await ObjectPool.Instance.PopFromPool(GPrefabName.CRAWLING_FLAME, null, false);
             obj.transform.position = player.transform.position;
             obj.GetComponent<CrawlingFlame>().Init(player.lastLookDirection);
             obj.SetActive(true);
@@ -69,7 +73,7 @@ public class FlameOnHitEffect : EquipmentEffectBase
 
     public override void Release()
     {
-        // 공격 적중 이벤트 구독 해제
+
     }
 }
 

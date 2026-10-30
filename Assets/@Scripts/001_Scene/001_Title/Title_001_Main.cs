@@ -36,15 +36,6 @@ public class Title_001_Main : StateBasePage
         LanguageManager.Instance.GetLangScript(10000, LanguageManager.Instance.languageScriptDic, newGameBtnTxt);
         LanguageManager.Instance.GetLangScript(10001, LanguageManager.Instance.languageScriptDic, continueBtnTxt);
     }
-    //public async UniTask MainInit()
-    //{
-    //    if (isFirstSetting)
-    //    {
-    //        BackgroundSetting().Forget();
-    //        AddListenerToButton();
-    //        isFirstSetting = false;
-    //    }
-    //}
 
     public void CanContinueCheck()
     {

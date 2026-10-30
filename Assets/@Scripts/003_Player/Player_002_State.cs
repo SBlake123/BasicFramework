@@ -106,27 +106,6 @@ public partial class Player : MonoBehaviour
         }
     }
 
-    //public class HitState : IPlayerState
-    //{
-    //    public async UniTask EnterAsync(Player player, CancellationToken token)
-    //    {
-    //        player.isHit = true;
-    //        player.playerSkinBase.PlayHit();
-    //        await UniTask.Delay(500);
-
-    //        await player.ChangeState(PlayerState.IDLE);
-    //    }
-
-    //}
-
-    //public class MoveState : IPlayerState
-    //{  
-    //    public async UniTask EnterAsync(Player player, CancellationToken token)
-    //    {
-    //        player.playerSkinBase.PlayMove();
-    //    }
-    //}
-
     public class DodgeState : IPlayerState
     {
         public async UniTask EnterAsync(Player player, CancellationToken token)
@@ -168,16 +147,19 @@ public partial class Player : MonoBehaviour
         }
     }
 
-    public async UniTask ChangeState(PlayerState state)
+    public async UniTask ChangeState(PlayerState nextState)
     {
-        if (isDead && state != PlayerState.DEAD) return;
+        if (isDead && nextState != PlayerState.DEAD) return;
+
+        if (playerState == nextState)
+            return;
 
         stateCts?.Cancel();
         stateCts = new CancellationTokenSource();
 
-        if (playerState != state)
+        if (playerState != nextState)
         {
-            playerState = state;
+            playerState = nextState;
 
             await OnStateChange(stateCts);
         }

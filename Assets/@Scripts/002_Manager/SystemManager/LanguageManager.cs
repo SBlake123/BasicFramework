@@ -188,26 +188,5 @@ public class LanguageManager : Singleton<LanguageManager>
 
         return str;
     }
-
-    public string ConvertToReadableFormat(long value)
-    {
-        if (value >= 100000000) // 억 단위 (10^8)
-        {
-            return $"{(value / 100000000.0):0.##}b";
-        }
-        else if (value >= 1000000) // 백만 단위 (10^6)
-        {
-            return $"{(value / 1000000.0):0.##}m";
-        }
-        else if (value >= 1000) // 천 단위 (10^3)
-        {
-            return $"{(value / 1000.0):0.##}k";
-        }
-        else // 천 미만
-        {
-            return value.ToString();
-        }
-    }
-
 }
 

@@ -54,7 +54,8 @@ public partial class TitleSceneManager : StateBaseSceneManager
         await ScreenBlurFadeOut();
         await ChangeState((int)TitleSceneState.MAIN);
 
-        screenGuard.SetActive(false);
+        if (screenGuard != null)
+            screenGuard.SetActive(false);
     }
 
     protected override async UniTask BackKeySetting()
@@ -148,12 +149,12 @@ public partial class TitleSceneManager : StateBaseSceneManager
 
 
 
-                    break;
+                    return;
                 }
         }
         if (screenGuard != null) screenGuard.SetActive(false);
 
-        await UniTask.WaitForFixedUpdate();
+        await UniTask.NextFrame();
     }
 
     private void ScreenBlurInit()

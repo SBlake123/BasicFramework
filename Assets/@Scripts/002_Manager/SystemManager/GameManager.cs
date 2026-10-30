@@ -41,6 +41,9 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
         bool isSuccess = await SystemLoading();
 
+        if (!isSuccess)
+            return;
+
         if (onInitialize != null)
         {
             await onInitialize();
@@ -74,7 +77,7 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
                 if (!success && step.IsEssential)
                 {
-                    await EssentialFailed();
+                    EssentialFailed();
                     return false;
                 }
 
@@ -83,48 +86,9 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
             return true;
         }
-
-        //async UniTask SystemLoading()
-        //{
-        //    int loadStep = 0;
-
-        //    for (int i = 0; i < initSteps.Count; i++)
-        //    {
-        //        var step = initSteps[i];
-
-        //        bool success = false;
-
-        //        for (int retry = 0; retry <= step.MaxRetryCount; retry++)
-        //        {
-        //            try
-        //            {
-        //                await step.Action.Invoke();
-        //                success = true;
-        //                break;
-        //            }
-        //            catch (Exception e)
-        //            {
-
-        //            }
-        //        }
-
-        //        if (!success)
-        //        {
-        //            if (step.IsEssential)
-        //            {
-        //                await EssentialFailed();
-        //            }
-        //        }
-
-        //        loadStep++;
-        //        systemInitPer = (float)loadStep / initSteps.Count;
-
-        //        await UniTask.Delay(1000);
-        //    }
-        //}
     }
 
-    public async UniTask EssentialFailed()
+    public void EssentialFailed()
     {
         PopupManager.Instance.setPopUpCode(false, "ERROR", "QUIT");
         PopupManager.Instance.AddMethodToBtn(() =>

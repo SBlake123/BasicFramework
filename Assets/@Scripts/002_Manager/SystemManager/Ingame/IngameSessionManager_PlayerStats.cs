@@ -174,7 +174,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         
         foreach (AccessoryData item in currentAccessoryDataArr)
         {
-            ApplyOptions(item?.additionalOptionsList);
+            await ApplyOptions(item?.additionalOptionsList);
         }
 
         //악세서리 추가
@@ -275,17 +275,6 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
             default: break;
         }
     }
-
-    //public void SetAttackDamage()
-    //{
-    //    //무기 공격력 -> 배수 계산까지 할 것
-    //    //없으면 맨손
-    //}
-
-    //public void SetDefense()
-    //{
-    //    //
-    //}
 
     public void SetHpAndStamina()
     {
@@ -418,11 +407,6 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         return (int)(finalDamage * UnityEngine.Random.Range(0.9f, 1.1f));
     }
 
-    //일단 인벤토리부터 해주자..
-    //플레이어 현재 아이템, 상태, 스탯값 다 계산하기.
-
-    //아이템 장착 시 알림 받고 스탯, 장착한 값 다 계산해서 플레이어한테 무기 다시 생성
-    //
     #region Obsolete
     //public async UniTask RefreshPlayerStatus(ItemData itemData, EquipmentType equipmentType, IsEquip isEquip)
     //{
