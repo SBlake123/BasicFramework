@@ -207,7 +207,7 @@ public class ResourceManager : Singleton<ResourceManager>
                                     }
                                     else
                                     {
-                                      //  GameManager.Instance.loadingGaugeValue = ((float)loadSize / downloadSize);
+                                        //  GameManager.Instance.loadingGaugeValue = ((float)loadSize / downloadSize);
 
                                     }
 
@@ -248,17 +248,6 @@ public class ResourceManager : Singleton<ResourceManager>
 
     public async UniTask<T> LoadAsset<T>(string key) where T : UnityEngine.Object //, Transform parent = null, Vector3? position = null, Quaternion? rotation = null) where T : UnityEngine.Object
     {
-        //key = RefineKey();
-
-        //isAssetLoaded = false;
-
-        //if (key == "") return null;
-
-        //lastKey = key;
-
-        //Addressables.LoadAssetAsync<T>(key).Completed += OnAssetLoaded;
-
-        //await UniTask.WaitUntil(() => isAssetLoaded);
 
         key = RefineKey();
         if (string.IsNullOrEmpty(key)) return null;
@@ -267,21 +256,15 @@ public class ResourceManager : Singleton<ResourceManager>
 
         return await handle;
 
-        //if (obj is GameObject _obj && typeof(T) == typeof(GameObject))
+        //try
         //{
-        //    SetGameObjectProperties(_obj, position, rotation, parent);
+        //    return (T)obj;
         //}
-
-        try
-        {
-            //Debug.Log(key);
-            return (T)obj;
-        }
-        catch (InvalidCastException)
-        {
-            Debug.Log($"Cant Load {key}");
-            return null;
-        }
+        //catch (InvalidCastException)
+        //{
+        //    Debug.Log($"Cant Load {key}");
+        //    return null;
+        //}
 
         string RefineKey()
         {

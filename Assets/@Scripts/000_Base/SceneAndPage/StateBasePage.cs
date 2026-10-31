@@ -22,8 +22,6 @@ public abstract class StateBasePage : MonoBehaviour
 
         
     }
-
     protected abstract UniTask OnFirstSetting();
-
     protected abstract UniTask OnAfterFirstSetting();
 }

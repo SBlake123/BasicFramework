@@ -14,7 +14,7 @@ public class Portal : MonoBehaviour
 
     public event Func<UniTask> EscapeSuccess;
 
-    public async UniTask Init()
+    public void Init()
     {
         EscapeCheck().Forget();
     }

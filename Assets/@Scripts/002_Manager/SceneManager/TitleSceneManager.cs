@@ -147,8 +147,6 @@ public partial class TitleSceneManager : StateBaseSceneManager
                     await ScreenBlurFadeIn();
                     await SceneLoadManager.Instance.LoadScene(GSceneName.INGAME_SCENE);
 
-
-
                     return;
                 }
         }

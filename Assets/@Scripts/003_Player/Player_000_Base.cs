@@ -39,7 +39,6 @@ public partial class Player : MonoBehaviour
 
     public async UniTask Init()
     {
-        moveSpeed = 3f;
         await ChangeState(PlayerState.IDLE);
 
         movementBody = GetComponent<Rigidbody>();

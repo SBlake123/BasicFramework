@@ -30,25 +30,22 @@ public enum IngameSceneIdx
 public class MonsterSpawnEntry
 {
     public int monsterId { get; set; }
-    public int value { get; set; } // true면 가중치, false면 마릿수
+    public int value { get; set; }
 }
 
 [Serializable]
 public class MonsterSpawnData
 {
-    public bool useWeight { get; set; } // true: 가중치, false: 고정 수량
-
-    public int totalSpawnCount { get; set; } // 가중치 방식에서 뽑을 총 마릿수
-
+    public bool useWeight { get; set; }
+    public int totalSpawnCount { get; set; }
     public List<MonsterSpawnEntry> monsters { get; set; } = new List<MonsterSpawnEntry>();
 }
 
 public class IngameSceneManager : StateBaseSceneManager
 {
-    private IngameSceneState ingameSceneState = IngameSceneState.NONE;
+    public IngameSceneState ingameSceneState { get; private set; } = IngameSceneState.NONE;
 
     public StateBasePage[] pages;
-
     public List<MonsterSpawnData> monsterSpawnDataList { get; set; } = new List<MonsterSpawnData>();
     public List<MonsterSpawnArea> monsterSpawnAreaList = new List<MonsterSpawnArea>();
     public List<Transform> itemBoxAreaList = new List<Transform>();
@@ -56,10 +53,8 @@ public class IngameSceneManager : StateBaseSceneManager
 
     public GameObject screenGuard;
     public Image screenBlur;
-    
-    public event Action InventoryClosed;
 
-    public IngameSceneState CurrentState { get; private set; } = IngameSceneState.NONE;
+    public event Action InventoryClosed;
 
     private void Start()
     {
@@ -67,25 +62,20 @@ public class IngameSceneManager : StateBaseSceneManager
     }
     private async UniTask InitializeScene()
     {
-        try
-        {
-            screenGuard.SetActive(true);
-            ScreenBlurInit();
-            BackKeySetting().Forget();
-            SceneAllocate();
-            SubscribingEvent();
-            SetDummyDataInSpawnData();
-            await SetDummyDataInItemBoxAreaList();
-            await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
-            await IngameUIManager.Instance.Init();
-            await IngameSessionManager.Instance.Init();
-            await ChangeState((int)IngameSceneState.INGAME);
-            await ScreenBlurFadeOut();
+        screenGuard.SetActive(true);
+        ScreenBlurInit();
+        BackKeySetting().Forget();
+        SceneAllocate();
+        SubscribingEvent();
+        SetDummyDataInSpawnData();
+        await SetDummyDataInItemBoxAreaList();
+        await SpawnMonsters(monsterSpawnAreaList, monsterSpawnDataList);
+        await IngameUIManager.Instance.Init();
+        await IngameSessionManager.Instance.Init();
+        await ChangeState((int)IngameSceneState.INGAME);
+        await ScreenBlurFadeOut();
 
-            screenGuard.SetActive(false);
-        }
-        catch (MissingReferenceException) { }
-        
+        screenGuard.SetActive(false);
     }
 
     protected override async UniTask BackKeySetting()
@@ -118,7 +108,7 @@ public class IngameSceneManager : StateBaseSceneManager
             item.Init();
         }
     }
-
+    #region DUMMY
     void SetDummyDataInSpawnData()
     {
         monsterSpawnDataList = new List<MonsterSpawnData>
@@ -210,7 +200,6 @@ public class IngameSceneManager : StateBaseSceneManager
         {
             if (monsterSpawnDataList[i].useWeight)
             {
-                // 가중치로 한 마리씩 선택해서 생성한다.
                 for (int j = 0; j < monsterSpawnDataList[i].totalSpawnCount; j++)
                 {
                     if (!monsterSpawnAreaList[i].TryGetSpawnPosition(out Vector3 spawnPosition)) continue;
@@ -226,21 +215,10 @@ public class IngameSceneManager : StateBaseSceneManager
 
                     monsterBase.SettingMonsterData(monster.monsterId);
                     monsterBase.Init().Forget();
-                    //실제 생성
-
-
-
-                    //MonsterSpawnEntry monster = SelectMonsterByWeight();
-
-                    //if (monster == null)
-                    //    return;
-
-                    //SpawnMonster(monster.monsterId);
                 }
             }
             else
             {
-                // 각 몬스터를 지정한 수량만큼 생성한다.
                 foreach (MonsterSpawnEntry monster in monsterSpawnDataList[i].monsters)
                 {
                     for (int j = 0; j < monster.value; j++)
@@ -256,20 +234,10 @@ public class IngameSceneManager : StateBaseSceneManager
 
                         monsterBase.SettingMonsterData(monster.monsterId);
                         monsterBase.Init().Forget();
-
-                        //실제 생성
-
-
-
-                        //SpawnMonster(monster.monsterId);
                     }
                 }
             }
         }
-
-
-        //지금은 있는 몬스터들 Init 시키기?
-        //1. 가중치, 2.고정수량
     }
 
     private MonsterSpawnEntry SelectMonsterByWeight(MonsterSpawnData monsterSpawnData)
@@ -304,6 +272,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
         return null;
     }
+    #endregion
 
     public override void SceneAllocate()
     {
@@ -317,12 +286,12 @@ public class IngameSceneManager : StateBaseSceneManager
     {
         IngameSceneState nextState = (IngameSceneState)state;
 
-        if (CurrentState == nextState)
+        if (ingameSceneState == nextState)
         {
             return;
         }
 
-        CurrentState = nextState;
+        ingameSceneState = nextState;
         await OnStateChange();
     }
 
@@ -330,9 +299,9 @@ public class IngameSceneManager : StateBaseSceneManager
     {
         screenGuard.SetActive(true);
 
-        Debug.Log($"NowState : {CurrentState}");
+        Debug.Log($"NowState : {ingameSceneState}");
 
-        switch (CurrentState)
+        switch (ingameSceneState)
         {
             case IngameSceneState.NONE:
 
@@ -345,14 +314,8 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.INGAME:
                 {
-                    SetGameplayPaused(false);
-
-
-
-                    //그냥 게임창 상태로 복귀,
-                    //그거는 켜야 됨 조이스틱
+                    GameManager.Instance.SetGameplayPaused(false, (Action)null);
                     IngameUIManager.Instance.InputUISetActive(true);
-
 
                     for (int i = 1; i < pages.Length; i++)
                     {
@@ -387,7 +350,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.OPTION:
                 {
-                    SetGameplayPaused(true);
+                    GameManager.Instance.SetGameplayPaused(true, (Action)null);
                     Ingame_003_Option ingame_003_Option = pages[(int)IngameSceneIdx.OPTION].GetComponent<Ingame_003_Option>();
                     await ingame_003_Option.Init();
                     ingame_003_Option.pageMain.SetActive(true);
@@ -427,7 +390,7 @@ public class IngameSceneManager : StateBaseSceneManager
                     async () =>
                     {
                         await ChangeState((int)IngameSceneState.RESULT);
-                    });                   
+                    });
                 }
                 break;
 
@@ -439,23 +402,14 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.GO_TO_TITLE:
 
-                Debug.Log("GOTOTITLE");
-                SetGameplayPaused(false);
+                GameManager.Instance.SetGameplayPaused(false, (Action)null);
                 await SceneLoadManager.Instance.LoadScene(GSceneName.TITLE_SCENE);
                 return;
         }
 
+
+
         screenGuard.SetActive(false);
-    }
-
-    private void SetGameplayPaused(bool isPaused)
-    {
-        Time.timeScale = isPaused ? 0f : 1f;
-
-        //ingameUIManager.SetInputUIActive(!isPaused);
-        //playerController.SetInputEnabled(!isPaused);
-
-        // 필요하면 스폰, AI 등에도 정지 상태 전달
     }
 
     private void ScreenBlurInit()

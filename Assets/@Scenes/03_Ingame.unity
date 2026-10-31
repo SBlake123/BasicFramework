@@ -1047,8 +1047,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 96970735}
-  - component: {fileID: 96970736}
   - component: {fileID: 1828643635}
+  - component: {fileID: 1828643636}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1079,32 +1079,6 @@ Transform:
   - {fileID: 798197130}
   m_Father: {fileID: 1597867085}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &96970736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 96970734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e669be222a04964e8c0d40696cc8486, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerSkinBase: {fileID: 325036396}
-  damageTrf: {fileID: 358320578}
-  specialAttributeTrf: {fileID: 977569225}
-  playerHitBoxArr:
-  - {fileID: 1828643634}
-  - {fileID: 1808178340}
-  useVirtualJoystickInEditor: 1
-  moveInput: {x: 0, y: 0}
-  aimInput: {x: 0, y: 0}
-  hasMovingInput: 0
-  hasAimInput: 0
-  isPlayerFacingRight: 1
-  isDodging: 0
-  isDead: 0
 --- !u!1 &102488623
 GameObject:
   m_ObjectHideFlags: 0
@@ -349823,7 +349797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bfd4eba3b401084db2c2dae986339e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 96970736}
+  player: {fileID: 1828643636}
   movingVirtualJoystick: {fileID: 209922004}
   aimVirtualJoystick: {fileID: 790786499}
   dodgeStaminaCost: 40
@@ -349956,7 +349930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5066e1a3a2674a245a938140cd3174fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 96970736}
+  player: {fileID: 0}
 --- !u!1 &801388717
 GameObject:
   m_ObjectHideFlags: 0
@@ -366565,6 +366539,24 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 120
   m_CollisionDetection: 1
+--- !u!114 &1828643636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96970734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e669be222a04964e8c0d40696cc8486, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSkinBase: {fileID: 325036396}
+  damageTrf: {fileID: 358320578}
+  specialAttributeTrf: {fileID: 977569225}
+  playerHitBoxArr:
+  - {fileID: 1828643634}
+  - {fileID: 1808178340}
 --- !u!1 &1839070361
 GameObject:
   m_ObjectHideFlags: 0
@@ -367532,7 +367524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a3bb69365031b34c86f0392e29bff27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 96970736}
+  player: {fileID: 1828643636}
   visionOrigin: {fileID: 1122457809}
   obstacleMask:
     serializedVersion: 2

@@ -46,7 +46,6 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, List<MonsterDropData>> monsterDropDataDic { get; set; } = new Dictionary<int, List<MonsterDropData>>();
     public Dictionary<int, List<MonsterAttackData>> monsterAttackDataDic { get; set; } = new Dictionary<int, List<MonsterAttackData>>();
 
-
     public async UniTask OnInitialize()
     {
         await Initialize();
@@ -54,8 +53,6 @@ public class DataManager : Singleton<DataManager>
 
     protected override async UniTask Initialize()
     {
-        Debug.Log("DataMAnager Initialize");
-
         //메소드 내용은 프로젝트마다 다르게 작성.
         await DataDicLoad("gameData", itemDataDic, item => item.itemId);
         await DataDicLoad("itemOptionData", itemOptionDataDic, item => item.optionId);
@@ -67,8 +64,6 @@ public class DataManager : Singleton<DataManager>
         await ApplyWeaponData("weaponData");
         await ApplyShieldData("shieldData");
         await ApplyAccessoryData("accessoryData");
-
-
     }
 
     void GroupOptionsByEquipmentType()
@@ -98,21 +93,6 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
-    //private async UniTask DataDicLoad(string jsonName, Dictionary<int, ItemData> saveDic)
-    //{
-    //    TextAsset _textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
-
-    //    Debug.Log(_textAsset.text);
-    //    var items = JsonConvert.DeserializeObject<List<ItemData>>(_textAsset.text, settings);
-
-    //    foreach (var item in items)
-    //    {
-    //        if (saveDic.ContainsKey(item.itemId)) continue;
-
-    //        saveDic.Add(item.itemId, item);
-    //    }
-    //}
-
     private async UniTask DataListLoad<T>(string jsonName, List<T> saveList)
     {
         TextAsset textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
@@ -132,7 +112,7 @@ public class DataManager : Singleton<DataManager>
 
         if (items == null) return;
 
-        foreach (T item in items) 
+        foreach (T item in items)
             saveDic.TryAdd(getId(item), item);
     }
 
@@ -140,7 +120,6 @@ public class DataManager : Singleton<DataManager>
     {
         TextAsset _textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
 
-        Debug.Log(_textAsset.text);
         var items = JsonConvert.DeserializeObject<List<T>>(_textAsset.text, settings);
 
         if (items == null) return;
@@ -157,80 +136,24 @@ public class DataManager : Singleton<DataManager>
 
             list.Add(item);
         }
-        //switch (typeof(T))
-        //{
-        //    case var type when type == typeof(ItemData):
-        //        {
-        //            foreach (var item in items)
-        //            {
-        //                if (saveDic.ContainsKey(getId(item))) continue;
-
-        //                saveDic.TryAdd(getId(item), item);
-        //            }
-        //        }
-        //        break;
-
-        //    case var type when type == typeof(MonsterData)
-        //                    || type == typeof(MonsterAttackData)
-        //                    || type == typeof(MonsterDropData):
-        //        {
-
-        //        }
-        //        break;
-        //}
     }
 
-
-    private async UniTask ApplyWeaponData(string jsonName)
+    private async UniTask ApplyItemData<TStat, TItem>(string jsonName, Func<TStat, int> getItemId, Action<TItem, TStat> applyStats = null) where TItem : ItemData, new()
     {
         TextAsset textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
 
-        var weaponStats = JsonConvert.DeserializeObject<List<WeaponStatData>>(textAsset.text, settings);
+        var stats = JsonConvert.DeserializeObject<List<TStat>>(textAsset.text, settings);
 
-        foreach (var stat in weaponStats)
+        if (stats == null) return;
+
+        foreach (var stat in stats)
         {
-            if (!itemDataDic.TryGetValue(stat.itemId, out ItemData item))
-            {
+            int itemId = getItemId(stat);
+
+            if (!itemDataDic.TryGetValue(itemId, out ItemData item))
                 continue;
-            }
 
-            var weapon = new WeaponData
-            {
-                itemId = item.itemId,
-                itemName = item.itemName,
-                itemNameId = item.itemNameId,
-                icon = item.icon,
-                itemKey = item.itemKey,
-
-                category = item.category,
-                equipmentType = item.equipmentType,
-                isEquip = item.isEquip,
-                gridIdx = item.gridIdx,
-                canStack = item.canStack,
-                maxStackAmount = item.maxStackAmount,
-                healAmount = item.healAmount,
-
-                attackDamage = stat.attackDamage,
-                attackSpeed = stat.attackSpeed,
-                attackRange = stat.attackRange
-            };
-
-            itemDataDic[stat.itemId] = weapon;
-        }
-    }
-
-    private async UniTask ApplyAccessoryData(string jsonName)
-    {
-        TextAsset textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
-
-        var accessoryStats = JsonConvert.DeserializeObject<List<AccessoryStatData>>(textAsset.text, settings);
-        if (accessoryStats == null) return;
-
-        foreach (var stat in accessoryStats)
-        {
-            if (!itemDataDic.TryGetValue(stat.itemId, out ItemData item)) continue;
-
-            var accessory = new AccessoryData
+            var equipment = new TItem
             {
                 itemId = item.itemId,
                 itemName = item.itemName,
@@ -249,44 +172,32 @@ public class DataManager : Singleton<DataManager>
                 itemExplanation = item.itemExplanation
             };
 
-            itemDataDic[stat.itemId] = accessory;
+            applyStats?.Invoke(equipment, stat);
+            itemDataDic[itemId] = equipment;
         }
     }
 
-    private async UniTask ApplyShieldData(string jsonName)
+    private UniTask ApplyWeaponData(string jsonName)
     {
-        TextAsset textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
-
-        var weaponStats = JsonConvert.DeserializeObject<List<ShieldStatData>>(textAsset.text, settings);
-
-        foreach (var stat in weaponStats)
+        return ApplyItemData<WeaponStatData, WeaponData>(jsonName, stat => stat.itemId, (weapon, stat) =>
         {
-            if (!itemDataDic.TryGetValue(stat.itemId, out ItemData item))
-            {
-                continue;
-            }
+            weapon.attackDamage = stat.attackDamage;
+            weapon.attackSpeed = stat.attackSpeed;
+            weapon.attackRange = stat.attackRange;
+        });
+    }
 
-            var weapon = new ShieldData
-            {
-                itemId = item.itemId,
-                itemName = item.itemName,
-                itemNameId = item.itemNameId,
-                icon = item.icon,
-                itemKey = item.itemKey,
+    private UniTask ApplyShieldData(string jsonName)
+    {
+        return ApplyItemData<ShieldStatData, ShieldData>(jsonName, stat => stat.itemId, (shield, stat) =>
+        {
+            shield.defense = stat.defense;
+        });
+    }
 
-                category = item.category,
-                equipmentType = item.equipmentType,
-                isEquip = item.isEquip,
-                gridIdx = item.gridIdx,
-                canStack = item.canStack,
-                maxStackAmount = item.maxStackAmount,
-                healAmount = item.healAmount,
-
-                defense = stat.defense
-            };
-
-            itemDataDic[stat.itemId] = weapon;
-        }
+    private UniTask ApplyAccessoryData(string jsonName)
+    {
+        return ApplyItemData<AccessoryStatData, AccessoryData>(jsonName, stat => stat.itemId);
     }
 
     private T CopyData<T>(T data) where T : class
@@ -317,8 +228,6 @@ public class DataManager : Singleton<DataManager>
         if (data is T typedData)
             return typedData;
 
-        Debug.LogError($"아이템 데이터 없음: {itemId}");
         return null;
-
     }
 }

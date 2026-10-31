@@ -33,26 +33,24 @@ public partial class Player : MonoBehaviour
     };
 
     private PlayerState playerState;
+    private CancellationTokenSource stateCts;
 
-    bool isAttack = false;
-    bool isHit = false;
-    public bool isDodging = false;
-    public bool isDead = false;
-
-    CancellationTokenSource stateCts;
+    private bool isAttack = false;
+    private bool isHit = false;
+    public bool isDodging { get; set; } = false;
+    public bool isDead { get; set; } = false;
 
     public event Action PlayerDied;
-    // Update is called once per frame
 
     public class IdleState : IPlayerState
     {
-        public async UniTask EnterAsync(Player player, CancellationToken token)
+        public UniTask EnterAsync(Player player, CancellationToken token)
         {
-            //Debug.Log($"Idle Start - Frame: {Time.frameCount}");
-
             player.AllStateBoolFalse();
             player.lastMoveAnim = MoveAnim.None;
             player.MoveInputChanged?.Invoke(player.moveInput);
+
+            return UniTask.CompletedTask;
         }
     }
 
@@ -65,8 +63,7 @@ public partial class Player : MonoBehaviour
                 await player.ChangeState(PlayerState.IDLE);
                 return;
             }
-     
-            //Attack에 관한 메소드
+
             player.lastMoveAnim = MoveAnim.None;
             player.isAttackRequested = false;
             player.isAttack = true;
@@ -98,11 +95,21 @@ public partial class Player : MonoBehaviour
 
     public async UniTask CheckAttackCooldown()
     {
-        while(true)
+        try
         {
-            lastAttackCooldown -= Time.unscaledDeltaTime;
-            if (lastAttackCooldown <= 0f) lastAttackCooldown = 0f;
-            await UniTask.Yield(PlayerLoopTiming.TimeUpdate);
+            while (true)
+            {
+                lastAttackCooldown -= Time.deltaTime;
+
+                if (lastAttackCooldown <= 0f)
+                    lastAttackCooldown = 0f;
+
+                await UniTask.Yield(PlayerLoopTiming.Update, destroyCancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+
         }
     }
 
@@ -122,9 +129,9 @@ public partial class Player : MonoBehaviour
 
                 if (state.IsName(GSkinSprName.DODGE) && state.normalizedTime >= 1f) break;
 
-                await UniTask.WaitForFixedUpdate();
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
             }
-            Debug.Log("EndDodge");
+
             player.playerSkinBase.EquipItemActivate(true);
             player.EndDodge();
             await player.ChangeState(PlayerState.IDLE);
@@ -134,7 +141,7 @@ public partial class Player : MonoBehaviour
     public void EndDodge()
     {
         isDodging = false;
-        
+
         OnOffHitBox(true);
     }
 
@@ -155,14 +162,29 @@ public partial class Player : MonoBehaviour
             return;
 
         stateCts?.Cancel();
-        stateCts = new CancellationTokenSource();
 
-        if (playerState != nextState)
+        var cts = CancellationTokenSource.CreateLinkedTokenSource(
+            destroyCancellationToken);
+
+        stateCts = cts;
+        playerState = nextState;
+
+        try
         {
-            playerState = nextState;
-
-            await OnStateChange(stateCts);
+            await OnStateChange();
         }
+        catch (OperationCanceledException) when (cts.IsCancellationRequested)
+        {
+            
+        }
+        finally
+        {
+            if (ReferenceEquals(stateCts, cts))
+                stateCts = null;
+
+            cts.Dispose();
+        }
+
     }
     public async UniTask OnStateChange()
     {
@@ -171,17 +193,8 @@ public partial class Player : MonoBehaviour
             case PlayerState.IDLE:
                 {
                     await stateMap[PlayerState.IDLE].EnterAsync(this, stateCts.Token);
-
-
                     break;
                 }
-
-            //case PlayerState.MOVE:
-            //    {
-            //        await stateMap[PlayerState.MOVE].EnterAsync(this,stateCts.Token);
-
-            //        break;
-            //    }
 
             case PlayerState.ATTACK:
                 {
@@ -198,22 +211,10 @@ public partial class Player : MonoBehaviour
             case PlayerState.DEAD:
                 {
                     await stateMap[PlayerState.DEAD].EnterAsync(this, stateCts.Token);
-
                     return;
                 }
         }
-        await UniTask.WaitForFixedUpdate();
     }
-
-    public async UniTask OnStateChange(CancellationTokenSource stateCts)
-    {
-        if (stateMap.TryGetValue(playerState, out var state))
-        {
-            await state.EnterAsync(this, stateCts.Token);
-        }
-        await UniTask.Yield(PlayerLoopTiming.Update, stateCts.Token);
-    }
-
     void AllStateBoolFalse()
     {
         isAttack = false;

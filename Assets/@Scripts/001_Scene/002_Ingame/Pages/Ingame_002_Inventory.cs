@@ -10,7 +10,7 @@ public class Ingame_002_Inventory : StateBasePage
     private IngameSceneManager IngameSceneManager;
     public Inventory_000_Base Inventory_000_Base;
     public Button inventoryBackDropButton;
-    protected override async UniTask OnFirstSetting()
+    protected override UniTask OnFirstSetting()
     {
         IngameSceneManager = (IngameSceneManager)stateBaseSceneManager;
         inventoryBackDropButton.onClick.AddListener(async () =>
@@ -20,6 +20,8 @@ public class Ingame_002_Inventory : StateBasePage
         });
 
         IngameSessionManager.Instance.playerStatsChanged += Inventory_000_Base.SetInventoryStatusVal;
+
+        return UniTask.CompletedTask;
     }
 
     protected override async UniTask OnAfterFirstSetting()

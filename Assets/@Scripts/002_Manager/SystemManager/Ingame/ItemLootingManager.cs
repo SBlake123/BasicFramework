@@ -22,26 +22,29 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
 {
     public event Func<UniTask> LootingBoxOpenRequested;
 
-    public int commonWeightBonus = 10;
-    public int uncommonWeightBonus = 10;
-    public int rareWeightBonus = 115;
-    public int uniqueWeightBonus = 0;
+    private int commonWeightBonus = 10;
+    private int uncommonWeightBonus = 10;
+    private int rareWeightBonus  = 115;
+    private int uniqueWeightBonus = 0;
 
-    public int uncommonOptionCnt = 1;
-    public int rareOptionMinCnt = 2;
-    public int rareOptionMaxCnt = 3;
+    private int uncommonOptionCnt = 1;
+    private int rareOptionMinCnt  = 2;
+    private int rareOptionMaxCnt  = 3;
 
     public LootingBox nowLootingBox { get; set; }
 
-    public async UniTask MakingItemLootingBox(string objName, int monsterIdx, Transform transform)
+    public async UniTask MakingItemLootingBox(string objName, int monsterIdx, Transform spawnTrf)
     {
         GameObject obj = await ObjectPool.Instance.PopFromPool(objName);
 
-        if (obj.TryGetComponent<LootingBox>(out var lootingBox))
+        if (!obj.TryGetComponent<LootingBox>(out var lootingBox))
         {
-            lootingBox.Init();
-            SettingLootingItem(monsterIdx, lootingBox);
+            ObjectPool.Instance.PushToPool(obj);
+            return;
         }
+
+        lootingBox.Init();
+        SettingLootingItem(monsterIdx, lootingBox);
 
         if (lootingBox.itemDataList.Count == 0)
         {
@@ -49,18 +52,21 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
             return;
         }
 
-        obj.transform.position = transform.position;
+        obj.transform.position = spawnTrf.position;
         obj.SetActive(true);
     }
 
-    public async UniTask MakingItemLootingBox(string objName, List<ItemData> itemDataList, Transform transform)
+    public async UniTask MakingItemLootingBox(string objName, List<ItemData> itemDataList, Transform spawnTrf)
     {
         GameObject obj = await ObjectPool.Instance.PopFromPool(objName);
 
-        if (obj.TryGetComponent<LootingBox>(out var lootingBox))
+        if (!obj.TryGetComponent<LootingBox>(out var lootingBox))
         {
-            lootingBox.Init();
+            ObjectPool.Instance.PushToPool(obj);
+            return;
         }
+
+        lootingBox.Init();
 
         if (itemDataList != null)
         {
@@ -70,7 +76,7 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
             }
         }
 
-        obj.transform.position = transform.position;
+        obj.transform.position = spawnTrf.position;
         obj.SetActive(true);
     }
 
@@ -78,10 +84,15 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
     {
         nowLootingBox = lootingBox;
 
-        LootingBoxOpenRequested?.Invoke();
-        //인벤토리에서 열어야 함.
+        var handlers = LootingBoxOpenRequested;
 
-        //가지고 있는 
+        if (handlers == null)
+            return;
+
+        foreach (Func<UniTask> handler in handlers.GetInvocationList())
+        {
+            await handler();
+        }
     }
 
     public void SettingLootingItem(int monsterIdx, LootingBox lootingBox)
@@ -101,6 +112,7 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
                 TryDropItem(drop);
             }
         }
+
         if (totalWeight > 0f)
         {
             float roll = UnityEngine.Random.Range(0f, totalWeight);
@@ -158,13 +170,12 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
 
         if (!DataManager.Instance.itemDataDic.TryGetValue(itemId, out var template))
         {
-            Debug.LogError($"아이템 데이터 없음: {itemId}");
             return null;
         }
 
         ItemData item = template.DeepCopy();
         item.itemRarity = (int)itemRarity;
-        item.isEquip = 0;
+        item.isEquip = (int)IsEquip.NO;
         item.gridIdx = gridIdx; // 넣을 슬롯이 정해지면 지정
 
         AddRandomOptions(item, GetOptionCount(itemRarity));
@@ -175,19 +186,17 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
         {
             if (!DataManager.Instance.itemDataDic.TryGetValue(itemId, out var template))
             {
-                Debug.LogError($"아이템 데이터 없음: {itemId}");
                 return null;
             }
 
             if (!DataManager.Instance.uniqueItemOptionDataDic.TryGetValue(itemId, out var uniqueOptions))
             {
-                Debug.LogError($"유니크 옵션 데이터 없음: {itemId}");
                 return null;
             }
 
             ItemData item = template.DeepCopy();
             item.itemRarity = (int)ItemRarity.UNIQUE;
-            item.isEquip = 0;
+            item.isEquip = (int)IsEquip.NO;
             item.gridIdx = gridIdx;
 
             List<ItemOptionData> itemOptions;
@@ -203,7 +212,6 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
             {
                 if (!DataManager.Instance.itemOptionDataDic.TryGetValue(data.optionId, out var optionTemplate))
                 {
-                    Debug.LogError($"옵션 데이터 없음: itemId={itemId}, optionId={data.optionId}");
                     return null;
                 }
 
@@ -244,7 +252,6 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
 
             itemOptions.RemoveAll(candidate => candidate.optionId == selected.optionId);
         }
-        //}
     }
 
     ItemOptionData PickOptionByWeight(List<ItemOptionData> optionList)
@@ -271,7 +278,7 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
                 return uncommonOptionCnt;
 
             case ItemRarity.RARE:
-                return UnityEngine.Random.Range(rareOptionMinCnt, rareOptionMaxCnt + 1); // 2~3개
+                return UnityEngine.Random.Range(rareOptionMinCnt, rareOptionMaxCnt + 1); 
 
             default:
                 return 0;
@@ -296,17 +303,5 @@ public class ItemLootingManager : MonoSingleton<ItemLootingManager>
         else item.itemRarity = (int)ItemRarity.UNIQUE;
 
         AddRandomOptions(item, GetOptionCount((ItemRarity)item.itemRarity));
-        //section 값에 따라 붙을 수 있는 옵션 조사하기
     }
-
-    //public Dictionary<int, List<ItemData>> lootingBoxDic = new Dictionary<int, List<ItemData>>();
-
-    //너는 무슨 일을 해아하니?
-    //몬스터가 죽었을 때, 상자를 만들어달라고 요청함,
-    //그 몬스터가 어떤 몬스터인지에 따라 무슨 아이템을 줄 지 결정해야 함.
-    //상자가 항상 있는 건 아님.
-    //몬스터가 드롭할 수 있는 아이템 리스트를 따로 만들 것
-    //몬스터 사망 => 요청 => 그 몬스터의 정보에 따른 루팅 정보가 들어있는 상자 드롭
-    //상자 클릭 시 인벤토리에 그 상자의 내용 들어가기.
-    //내 생각에는 번호를 붙여서 싱자 리스트에 맞는 아이템 들어가는 것이 필요.
 }

@@ -21,25 +21,21 @@ public partial class Player : MonoBehaviour
 
         damageVal.SetDamage(calculatingDamage);
         damageVal.Play();
-
-        //몬스터의 방어력 값 계산 후 적용
     }
 
     public void CalculateDamage(int attackDamage)
     {
-        //int calculateDamage = attackDamage;
+        if (isDead || playerState == PlayerState.DEAD)
+            return;
 
-        //방어력 계산 적용 후 빼야 함
+        var stats = IngameSessionManager.Instance.playerStats;
 
-        IngameSessionManager.Instance.playerStats.currentHp -= attackDamage;
+        stats.currentHp = Mathf.Max(0, stats.currentHp - attackDamage);
 
-        //체력 UI 표시하기
         IngameUIManager.Instance.SetHpSlider();
-        //죽음판정
-        if (IngameSessionManager.Instance.playerStats.currentHp <= 0)
+
+        if (stats.currentHp == 0)
         {
-            IngameSessionManager.Instance.playerStats.currentHp = 0;
-            IngameUIManager.Instance.SetHpSlider();
             ChangeState(PlayerState.DEAD).Forget();
         }
     }
@@ -59,6 +55,6 @@ public partial class Player : MonoBehaviour
 
         await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: destroyCancellationToken);
 
-        GameManager.Instance.SetGameplayPaused(true, callback: null);
+        GameManager.Instance.SetGameplayPaused(true, (Action)null);
     }
 }

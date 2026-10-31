@@ -19,32 +19,29 @@ public partial class Player : MonoBehaviour
 {
     private PlayerInputKeyCode playerInputKeyCode = new PlayerInputKeyCode();
 
-    [Header("Input")]
-    [SerializeField] private bool useVirtualJoystickInEditor;
-
-    private float moveSpeed;
+    private float moveSpeed = 3f;
+    private bool useVirtualJoystickInEditor;
     private bool nowEvading;
-    public Vector2 moveInput;
-    public Vector2 aimInput;
     private Vector2 movingVirtualJoystickInput;
     private Vector2 aimingVirtualJoystickInput;
     private Rigidbody movementBody;
     private Vector3 desiredVelocity;
 
+    public Vector2 moveInput { get; private set; }
+    public Vector2 aimInput { get; private set; }
     public Vector2 lastMoveDirection { get; private set; } = Vector2.right;
     public Vector2 lastAimDirection { get; private set; } = Vector2.right;
     public Vector2 lastLookDirection { get; private set; } = Vector2.right;
     public Vector2 dodgeDirection { get; private set; } = Vector2.right;
 
-
     private bool isAttackRequested;
 
     public event Action<Vector2> MoveInputChanged;
     public event Action<Vector2> AimInputChanged;
-    public bool hasMovingInput;
-    public bool hasAimInput;
+    public bool hasMovingInput { get; private set; }
+    public bool hasAimInput { get; private set; }
 
-    public bool isPlayerFacingRight = true;
+    public bool isPlayerFacingRight { get; private set; } = true;
     private MoveAnim lastMoveAnim = MoveAnim.None; 
 
     private void OnDisable()
@@ -57,9 +54,6 @@ public partial class Player : MonoBehaviour
         return !isDodging && !isDead;
     }
 
-    /// <summary>
-    /// Virtual joystick calls this while the player drags it.
-    /// </summary>
     public void SetMovingVirtualJoystickInput(Vector2 direction)
     {
         if (!CanInputAction()) return;
@@ -76,9 +70,6 @@ public partial class Player : MonoBehaviour
         MoveInputChanged?.Invoke(moveInput);
     }
 
-    /// <summary>
-    /// Virtual joystick calls this when the player's finger leaves it.
-    /// </summary>
     public void ClearMovingVirtualJoystickInput()
     {
         movingVirtualJoystickInput = Vector2.zero;
@@ -107,17 +98,11 @@ public partial class Player : MonoBehaviour
     {
         if (hasAimInput)
         {
-            // Aim만 있거나 둘 다 있으면 Aim 기준
             lastLookDirection = lastAimDirection;
         }
         else if (hasMovingInput)
-        {
-            // Move만 있으면 Move 기준
+        {        
             lastLookDirection = lastMoveDirection;
-        }
-        else
-        {
-            // 입력 없으면 마지막 방향 유지
         }
     }
 
@@ -159,8 +144,6 @@ public partial class Player : MonoBehaviour
 
     private void MovePlayer()
     {
-        //Debug.Log("Move");
-        
         if (!CanInputAction())
         {
             return;
@@ -172,7 +155,6 @@ public partial class Player : MonoBehaviour
             return;
         }
        
-        //ChangeState(PlayerState.MOVE);
         UpdateMoveSpeed();
         UpdateSpriteDirection();
         UpdateWeaponRotation();
@@ -183,7 +165,6 @@ public partial class Player : MonoBehaviour
 
     private void AimPlayer()
     {
-        //Debug.Log("Move");
         UpdateSpriteDirection();
         UpdateWeaponRotation();
     }
@@ -276,7 +257,7 @@ public partial class Player : MonoBehaviour
 
     private bool CanAttack()
     {
-        return !isDodging && !isDead && !isAttack;
+        return !isDodging && !isDead && !isAttack && lastAttackCooldown <= 0f;
     }
 
     private bool CanDodge()
@@ -284,7 +265,4 @@ public partial class Player : MonoBehaviour
         return !isDead && !isDodging && IngameSessionManager.Instance.playerStats.currentStamina
                 >= IngameSessionManager.Instance.dodgeStaminaCost;
     }
-    // Legacy PlayerActionCheck() read keyboard input and moved the player in a
-    // UniTask loop. The same responsibility now lives in Update, ReadMoveInput,
-    // and MovePlayer so keyboard and a virtual joystick use one movement path.
 }

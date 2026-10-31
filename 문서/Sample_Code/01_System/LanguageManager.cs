@@ -1,0 +1,192 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Cysharp.Threading.Tasks;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using Newtonsoft.Json;
+using System.Linq;
+using System.Text;
+
+[Serializable]
+public class ScriptClass
+{
+    public int idx { get; set; }
+}
+
+[Serializable]
+public class LanguageScript : ScriptClass
+{
+    public string kr { get; set; }
+    public string en { get; set; }
+    public string jp { get; set; }
+}
+
+public class LanguageManager : Singleton<LanguageManager>
+{
+    private LanguageType currentLanguage = LanguageType.KR;
+    public Dictionary<int, LanguageScript> languageScriptDic { get; set; } = new Dictionary<int, LanguageScript>();
+    public async UniTask OnInitialize()
+    {
+        await Initialize();
+    }
+
+    protected override async UniTask Initialize()
+    {
+        //메소드 내용은 프로젝트마다 다르게 작성.
+
+        SetLanguageType();
+
+        await UniTask.WhenAll(
+                LanguageScriptDicLoad("contents", languageScriptDic)
+            );
+    }
+
+    private void SetLanguageType()
+    {
+        if (!PlayerPrefs.HasKey("LANGUAGE")) PlayerPrefs.SetInt("LANGUAGE", (int)LanguageType.KR);
+        currentLanguage = (LanguageType)PlayerPrefs.GetInt("LANGUAGE");
+    }
+
+    public void ChangeLanguageType(LanguageType languageType)
+    {
+        PlayerPrefs.SetInt("LANGUAGE", (int)languageType);
+        currentLanguage = (LanguageType)PlayerPrefs.GetInt("LANGUAGE");
+    }
+
+    public LanguageType GetCurrentLanguageType()
+    {
+        return currentLanguage;
+    }
+
+    private async UniTask LanguageScriptDicLoad<T>(string jsonName, Dictionary<int, T> saveDic) where T : ScriptClass
+    {
+        TextAsset _textAsset = await ResourceManager.Instance.LoadAsset<TextAsset>(jsonName);
+
+        var items = JsonConvert.DeserializeObject<List<T>>(_textAsset.text);
+
+        foreach (var item in items)
+        {
+            if (saveDic.ContainsKey(item.idx)) continue;
+
+            saveDic.Add(item.idx, item);
+        }
+    }
+
+    public void GetLangScript(int idx, Dictionary<int, LanguageScript> scriptDic, Text text, ContentSizeFitter fitter = null, RectTransform rect = null)
+    {
+        text.text = GetString(idx, scriptDic);
+        FitterRefresh(fitter, rect);
+    }
+
+    public void GetLangScript(int idx, Dictionary<int, LanguageScript> scriptDic, TextMeshProUGUI tmp, ContentSizeFitter fitter = null, RectTransform rect = null)
+    {
+        tmp.text = GetString(idx, scriptDic);
+        FitterRefresh(fitter, rect);
+    }
+
+    public string GetLangScript(int idx, Dictionary<int, LanguageScript> scriptDic = null, LanguageType langType = LanguageType.NONE)
+    {
+        LanguageType _previousLangType = currentLanguage;
+
+        if (scriptDic == null) scriptDic = languageScriptDic;
+
+        switch (langType)
+        {
+            case LanguageType.NONE:
+                {
+
+                }
+                break;
+
+            default:
+                {
+                    currentLanguage = langType;
+                }
+                break;
+        }
+
+        string _text = GetString(idx, scriptDic);
+
+        currentLanguage = _previousLangType;
+
+        return _text;
+    }
+
+    private string GetString(int idx, Dictionary<int, LanguageScript> scriptDic)
+    {
+        try
+        {
+            string _str = "";
+
+            switch (currentLanguage)
+            {
+                case LanguageType.KR:
+                    _str = scriptDic[idx].kr;
+                    break;
+
+                case LanguageType.EN:
+                    _str = scriptDic[idx].en;
+                    break;
+
+                default:
+                    _str = scriptDic[idx].kr;
+                    break;
+            }
+
+            return _str;
+        }
+
+        catch (KeyNotFoundException)
+        {
+            return "NF";
+        }
+    }
+
+    public void FitterRefresh(ContentSizeFitter fitter = null, RectTransform rect = null)
+    {
+        if (fitter != null)
+        {
+            fitter.SetLayoutHorizontal();
+            fitter.SetLayoutVertical();
+            Canvas.ForceUpdateCanvases();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);       
+        }
+    }
+
+    public string StrFormatForLangScript(int idx, Dictionary<int, LanguageScript> scriptDic = null, params string[] str)
+    {
+        if (scriptDic == null) scriptDic = languageScriptDic;
+
+        string _text = GetString(idx, scriptDic);
+
+        _text = string.Format(_text, str);
+
+        //if (_text != "" || _text != null) _text = _text.Replace(' ', '\u00A0');
+
+        return _text;
+    }
+
+    public string GetColorLangScript(int idx, string colorCode, Dictionary<int, LanguageScript> scriptDic = null)
+    {
+        if (scriptDic == null) scriptDic = languageScriptDic;
+
+        string _text = GetString(idx, scriptDic);
+
+        _text = TextColorChange(_text, colorCode);
+
+        return _text;
+    }
+
+    public string TextColorChange(string str, string colorCode)
+    {
+        str = $"{colorCode}" + str + $"{GColorScript.COLOR_END}";
+
+        return str;
+    }
+}
+
