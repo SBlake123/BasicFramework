@@ -11,4 +11,5 @@ public class SoundDisk : MonoBehaviour
 {
     public AudioSource audioSource;
     public SoundCategory category { get; set; }
+    public GameObject owner { get; set; }
 }

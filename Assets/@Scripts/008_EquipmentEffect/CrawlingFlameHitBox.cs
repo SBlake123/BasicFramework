@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,8 @@ public class CrawlingFlameHitBox : MonoBehaviour
 
         else boom.sprRenderer.flipX = true;
 
+        SoundManager.Instance.SetSound(GSoundName.CRAWLING_EXPLOSION, SoundCategory.FX, gameObject).Forget();
+
         boom.gameObject.SetActive(true);
 
         //if (other.GetComponentInParent<Monster_000_Base>() is Monster_000_Base monster)
@@ -39,5 +42,5 @@ public class CrawlingFlameHitBox : MonoBehaviour
         //{
         //    monster.TakeDamage(IngameSessionManager.Instance.CalculateDamageDealt());
         //}
-    }    
+    }
 }

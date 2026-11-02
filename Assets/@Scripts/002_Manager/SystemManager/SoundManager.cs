@@ -28,7 +28,7 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
         if (!PlayerPrefs.HasKey("BGMVOL")) PlayerPrefs.SetFloat("BGMVOL", 0.5f);
     }
 
-    public async UniTask SetSound(string soundName, SoundCategory category)
+    public async UniTask SetSound(string soundName, SoundCategory category, GameObject owner = null)
     {
         switch (category)
         {
@@ -38,14 +38,16 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
                     {
                         foreach (Transform item in bgmSoundParent)
                         {
-                            Destroy(item.gameObject);
+                            item.GetComponent<SoundDisk>().audioSource.Stop();
+                            ObjectPool.Instance.PushToPool(item.gameObject);
+                            //Destroy(item.gameObject);
                         }
 
                         //Destroy(bgmSoundParent.GetChild(0).gameObject);
                         bgmSoundList.Clear();
                     }
 
-                    GameObject _soundDiskObj = Instantiate(soundDiskPrefab, bgmSoundParent);
+                    GameObject _soundDiskObj = await ObjectPool.Instance.PopFromPool("SoundDisk", bgmSoundParent);
                     SoundDisk soundDisk = _soundDiskObj.GetComponent<SoundDisk>();
 
                     Debug.Log($"soundName : {soundName}");
@@ -61,7 +63,7 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
 
             case SoundCategory.FX:
                 {
-                    GameObject _soundDiskObj = Instantiate(soundDiskPrefab, fxSoundParent);
+                    GameObject _soundDiskObj = await ObjectPool.Instance.PopFromPool("SoundDisk", fxSoundParent);
                     SoundDisk soundDisk = _soundDiskObj.GetComponent<SoundDisk>();
                     soundDisk.audioSource.clip = await ResourceManager.Instance.LoadAsset<AudioClip>(soundName);//Resources.Load<AudioClip>(soundName); //어드레서블에서 바꿀 곳
                     fxSoundList.Add(soundDisk);
@@ -69,6 +71,7 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
                     if (soundDisk.audioSource.clip != null)
                     {
                         soundDisk.category = category;
+                        soundDisk.owner = owner;
                         soundDisk.audioSource.volume = PlayerPrefs.GetFloat("FXVOL");
                         soundDisk.audioSource.loop = false;
 
@@ -84,7 +87,7 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
         }
     }
 
-    public async UniTask StopSound(string soundName, SoundCategory category)
+    public async UniTask StopSound(string soundName, SoundCategory category, GameObject owner = null)
     {
         await UniTask.WaitForFixedUpdate();
 
@@ -108,13 +111,13 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
                     {
                         Debug.Log(fxSoundList[i].audioSource.clip.name);
 
-                        if (fxSoundList[i].audioSource.clip.name == soundName)
+                        if (fxSoundList[i].owner == owner)
                         {
-                            SoundDisk _soundDisk = fxSoundList[i];
+                            SoundDisk soundDisk = fxSoundList[i];
 
-                            _soundDisk.audioSource.Stop();
-                            fxSoundList.Remove(_soundDisk);
-                            Destroy(_soundDisk.gameObject);
+                            soundDisk.audioSource.Stop();
+                            fxSoundList.Remove(soundDisk);
+                            ObjectPool.Instance.PushToPool(soundDisk.gameObject);
                         }
                     }
                 }
@@ -148,11 +151,59 @@ public class SoundManager : PersistentMonoSingleton<SoundManager>
         for (int i = fxSoundList.Count - 1; i >= 0; i--)
         {
             fxSoundList[i].audioSource.Stop();
-            Destroy(fxSoundList[i].gameObject);
+            ObjectPool.Instance.PushToPool(fxSoundList[i].gameObject);
             fxSoundList.RemoveAt(i);
         }
 
         await UniTask.WaitForFixedUpdate();
+    }
+
+    public void PauseSound(SoundCategory soundCategory)
+    {
+        switch (soundCategory)
+        {
+            case SoundCategory.BGM:
+                {
+                    foreach (var disk in bgmSoundList)
+                    {
+                        disk.audioSource.Pause();
+                    }
+                }
+                break;
+
+            case SoundCategory.FX:
+                {
+                    foreach (var disk in fxSoundList)
+                    {
+                        disk.audioSource.Pause();
+                    }
+                }
+                break;
+        }
+    }
+
+    public void UnPauseSound(SoundCategory soundCategory)
+    {
+        switch (soundCategory)
+        {
+            case SoundCategory.BGM:
+                {
+                    foreach (var disk in bgmSoundList)
+                    {
+                        disk.audioSource.UnPause();
+                    }
+                }
+                break;
+
+            case SoundCategory.FX:
+                {
+                    foreach (var disk in fxSoundList)
+                    {
+                        disk.audioSource.UnPause();
+                    }
+                }
+                break;
+        }
     }
 
     public async UniTask SetSoundFromResources(string soundName, SoundCategory category)

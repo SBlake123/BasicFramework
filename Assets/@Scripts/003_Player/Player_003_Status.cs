@@ -56,5 +56,6 @@ public partial class Player : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: destroyCancellationToken);
 
         GameManager.Instance.SetGameplayPaused(true, (Action)null);
+        SoundManager.Instance.PauseSound(SoundCategory.FX);
     }
 }

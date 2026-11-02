@@ -315,6 +315,7 @@ public class IngameSceneManager : StateBaseSceneManager
             case IngameSceneState.INGAME:
                 {
                     GameManager.Instance.SetGameplayPaused(false, (Action)null);
+                    SoundManager.Instance.UnPauseSound(SoundCategory.FX);
                     IngameUIManager.Instance.InputUISetActive(true);
 
                     for (int i = 1; i < pages.Length; i++)
@@ -351,6 +352,7 @@ public class IngameSceneManager : StateBaseSceneManager
             case IngameSceneState.OPTION:
                 {
                     GameManager.Instance.SetGameplayPaused(true, (Action)null);
+                    SoundManager.Instance.PauseSound(SoundCategory.FX);
                     Ingame_003_Option ingame_003_Option = pages[(int)IngameSceneIdx.OPTION].GetComponent<Ingame_003_Option>();
                     await ingame_003_Option.Init();
                     ingame_003_Option.pageMain.SetActive(true);

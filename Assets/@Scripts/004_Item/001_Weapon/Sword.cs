@@ -20,6 +20,8 @@ public class Sword : WeaponBase
 
     public async UniTask AttackEffectActive(Player player, CancellationToken token)
     {
+        SoundManager.Instance.SetSound(GSoundName.SWORD_SWING, SoundCategory.FX, gameObject).Forget();
+
         var effect = await ObjectPool.Instance.PopFromPool("AttackEffect", parent: null, false);
         Vector3 direction = new Vector3(player.lastLookDirection.x, player.lastLookDirection.y, 0f).normalized;
 

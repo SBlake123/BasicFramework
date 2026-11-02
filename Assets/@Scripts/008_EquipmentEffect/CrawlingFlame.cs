@@ -18,6 +18,7 @@ public class CrawlingFlame : MonoBehaviour
 
     public void OnEnable()
     {
+        SoundManager.Instance.SetSound(GSoundName.CRAWLING_FIRE, SoundCategory.FX, gameObject).Forget();
         PlaySequenceAsync().Forget();
     }
 
@@ -134,6 +135,7 @@ public class CrawlingFlame : MonoBehaviour
 
     private void OnDisable()
     {
+        SoundManager.Instance.StopSound(GSoundName.CRAWLING_FIRE, SoundCategory.FX, gameObject).Forget();
         swayTween?.Kill();
         target = null;
     }
