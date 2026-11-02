@@ -207,11 +207,11 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
         try
         {
+            await UniTask.WaitForSeconds(0.5f);
+
             monsterSkinSkeleton.anim.Play(GAnimName.ATTACK);
 
             GameObject obj = await ObjectPool.Instance.PopFromPool("SkeletonClaw", parent: null, false);
-
-            await UniTask.WaitForSeconds(0.5f);
 
             obj.transform.position = transform.position + (target.position - transform.position).normalized;
             obj.SetActive(true);

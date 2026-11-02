@@ -162,6 +162,7 @@ public abstract class Monster_000_Base : MonoBehaviour
 
         return Vector2.Distance(transform.position, target.position) <= monsterData.detectionRange;
     }
+
     protected bool CanAttackTarget(float attackRange = 0)
     {
         if (attackRange == 0) attackRange = monsterAttackDataList[0].attackRange;
@@ -173,6 +174,7 @@ public abstract class Monster_000_Base : MonoBehaviour
 
         return Vector2.Distance(transform.position, target.position) <= attackRange;
     }
+
     protected bool CanMoveCheck(Vector3 destination)
     {
         Vector3 origin = transform.position;
