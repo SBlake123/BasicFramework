@@ -5,4 +5,9 @@ public class GSoundName
     public static readonly string CRAWLING_FIRE = "101_Crawling_Fire";
 
     public static readonly string CRAWLING_EXPLOSION = "102_Crawling_Explosion";
+
+    public static readonly string TITLE_BGM = "001_Title";
+
+    public static readonly string BUTTON_CLICK = "200_ButtonPop";
+
 }

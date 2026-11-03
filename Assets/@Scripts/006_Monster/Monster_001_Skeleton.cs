@@ -207,7 +207,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
         try
         {
-            await UniTask.WaitForSeconds(0.5f);
+            await UniTask.WaitForSeconds(0.5f, cancellationToken: token);
 
             monsterSkinSkeleton.anim.Play(GAnimName.ATTACK);
 

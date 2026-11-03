@@ -73,9 +73,16 @@ public class Title_001_Main : StateBasePage
 
     public void AddListenerToButton()
     {
-        newGameButton.onClick.AddListener(() => NewGameStart());
-        continueGameButton.onClick.AddListener(() => ContinueStart());
-        optionButton.onClick.AddListener(() => OptionStart());
+        newGameButton.onClick.AddListener(() => { SoundManager.Instance.SetSound(GSoundName.BUTTON_CLICK, SoundCategory.FX).Forget(); NewGameStart(); });
+        continueGameButton.onClick.AddListener(() =>
+        {
+            SoundManager.Instance.SetSound(GSoundName.BUTTON_CLICK, SoundCategory.FX).Forget(); ContinueStart(); 
+        });
+        optionButton.onClick.AddListener(() =>
+        {
+            SoundManager.Instance.SetSound(GSoundName.BUTTON_CLICK, SoundCategory.FX).Forget(); OptionStart(); 
+        });
+
     }
 
     private async UniTask BackgroundSetting()
