@@ -11,4 +11,6 @@ public class GAnimName : MonoBehaviour
     public static readonly string ATTACK = "Attack";
     public static readonly string ROLLING_ATTACK = "RollingAttack";
     public static readonly string KIDDING = "Kidding";
+    public static readonly string DEAD = "Dead";
+
 }

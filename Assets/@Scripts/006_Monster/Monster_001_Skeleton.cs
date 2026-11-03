@@ -31,7 +31,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
     public override async UniTask Init()
     {
         boxCol.enabled = true;
-        monsterData.detectionRange = 6f;     
+        monsterData.detectionRange = 6f;
         await base.Init();
     }
 
@@ -109,7 +109,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         {
 
         }
- 
+
     }
 
     float resumeMoveTime = 0f;
@@ -211,7 +211,7 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
             monsterSkinSkeleton.anim.Play(GAnimName.ATTACK);
 
-            GameObject obj = await ObjectPool.Instance.PopFromPool("SkeletonClaw", parent: null, false);
+            GameObject obj = await ObjectPool.Instance.PopFromPool(GPrefabName.SKELETON_CLAW, parent: null, false);
 
             obj.transform.position = transform.position + (target.position - transform.position).normalized;
             obj.SetActive(true);
@@ -288,7 +288,9 @@ public partial class Monster_001_Skeleton : Monster_000_Base
     {
         boxCol.enabled = false;
 
-        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
+        monsterSkinSkeleton.anim.Play(GAnimName.DEAD);
+
+        DOTween.Sequence().Append(transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear)).AppendInterval(0.5f).OnComplete(() =>
         {
             ResetForPool(() =>
             {

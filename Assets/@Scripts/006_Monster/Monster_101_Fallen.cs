@@ -416,7 +416,9 @@ public partial class Monster_101_Fallen : Monster_000_Base
     {
         boxCol.enabled = false;
 
-        transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
+        monsterSkinFallen.anim.Play(GAnimName.DEAD);
+
+        DOTween.Sequence().Append(transform.DOShakePosition(0.5f, 0.2f).SetEase(Ease.Linear)).AppendInterval(0.6f).OnComplete(() =>
         {
             ResetForPool(() =>
             {
