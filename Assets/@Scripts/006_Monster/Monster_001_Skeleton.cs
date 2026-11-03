@@ -118,9 +118,9 @@ public partial class Monster_001_Skeleton : Monster_000_Base
     private async UniTask OnIdle()
     {
         CancellationToken token = stateCts.Token;
-        Vector3 idleDestination = GetRandomPosition();
 
-        monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
+        Vector3 idleDestination = transform.position;
+        bool hasDestination = false;
 
         try
         {
@@ -141,11 +141,18 @@ public partial class Monster_001_Skeleton : Monster_000_Base
                     }
 
                     isWaiting = false;
-                    idleDestination = GetRandomPosition();
-                    monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
+                    hasDestination = false;
                 }
 
-                if (IsArrived(idleDestination) || !CanMoveCheck(idleDestination))
+                if (!hasDestination)
+                {
+                    hasDestination = TryChooseIdleDestination(out idleDestination);
+
+                    if (hasDestination)
+                        monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
+                }
+
+                if (!hasDestination || IsArrived(idleDestination))
                 {
                     moveDestination = null;
                     CharacterContactMovement.Stop(movementBody);
@@ -165,7 +172,6 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         }
         catch (OperationCanceledException)
         {
-
         }
     }
 
@@ -302,5 +308,70 @@ public partial class Monster_001_Skeleton : Monster_000_Base
         await ItemLootingManager.Instance.MakingItemLootingBox("Box_Common", monsterData.monsterId, transform);
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: destroyCancellationToken);
+    }
+
+    private float wallGap = 0.8f;
+    private bool TryGetReachableDestination(Vector3 destination, out Vector3 result)
+    {
+        Vector3 origin = movementBody.position;
+        destination.z = origin.z;
+        result = origin;
+
+        Vector3 offset = destination - origin;
+        float distance = offset.magnitude;
+
+        if (distance <= 0.05f) return false;
+
+        Vector3 direction = offset / distance;
+        Vector3 scale = boxCol.transform.lossyScale;
+
+        Vector3 halfExtents = new Vector3(
+            Mathf.Abs(boxCol.size.x * scale.x),
+            Mathf.Abs(boxCol.size.y * scale.y),
+            Mathf.Abs(boxCol.size.z * scale.z)
+        ) * 0.5f;
+
+        Vector3 center = boxCol.transform.TransformPoint(boxCol.center);
+
+        if (Physics.BoxCast(center, halfExtents, direction, out RaycastHit hit, boxCol.transform.rotation, distance, obstacleLayers, QueryTriggerInteraction.Ignore))
+        {
+            float allowedDistance = Mathf.Max(0f, hit.distance - wallGap);
+            result = origin + direction * allowedDistance;
+        }
+        else
+        {
+            result = destination;
+        }
+
+        return Vector2.Distance(origin, result) > 0.05f;
+    }
+
+    private LayerMask monsterLayers;
+    private float idleClearance = 0.6f;
+    private bool TryChooseIdleDestination(out Vector3 result)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Vector3 candidate = GetRandomPosition();
+
+            if (!TryGetReachableDestination(candidate, out result)) continue;
+
+            Collider[] nearby = Physics.OverlapSphere(result, idleClearance, monsterLayers, QueryTriggerInteraction.Ignore);
+
+            bool occupied = false;
+
+            foreach (Collider col in nearby)
+            {
+                if (col.transform == transform || col.transform.IsChildOf(transform)) continue;
+
+                occupied = true;
+                break;
+            }
+
+            if (!occupied) return true;
+        }
+
+        result = transform.position;
+        return false;
     }
 }
