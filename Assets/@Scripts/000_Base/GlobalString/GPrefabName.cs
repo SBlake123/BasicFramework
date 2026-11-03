@@ -8,7 +8,7 @@ public class GPrefabName : MonoBehaviour
 
     public static readonly string SKELETON = "MonsterSkeleton";
 
-    public static readonly string SKELETON_CLAW = "MonsterSkeleton";
+    public static readonly string SKELETON_CLAW = "SkeletonClaw";
 
     public static readonly string FALLEN = "MonsterFallen";
 
