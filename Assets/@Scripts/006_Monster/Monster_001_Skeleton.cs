@@ -14,6 +14,8 @@ public partial class Monster_001_Skeleton : Monster_000_Base
 
     public BoxCollider boxCol;
 
+    [SerializeField] private MonsterNavigator navigator;
+
     private float cooldownTerm;
     private void FixedUpdate()
     {
@@ -179,30 +181,71 @@ public partial class Monster_001_Skeleton : Monster_000_Base
     {
         CancellationToken token = stateCts.Token;
 
+        if (navigator == null)
+            navigator = GetComponent<MonsterNavigator>();
+
+        if (navigator == null)
+            throw new InvalidOperationException(
+                $"{name}: MonsterNavigator가 필요합니다.");
+
+        navigator.ClearPath();
+
+        bool wasMoving = false;
+        monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_IDLE);
+
         try
         {
-            while (!token.IsCancellationRequested)
+            while (true)
             {
-                if (target == null || !CanDetectTarget())// || HasLeftSpawnRange())
+                token.ThrowIfCancellationRequested();
+
+                if (target == null ||
+                    !target.gameObject.activeInHierarchy ||
+                    !CanDetectTarget())
                 {
                     ChangeState((int)MonsterState.RETURN).Forget();
                     return;
                 }
 
-
-                if (CanAttackTarget())
+                // 벽 너머에서는 거리만 보고 공격하지 않음
+                if (CanAttackTarget() &&
+                    navigator.HasLineOfSight(
+                        movementBody.position, target.position))
                 {
                     ChangeState((int)MonsterState.ATTACK).Forget();
                     return;
                 }
 
-                monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
-                UpdateFacingDirection();
-                MoveTo(target.position);
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
+                bool moving = navigator.TryGetNextPoint(
+                    movementBody.position,
+                    target.position,
+                    out Vector3 nextPoint);
+
+                if (moving)
+                {
+                    MoveTo(nextPoint);
+                    UpdateFacingDirection();
+                }
+                else
+                {
+                    moveDestination = null;
+                    CharacterContactMovement.Stop(movementBody);
+                }
+
+                if (moving != wasMoving)
+                {
+                    monsterSkinSkeleton.anim.Play(
+                        moving
+                            ? GAnimName.SKELETON_MOVE
+                            : GAnimName.SKELETON_IDLE);
+
+                    wasMoving = moving;
+                }
+
+                await UniTask.NextFrame(cancellationToken: token);
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
         }
     }
@@ -267,25 +310,56 @@ public partial class Monster_001_Skeleton : Monster_000_Base
     {
         CancellationToken token = stateCts.Token;
 
+        navigator.ClearPath();
+
+        bool wasMoving = false;
+        monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_IDLE);
+
         try
         {
-            monsterSkinSkeleton.anim.Play(GAnimName.SKELETON_MOVE);
-            UpdateFacingDirection();
-            while (!token.IsCancellationRequested)
+            while (true)
             {
-
-                MoveTo(spawnPosition);
+                token.ThrowIfCancellationRequested();
 
                 if (IsArrived(spawnPosition))
                 {
+                    moveDestination = null;
+                    CharacterContactMovement.Stop(movementBody);
+
                     ChangeState((int)MonsterState.IDLE).Forget();
                     return;
                 }
 
-                await UniTask.Yield(PlayerLoopTiming.Update, token);
+                bool moving = navigator.TryGetNextPoint(
+                    movementBody.position,
+                    spawnPosition,
+                    out Vector3 nextPoint);
+
+                if (moving)
+                {
+                    MoveTo(nextPoint);
+                    UpdateFacingDirection();
+                }
+                else
+                {
+                    moveDestination = null;
+                    CharacterContactMovement.Stop(movementBody);
+                }
+
+                if (moving != wasMoving)
+                {
+                    monsterSkinSkeleton.anim.Play(
+                        moving
+                            ? GAnimName.SKELETON_MOVE
+                            : GAnimName.SKELETON_IDLE);
+
+                    wasMoving = moving;
+                }
+
+                await UniTask.NextFrame(cancellationToken: token);
             }
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
         {
         }
     }
