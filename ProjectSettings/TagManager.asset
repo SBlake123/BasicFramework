@@ -42,8 +42,14 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: FieldItem
+    uniqueID: 1672597171
+    locked: 0
   - name: Character
     uniqueID: 886366995
+    locked: 0
+  - name: Monster
+    uniqueID: 300110957
     locked: 0
   - name: AboveCharacter
     uniqueID: 4274244069

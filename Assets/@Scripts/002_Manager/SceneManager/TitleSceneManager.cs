@@ -49,6 +49,7 @@ public partial class TitleSceneManager : StateBaseSceneManager
         screenGuard.SetActive(true);
 
         ScreenBlurInit();
+        SoundManager.Instance.SetSound(GSoundName.TITLE_BGM, SoundCategory.BGM, gameObject).Forget();
         BackKeySetting().Forget();
         SceneAllocate();
         await ScreenBlurFadeOut();

@@ -18,6 +18,8 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
 
     public async void OnBeginDrag(PointerEventData eventData)
     {
+        EventSystem.current.pixelDragThreshold = 25;
+
         switch (inventoryGrid_000_Base.itemData)
         {
             case not null:

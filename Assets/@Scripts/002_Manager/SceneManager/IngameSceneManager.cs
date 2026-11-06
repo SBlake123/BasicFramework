@@ -63,6 +63,7 @@ public class IngameSceneManager : StateBaseSceneManager
     private async UniTask InitializeScene()
     {
         screenGuard.SetActive(true);
+        SoundManager.Instance.StopSound("001_Title", SoundCategory.BGM).Forget();
         ScreenBlurInit();
         BackKeySetting().Forget();
         SceneAllocate();
@@ -363,6 +364,7 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.EXTRACTING:
                 {
+                    IngameUIManager.Instance.JoyStickUISetActive(false);
                     Ingame_002_Inventory ingame_002_Inventory = pages[(int)IngameSceneIdx.INVENTORY].GetComponent<Ingame_002_Inventory>();
                     PlayerDataManager.Instance.SaveToDisk(ingame_002_Inventory.Inventory_000_Base.ExtractingInvenItems());
                     PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10015), LanguageManager.Instance.GetLangScript(10002));
