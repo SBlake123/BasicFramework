@@ -23,8 +23,14 @@ public class Ingame_003_Option : StateBasePage
 
     protected override async UniTask OnFirstSetting()
     {
-        IngameSceneManager = (IngameSceneManager)stateBaseSceneManager;
-        optionBackDropButton.onClick.AddListener(async () => await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME));
+        IngameSceneManager = stateBaseSceneManager as IngameSceneManager;
+        optionBackDropButton.onClick.AddListener(async () =>
+        {
+            if (stateBaseSceneManager is LobbySceneManager lobby)
+                await lobby.ChangeState((int)LobbySceneState.EXPLORE);
+            else
+                await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME);
+        });
         quitBtn.onClick.AddListener(async () =>  await QuitBtnClicked()); 
 
         volSlider.onValueChanged.AddListener((value) => SliderValue(value, SoundCategory.BGM));
@@ -73,7 +79,13 @@ public class Ingame_003_Option : StateBasePage
     public async UniTask QuitBtnClicked()
     {
         PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10004), LanguageManager.Instance.GetLangScript(10002));
-        PopupManager.Instance.AddMethodToBtn(async () => await IngameSceneManager.ChangeState((int)IngameSceneState.GO_TO_TITLE));
+        PopupManager.Instance.AddMethodToBtn(async () =>
+        {
+            if (stateBaseSceneManager is LobbySceneManager lobby)
+                await lobby.ChangeState((int)LobbySceneState.GO_TO_TITLE);
+            else
+                await IngameSceneManager.ChangeState((int)IngameSceneState.GO_TO_TITLE);
+        });
     }
 
 }

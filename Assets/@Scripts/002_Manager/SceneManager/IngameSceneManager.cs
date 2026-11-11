@@ -16,7 +16,8 @@ public enum IngameSceneState
     DEAD,
     EXTRACTING,
     RESULT,
-    GO_TO_TITLE
+    GO_TO_TITLE,
+    GO_TO_LOBBY
 }
 
 public enum IngameSceneIdx
@@ -383,7 +384,6 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.DEAD:
                 {
-                    PlayerDataManager.Instance.DeleteData(false);
 
                     PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10004), LanguageManager.Instance.GetLangScript(10002));
                     PopupManager.Instance.AddMethodToBtn(async () =>
@@ -400,10 +400,14 @@ public class IngameSceneManager : StateBaseSceneManager
 
             case IngameSceneState.RESULT:
                 {
-                    await ChangeState((int)IngameSceneState.GO_TO_TITLE);
+                    await ChangeState((int)IngameSceneState.GO_TO_LOBBY);
                 }
                 return;
 
+            case IngameSceneState.GO_TO_LOBBY:
+                GameManager.Instance.SetGameplayPaused(false, (Action)null);
+                await SceneLoadManager.Instance.LoadScene(GSceneName.LOBBY_SCENE);
+                return;
             case IngameSceneState.GO_TO_TITLE:
 
                 GameManager.Instance.SetGameplayPaused(false, (Action)null);
@@ -413,7 +417,8 @@ public class IngameSceneManager : StateBaseSceneManager
 
 
 
-        screenGuard.SetActive(false);
+        if (screenGuard != null)
+            screenGuard.SetActive(false);
     }
 
     private void ScreenBlurInit()

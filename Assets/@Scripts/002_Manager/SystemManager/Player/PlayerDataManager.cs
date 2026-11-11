@@ -106,6 +106,39 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
         }
     }
 
+    public bool SaveLobbyProfile(PlayerProfileData profile)
+    {
+        PlayerLoad();
+        var updatedSave = new PlayerSaveData
+        {
+            playCnt = saveData.playCnt,
+            profileData = new PlayerProfileData
+            {
+                playerId = profile.playerId,
+                money = profile.money,
+                invenItems = profile.invenItems.ConvertAll(item => item.DeepCopy())
+            }
+        };
+
+        try
+        {
+            string json = JsonConvert.SerializeObject(updatedSave, saveSettings);
+            string temporaryPath = SavePath + ".tmp";
+            File.WriteAllText(temporaryPath, GSecurity.EncryptString(json));
+            if (File.Exists(SavePath))
+                File.Replace(temporaryPath, SavePath, null);
+            else
+                File.Move(temporaryPath, SavePath);
+            saveData = updatedSave;
+            return true;
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError($"[PlayerDataManager] Lobby profile could not be saved: {exception.Message}");
+            return false;
+        }
+    }
+
     public void SaveToDisk(List<ItemData> itemDataList)
     {
         try

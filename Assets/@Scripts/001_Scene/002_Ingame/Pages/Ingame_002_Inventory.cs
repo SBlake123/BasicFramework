@@ -12,9 +12,15 @@ public class Ingame_002_Inventory : StateBasePage
     public Button inventoryBackDropButton;
     protected override UniTask OnFirstSetting()
     {
-        IngameSceneManager = (IngameSceneManager)stateBaseSceneManager;
+        IngameSceneManager = stateBaseSceneManager as IngameSceneManager;
         inventoryBackDropButton.onClick.AddListener(async () =>
         {
+            if (stateBaseSceneManager is LobbySceneManager lobby)
+            {
+                await lobby.CloseInventory();
+                return;
+            }
+
             await Inventory_000_Base.InventoryClosed();
             await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME);
         });

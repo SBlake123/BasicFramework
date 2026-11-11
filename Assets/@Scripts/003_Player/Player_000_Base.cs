@@ -7,11 +7,12 @@ public partial class Player : MonoBehaviour
 {
     public WeaponBase currentWeapon { get; set; }
     public ShieldBase currentShield { get; set; }
+    public bool InputBlocked { get; private set; }
 
     public BoxCollider[] playerHitBoxArr;
     private void Update()
     {
-        if (isDead) return;
+        if (isDead || InputBlocked) return;
         ReadMoveInput();
         MovePlayer();
         AimPlayer();
@@ -21,7 +22,7 @@ public partial class Player : MonoBehaviour
     {
         if (movementBody != null)
         {
-            if (isDead)
+            if (isDead || InputBlocked)
             {
                 CharacterContactMovement.Move(movementBody, Vector3.zero);
                 return;
@@ -57,5 +58,15 @@ public partial class Player : MonoBehaviour
         {
             item.enabled = enabled;
         }
+    }
+
+    public void SetInputBlocked(bool blocked)
+    {
+        InputBlocked = blocked;
+        if (!blocked) return;
+
+        desiredVelocity = Vector3.zero;
+        ClearMovingVirtualJoystickInput();
+        ClearAimingVirtualJoystickInput();
     }
 }

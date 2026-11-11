@@ -51,7 +51,7 @@ public partial class Player : MonoBehaviour
 
     private bool CanInputAction()
     {
-        return !isDodging && !isDead;
+        return !InputBlocked && !isDodging && !isDead;
     }
 
     public void SetMovingVirtualJoystickInput(Vector2 direction)
@@ -257,12 +257,12 @@ public partial class Player : MonoBehaviour
 
     private bool CanAttack()
     {
-        return !isDodging && !isDead && !isAttack && lastAttackCooldown <= 0f;
+        return !InputBlocked && !isDodging && !isDead && !isAttack && lastAttackCooldown <= 0f;
     }
 
     private bool CanDodge()
     {
-        return !isDead && !isDodging && IngameSessionManager.Instance.playerStats.currentStamina
+        return !InputBlocked && !isDead && !isDodging && IngameSessionManager.Instance.playerStats.currentStamina
                 >= IngameSessionManager.Instance.dodgeStaminaCost;
     }
 }

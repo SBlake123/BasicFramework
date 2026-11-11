@@ -23,7 +23,7 @@ public enum TitleSceneState
     OPTION,
     NEW_GAME,
     CONTINUE,
-    START_INGAME,
+    START_LOBBY,
 
     APPQUIT = 998,
     GOTOTITLE = 999
@@ -142,11 +142,11 @@ public partial class TitleSceneManager : StateBaseSceneManager
 
                     break;
                 }
-            case TitleSceneState.START_INGAME:
+            case TitleSceneState.START_LOBBY:
                 {
-                    Debug.Log("START_INGAME");
+                    Debug.Log("START_LOBBY");
                     await ScreenBlurFadeIn();
-                    await SceneLoadManager.Instance.LoadScene(GSceneName.INGAME_SCENE);
+                    await SceneLoadManager.Instance.LoadScene(GSceneName.LOBBY_SCENE);
 
                     return;
                 }

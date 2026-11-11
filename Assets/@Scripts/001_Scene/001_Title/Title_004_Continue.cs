@@ -18,14 +18,14 @@ public class Title_004_Continue : StateBasePage
     }
     public async UniTask ContinueCheck()
     {
-        var saveData = SaveLoadManager.Instance.Load();
+        var saveData = PlayerDataManager.Instance.LoadFromDisk();
 
         if (saveData != null)
         {
             //로드 후 인게임 씬에 적용.
             //GameManager -> IngameDataManager
             //
-            stateBaseSceneManager.ChangeState((int)TitleSceneState.START_INGAME).Forget();
+            stateBaseSceneManager.ChangeState((int)TitleSceneState.START_LOBBY).Forget();
         }
         else
         {

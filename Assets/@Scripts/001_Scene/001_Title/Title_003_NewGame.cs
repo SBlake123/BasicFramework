@@ -29,7 +29,7 @@ public class Title_003_NewGame : StateBasePage
             PopupManager.Instance.AddMethodToBtn(() =>
             {
                 PlayerDataManager.Instance.DeleteData(true);
-                stateBaseSceneManager.ChangeState((int)TitleSceneState.START_INGAME).Forget();
+                stateBaseSceneManager.ChangeState((int)TitleSceneState.START_LOBBY).Forget();
             }, async () => { await stateBaseSceneManager.ChangeState((int)TitleSceneState.MAIN); },
                 async () => { await stateBaseSceneManager.ChangeState((int)TitleSceneState.MAIN); });
 
@@ -40,7 +40,7 @@ public class Title_003_NewGame : StateBasePage
         }
         else
         {
-            stateBaseSceneManager.ChangeState((int)TitleSceneState.START_INGAME).Forget();
+            stateBaseSceneManager.ChangeState((int)TitleSceneState.START_LOBBY).Forget();
         }
     }
 

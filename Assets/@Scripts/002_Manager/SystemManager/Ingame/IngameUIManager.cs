@@ -12,6 +12,7 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
     public event Func<UniTask> AttackRequested;
     public event Func<UniTask> DodgeRequested;
     public event Func<UniTask> OptionRequested;
+    public Func<bool> ConsumeAttackInput { get; set; }
 
     public Canvas hudCanvas;
 
@@ -48,7 +49,7 @@ public class IngameUIManager : MonoSingleton<IngameUIManager>
 
     private async UniTask OnAttackClicked()
     {
-        if (CanUIAction())
+        if (CanUIAction() && ConsumeAttackInput?.Invoke() != true)
             AttackRequested?.Invoke();
     }
 
