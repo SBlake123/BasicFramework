@@ -22,21 +22,44 @@ public class Sword : WeaponBase
     {
         SoundManager.Instance.SetSound(GSoundName.SWORD_SWING, SoundCategory.FX, gameObject).Forget();
 
-        var effect = await ObjectPool.Instance.PopFromPool("AttackEffect", parent: null, false);
-        Vector3 direction = new Vector3(player.lastLookDirection.x, player.lastLookDirection.y, 0f).normalized;
-
-        effect.transform.position = player.transform.position + direction * 1f;
-        UpdateEffectDirection(effect, player);
-        effect.SetActive(true);
+        var effect = await ObjectPool.Instance.PopFromPool(GPrefabName.SWORD_ATTACK_EFFECT, parent: null, isActive: false);
+        var hitBox = effect.GetComponentInChildren<WeaponHitBox>(true);
+        var hitCollider = hitBox != null ? hitBox.GetComponent<Collider>() : null;
 
         try
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(AttackSpeed), cancellationToken: token);
+            if (hitCollider != null)
+                hitCollider.enabled = false;
+            hitBox?.ClearImpactOrigin();
+            token.ThrowIfCancellationRequested();
+
+            Vector3 origin = player.transform.position;
+            Vector3 direction = new Vector3(player.lastLookDirection.x, player.lastLookDirection.y, 0f).normalized;
+            effect.transform.position = origin + direction;
+            UpdateEffectDirection(effect, player);
+            hitBox?.SetImpactOrigin(origin, direction);
+            effect.SetActive(true);
+
+            double visibleUntil = Time.timeAsDouble + 0.3f;
+            if (hitCollider != null)
+            {
+                hitCollider.enabled = true;
+                await UniTask.WaitForFixedUpdate(token);
+                if (hitCollider != null)
+                    hitCollider.enabled = false;
+                hitBox?.ClearImpactOrigin();
+            }
+
+            double remaining = visibleUntil - Time.timeAsDouble;
+            if (remaining > 0)
+                await UniTask.Delay(TimeSpan.FromSeconds(remaining), cancellationToken: token);
         }
         finally
         {
+            if (hitCollider != null)
+                hitCollider.enabled = false;
             if (effect != null)
-                ObjectPool.Instance.PushToPool(effect.gameObject);
+                ObjectPool.Instance.PushToPool(effect);
         }
     }
 

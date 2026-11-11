@@ -23,6 +23,7 @@ public class Ember_Branch : WeaponBase
 
         effect.transform.position = player.transform.position + direction * 1.2f;
         UpdateEffectDirection(effect, player);
+        effect.GetComponent<Ember_Branch_Effect>()?.SetImpactOrigin(player.transform.position, direction);
         effect.SetActive(true);
     }
 

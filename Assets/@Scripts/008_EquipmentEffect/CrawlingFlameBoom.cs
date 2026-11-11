@@ -14,6 +14,7 @@ public class CrawlingFlameBoom : MonoBehaviour
     {
         if (other.GetComponentInParent<Monster_000_Base>() is Monster_000_Base monster)
         {
+            monster.PlayHitFlash();
             monster.TakeDamage(20);
         }
     }

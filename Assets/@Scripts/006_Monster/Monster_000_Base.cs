@@ -90,6 +90,8 @@ public abstract class Monster_000_Base : MonoBehaviour
     protected Vector3? moveDestination;
     protected bool isAttack;
     protected bool isDeath;
+    private const float WeaponKnockbackSpeed = 5f;
+    private Vector3 remainingWeaponKnockback;
 
     public virtual async UniTask Init()
     {
@@ -97,6 +99,7 @@ public abstract class Monster_000_Base : MonoBehaviour
         monsterState = MonsterState.IDLE;
         isDeath = false;
         isAttack = false;
+        remainingWeaponKnockback = Vector3.zero;
         spawnPosition = transform.position;
         target = IngameSessionManager.Instance.player.GetComponent<Transform>();
         OnStateChange().Forget();
@@ -117,6 +120,33 @@ public abstract class Monster_000_Base : MonoBehaviour
     protected abstract UniTask OnDeath();
 
     public abstract UniTask TakeDamage(int attackDamage);
+
+    internal void PlayHitFlash()
+    {
+        var skin = GetComponentInChildren<MonsterSkinBase>();
+        if (skin != null && skin.mainSpr != null)
+            GameJuiceManager.Instance.PlayFlash(skin.mainSpr, 0.12f);
+    }
+
+    internal void QueueWeaponKnockback(Vector3 displacement)
+    {
+        if (!isDeath && monsterState != MonsterState.DEAD)
+            remainingWeaponKnockback = displacement;
+    }
+
+    protected bool TryApplyWeaponKnockback()
+    {
+        if (isDeath || monsterState == MonsterState.DEAD)
+            remainingWeaponKnockback = Vector3.zero;
+        if (remainingWeaponKnockback.sqrMagnitude < 0.000001f) return false;
+
+        // Apply the displacement through physics before the current state writes its movement.
+        Vector3 step = Vector3.ClampMagnitude(remainingWeaponKnockback, WeaponKnockbackSpeed * Time.fixedDeltaTime);
+        CharacterContactMovement.Move(movementBody, step / Time.fixedDeltaTime);
+        remainingWeaponKnockback -= step;
+        return true;
+    }
+
     protected void SetTarget(Transform newTarget)
     {
         target = newTarget;
@@ -219,6 +249,7 @@ public abstract class Monster_000_Base : MonoBehaviour
 
         stateCts = null;
         moveDestination = null;
+        remainingWeaponKnockback = Vector3.zero;
 
         transform.DOKill();
 

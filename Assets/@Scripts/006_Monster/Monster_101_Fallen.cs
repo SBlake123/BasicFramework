@@ -23,6 +23,7 @@ public partial class Monster_101_Fallen : Monster_000_Base
     private void FixedUpdate()
     {
         if (movementBody == null) return;
+        if (TryApplyWeaponKnockback()) return;
         if (!moveDestination.HasValue)
         {
             CharacterContactMovement.Stop(movementBody);

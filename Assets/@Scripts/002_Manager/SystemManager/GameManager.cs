@@ -103,17 +103,27 @@ public class GameManager : PersistentMonoSingleton<GameManager>
 
     public void SetGameplayPaused(bool isPaused, Action callback = null)
     {
-        Time.timeScale = isPaused ? 0f : 1f;
+        ApplyGameplayPause(isPaused);
         callback?.Invoke();
     }
 
     public async UniTask SetGameplayPaused(bool isPaused, Func<UniTask> callback = null)
     {
-        Time.timeScale = isPaused ? 0f : 1f;
+        ApplyGameplayPause(isPaused);
 
         if (callback != null)
         {
             await callback.Invoke();
         }
+    }
+
+    private void ApplyGameplayPause(bool isPaused)
+    {
+        float timeScale = isPaused ? 0f : 1f;
+        var juice = FindFirstObjectByType<GameJuiceManager>();
+        if (juice != null)
+            juice.SetGameplayTimeScale(timeScale);
+        else
+            Time.timeScale = timeScale;
     }
 }
