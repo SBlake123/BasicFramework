@@ -47,6 +47,12 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
     private PlayerSaveData saveData;
     public PlayerProfileData Profile => saveData.profileData;
 
+    public List<ItemData> GetStashItems()
+    {
+        PlayerLoad();
+        return (saveData.stashItems ?? new List<ItemData>()).ConvertAll(item => item.DeepCopy());
+    }
+
     public event Action<PlayerProfileData> OnProfileChanged;
     public event Action<PlayerProfileData> OnRaidChanged;
 
@@ -84,7 +90,7 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
         };
     }
 
-    //ÀÎ°ÔÀÓ¾È¿¡¼­ÀÏ¾î³ª´Â µ¥ÀÌÅÍ ¸ğµÎ ÀúÀå. 
+    //ì¸ê²Œì„ì•ˆì—ì„œì¼ì–´ë‚˜ëŠ” ë°ì´í„° ëª¨ë‘ ì €ì¥. 
 
     public PlayerSaveData LoadFromDisk()
     {
@@ -106,12 +112,13 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
         }
     }
 
-    public bool SaveLobbyProfile(PlayerProfileData profile)
+    public bool SaveLobbyProfile(PlayerProfileData profile, List<ItemData> stashItems = null)
     {
         PlayerLoad();
         var updatedSave = new PlayerSaveData
         {
             playCnt = saveData.playCnt,
+            stashItems = (stashItems ?? saveData.stashItems ?? new List<ItemData>()).ConvertAll(item => item.DeepCopy()),
             profileData = new PlayerProfileData
             {
                 playerId = profile.playerId,

@@ -177,7 +177,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
             await ApplyOptions(item?.additionalOptionsList);
         }
 
-        //¾Ç¼¼¼­¸® Ãß°¡
+        //ì•…ì„¸ì„œë¦¬ ì¶”ê°€
 
         async UniTask ApplyOptions(List<ItemOptionData> options)
         {
@@ -235,7 +235,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
                     case StatType.ATTACK_RANGE:
                         {
-                            // PlayerRuntimeStats¿¡ °ø°İ ¹üÀ§ ÇÊµå¸¦ ¸¸µç µÚ °è»ê
+                            // PlayerRuntimeStatsì— ê³µê²© ë²”ìœ„ í•„ë“œë¥¼ ë§Œë“  ë’¤ ê³„ì‚°
                             break;
                         }
 
@@ -314,10 +314,11 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
 
                                 //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
 
-                                player.currentWeapon = player.playerSkinBase.swingPivotTrf.GetChild(0).GetComponent<WeaponBase>();
-                                //µ¥ÀÌÅÍ ±â¹İÀ¸·Î ¸¸µé¾î¾ßµÊ player À§Ä¡¿¡ 
+                                player.currentWeapon = obj.GetComponent<WeaponBase>();
+                                player.currentWeapon.weaponData = currentWeaponData;
+                                //ë°ì´í„° ê¸°ë°˜ìœ¼ë¡œ ë§Œë“¤ì–´ì•¼ë¨ player ìœ„ì¹˜ì— 
                                 //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
-                                //µ¥ÀÌÅÍ ±â¹İÀ¸·Î ¸¸µé¾î¾ßµÊ player À§Ä¡¿¡ 
+                                //ë°ì´í„° ê¸°ë°˜ìœ¼ë¡œ ë§Œë“¤ì–´ì•¼ë¨ player ìœ„ì¹˜ì— 
                             }
                             break;
 
@@ -365,7 +366,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                                     ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
 
                                 //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
-                                //µ¥ÀÌÅÍ ±â¹İÀ¸·Î ¸¸µé¾î¾ßµÊ player À§Ä¡¿¡ 
+                                //ë°ì´í„° ê¸°ë°˜ìœ¼ë¡œ ë§Œë“¤ì–´ì•¼ë¨ player ìœ„ì¹˜ì— 
                             }
                             break;
 
@@ -448,7 +449,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     //                //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentWeaponData.itemKey)), player.playerSkinBase.weaponTrf);
 
     //                player.currentWeapon = player.playerSkinBase.swingPivotTrf.GetChild(0).GetComponent<WeaponBase>();
-    //                //µ¥ÀÌÅÍ ±â¹İÀ¸·Î ¸¸µé¾î¾ßµÊ player À§Ä¡¿¡ 
+    //                //ë°ì´í„° ê¸°ë°˜ìœ¼ë¡œ ë§Œë“¤ì–´ì•¼ë¨ player ìœ„ì¹˜ì— 
     //            }
     //            break;
 
@@ -495,7 +496,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     //                    ObjectPool.Instance.PushToPool(player.playerSkinBase.swingPivotTrf.GetChild(0).gameObject);
 
     //                //Destroy(player.playerSkinBase.weaponTrf.GetChild(0).gameObject);
-    //                //µ¥ÀÌÅÍ ±â¹İÀ¸·Î ¸¸µé¾î¾ßµÊ player À§Ä¡¿¡ 
+    //                //ë°ì´í„° ê¸°ë°˜ìœ¼ë¡œ ë§Œë“¤ì–´ì•¼ë¨ player ìœ„ì¹˜ì— 
     //            }
     //            break;
 

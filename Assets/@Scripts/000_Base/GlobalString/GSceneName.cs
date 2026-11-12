@@ -8,9 +8,9 @@ public class GSceneName
 
     public static readonly string TITLE_SCENE = "01_Title";
 
-    public static readonly string LOBBY_SCENE = "02_Lobby";
+    public static readonly string LOBBY_SCENE = "02_Ingame_Lobby";
 
-    public static readonly string INGAME_SCENE = "03_Ingame";
+    public static readonly string INGAME_SCENE = "03_Ingame_Raid_01";
 
     //public static readonly string HIT_RED = "Hit Red";
 

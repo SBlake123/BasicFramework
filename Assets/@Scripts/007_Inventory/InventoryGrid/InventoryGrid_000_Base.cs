@@ -16,7 +16,8 @@ public enum GridCategory
 public enum InventoryCategory
 {
     PLAYER,
-    LOOTING
+    LOOTING,
+    STORAGE
 }
 
 

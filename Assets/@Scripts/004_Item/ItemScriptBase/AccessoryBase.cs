@@ -30,6 +30,9 @@ public class AccessoryData : ItemData
             maxStackAmount = maxStackAmount,
             healAmount = healAmount,
             itemExplanation = itemExplanation,
+            scrollAttemptCount = scrollAttemptCount,
+            scrollSuccessCount = scrollSuccessCount,
+            scrollBonuses = CopyScrollBonuses(),
 
             additionalOptionsList = additionalOptionsList.ConvertAll(option => option.DeepCopy())
         };

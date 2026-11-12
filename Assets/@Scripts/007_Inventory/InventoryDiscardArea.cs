@@ -11,6 +11,9 @@ public class InventoryDiscardArea : MonoBehaviour, IDropHandler
 
         if (!eventData.pointerDrag.TryGetComponent<InvenSpacePointerHandler>(out var handler)) return;
         if (handler.inventoryGrid_000_Base.itemData == null) return;
+        // Permanent storage transfers use the validated transaction, never the raid discard area.
+        if (handler.inventoryGrid_000_Base.Inventory_000_Base.IsLobbyInventory ||
+            handler.inventoryGrid_000_Base.Inventory_000_Base.IsMovingItem) return;
         //handler.inventoryGrid_000_Base.
 
 

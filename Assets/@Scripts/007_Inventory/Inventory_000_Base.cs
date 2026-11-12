@@ -75,7 +75,7 @@ public partial class Inventory_000_Base : MonoBehaviour
 
         foreach (var grid in lootingGridList)
         {
-            grid.inventoryCategory = InventoryCategory.LOOTING;
+            grid.inventoryCategory = IsLobbyInventory ? InventoryCategory.STORAGE : InventoryCategory.LOOTING;
             grid.gridIdx = lootingGridList.IndexOf(grid);
             grid.gridCategory = GridCategory.STASH;
             grid.Inventory_000_Base = this;
@@ -97,13 +97,13 @@ public partial class Inventory_000_Base : MonoBehaviour
 
             InventoryGrid_000_Base grid = null;
 
-            // °¡¹æ ¾ÆÀÌÅÛÀº gridIdx¹øÂ° ÀÏ¹Ý ½½·Ô¿¡ ³õ´Â´Ù.
+            // ê°€ë°© ì•„ì´í…œì€ gridIdxë²ˆì§¸ ì¼ë°˜ ìŠ¬ë¡¯ì— ë†“ëŠ”ë‹¤.
             if (item.isEquip == 0)
             {
                 if (item.gridIdx >= 0 && item.gridIdx < invenGridList.Count)
                     grid = invenGridList[item.gridIdx];
             }
-            // ÀåÂø ¾ÆÀÌÅÛÀº Àåºñ Á¾·ù¿¡ ¸Â´Â ½½·Ô¿¡ ³õ´Â´Ù.
+            // ìž¥ì°© ì•„ì´í…œì€ ìž¥ë¹„ ì¢…ë¥˜ì— ë§žëŠ” ìŠ¬ë¡¯ì— ë†“ëŠ”ë‹¤.
             else if (item.isEquip == 1)
             {
                 if (item.equipmentType == (int)EquipmentType.Weapon && item.gridIdx == 0)
@@ -117,13 +117,13 @@ public partial class Inventory_000_Base : MonoBehaviour
 
             if (grid == null)
             {
-                Debug.LogWarning($"¾ÆÀÌÅÛ {item.itemId}ÀÇ ½½·ÔÀ» Ã£À» ¼ö ¾øÀ½: isEquip={item.isEquip}, gridIdx={item.gridIdx}");
+                Debug.LogWarning($"ì•„ì´í…œ {item.itemId}ì˜ ìŠ¬ë¡¯ì„ ì°¾ì„ ìˆ˜ ì—†ìŒ: isEquip={item.isEquip}, gridIdx={item.gridIdx}");
                 continue;
             }
 
             if (grid.itemData != null)
             {
-                Debug.LogWarning($"¾ÆÀÌÅÛ {item.itemId}ÀÇ ´ë»ó ½½·Ô¿¡ ÀÌ¹Ì ¾ÆÀÌÅÛÀÌ ÀÖÀ½");
+                Debug.LogWarning($"ì•„ì´í…œ {item.itemId}ì˜ ëŒ€ìƒ ìŠ¬ë¡¯ì— ì´ë¯¸ ì•„ì´í…œì´ ìžˆìŒ");
                 continue;
             }
 
@@ -221,6 +221,7 @@ public partial class Inventory_000_Base : MonoBehaviour
     }
     public void SaveLootingBoxItems()
     {
+        if (IsLobbyInventory) return;
         LootingBox box = ItemLootingManager.Instance.nowLootingBox;
         if (box == null) return;
 
@@ -241,372 +242,20 @@ public partial class Inventory_000_Base : MonoBehaviour
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
         GameObject obj = await ObjectPool.Instance.PopFromPool(ItemName, itemRect);
+        var group = obj.GetComponent<CanvasGroup>();
+        if (group != null) { group.blocksRaycasts = true; group.alpha = 1f; }
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
         obj.transform.localScale = Vector3.one;
     }
-    public async UniTask InventoryClosed()
+    public UniTask InventoryClosed()
     {
-        IngameSessionManager.Instance.playerIngameData.invenItems.Clear();
-
-        AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, weaponGrid);
-        AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, shieldGrid);
-
-        foreach (var item in accessoryGridList)
-        {
-            AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, item);
-        }
-
-        foreach (var item in invenGridList)
-        {
-            AddGridItem(IngameSessionManager.Instance.playerIngameData.invenItems, item);
-        }
-
+        CancelDrags();
+        IngameSessionManager.Instance.playerIngameData.invenItems = ExtractingInvenItems();
         SaveLootingBoxItems();
-
-        void AddGridItem(List<ItemData> itemdataList, InventoryGrid_000_Base inventoryGrid_000_Base)
-        {
-            if (inventoryGrid_000_Base.itemData == null) return;
-
-            ItemData item = inventoryGrid_000_Base.itemData.DeepCopy();
-
-            itemdataList.Add(item);
-        }
+        return UniTask.CompletedTask;
     }
-    public async UniTask ItemMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
-    {
-        bool isMovingItem;
 
-        if (startGrid == targetGrid || startGrid.itemData == null) return;
-        if (!CanPlaceItem(targetGrid, startGrid.itemData)) return;
-        if (!CanPlaceItem(startGrid, targetGrid.itemData)) return;
-
-        //await ItemMoveOrChange(startGrid, targetGrid);
-
-        bool CanPlaceItem(InventoryGrid_000_Base grid, ItemData item)
-        {
-            if (item == null) return true;
-            if (grid.gridCategory == GridCategory.STASH) return true;
-
-            return item.equipmentType == (int)grid.gridCategory;
-        }
-
-        isMovingItem = true;
-
-        try
-        {
-            bool equipmentChanged = IsEquipmentSlot(startGrid) || IsEquipmentSlot(targetGrid);
-
-            await ItemMoveOrChange(startGrid, targetGrid);
-
-            await UpdateEquipmentSlot(startGrid);
-            await UpdateEquipmentSlot(targetGrid);
-
-            if (equipmentChanged) await IngameSessionManager.Instance.RefreshPlayerStatus();
-        }
-        finally
-        {
-            isMovingItem = false;
-        }
-
-        bool IsEquipmentSlot(InventoryGrid_000_Base grid)
-        {
-            return grid == weaponGrid || grid == shieldGrid || accessoryGridList.Contains(grid);
-        }
-
-        async UniTask UpdateEquipmentSlot(InventoryGrid_000_Base grid)
-        {
-            var session = IngameSessionManager.Instance;
-            int accessoryIdx = accessoryGridList.IndexOf(grid);
-
-            bool isEquipmentSlot = grid == weaponGrid || grid == shieldGrid || accessoryIdx >= 0;
-
-            // ¾ÆÀÌÅÛÀÌ ÀÖÀ¸¸é ÇöÀç ½½·Ô¿¡ ¸Â°Ô ÀúÀå Á¤º¸ ¼³Á¤
-            if (grid.itemData != null)
-            {
-                grid.itemData.isEquip = isEquipmentSlot ? (int)IsEquip.YES : (int)IsEquip.NO;
-                grid.itemData.gridIdx = accessoryIdx >= 0 ? accessoryIdx : isEquipmentSlot ? 0 : grid.gridIdx;
-            }
-
-            if (!isEquipmentSlot) return;
-
-            // ¾Ç¼¼¼­¸®´Â ÇØ´ç Ä­¸¸ °»½Å. ºó Ä­ÀÌ¸é ±âÁ¸ ÀåÂø Á¤º¸ Á¦°Å
-            if (accessoryIdx >= 0)
-            {
-                session.currentAccessoryDataArr[accessoryIdx] = grid.itemData?.DeepCopy();
-                return;
-            }
-
-            // ¹«±â¡¤¹æÆÐ´Â ±âÁ¸ ¿ÜÇü °»½Å ±â´É »ç¿ë
-            EquipmentType equipmentType = grid == weaponGrid ? EquipmentType.Weapon : EquipmentType.Shield;
-
-            if (grid.itemData == null)
-                await session.RefreshCurrentItem(grid, IsEquip.NO);
-            else
-                await session.RefreshCurrentItem(grid, IsEquip.YES);
-        }
-
-        async UniTask ItemMoveOrChange(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
-        {
-            InventoryCategory inventoryCategory = targetGrid.inventoryCategory;
-
-
-            if (targetGrid.itemData == null)
-            {
-                var data = startGrid.itemData.DeepCopy();
-
-                targetGrid.itemData = data;
-
-                await MakeInvenItem(string.Format(GScriptAddress.invenItem, startGrid.itemData.itemKey), targetGrid.itemImgParent);
-                //Instantiate(startGrid.itemImgParent.GetChild(0).gameObject, targetGrid.itemImgParent);
-
-                startGrid.itemData = null;
-
-                ObjectPool.Instance.PushToPool(startGrid.itemImgParent.GetChild(0).gameObject);
-                //Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
-            }
-            else
-            {
-                ItemData startItem = startGrid.itemData.DeepCopy();
-                ItemData targetItem = targetGrid.itemData.DeepCopy();
-
-                startItem.isEquip = targetGrid.itemData.isEquip;
-                targetItem.isEquip = startGrid.itemData.isEquip;
-
-                startItem.gridIdx = targetGrid.itemData.gridIdx;
-                targetItem.gridIdx = startGrid.itemData.gridIdx;
-
-                startGrid.itemData = targetItem;
-                targetGrid.itemData = startItem;
-
-                ObjectPool.Instance.PushToPool(startGrid.itemImgParent.GetChild(0).gameObject);
-                ObjectPool.Instance.PushToPool(targetGrid.itemImgParent.GetChild(0).gameObject);
-
-                //Destroy(startGrid.itemImgParent.GetChild(0).gameObject);
-                //Destroy(targetGrid.itemImgParent.GetChild(0).gameObject);
-
-                await MakeInvenItem(string.Format(GScriptAddress.invenItem, startGrid.itemData.itemKey), startGrid.itemImgParent);
-                await MakeInvenItem(string.Format(GScriptAddress.invenItem, targetGrid.itemData.itemKey), targetGrid.itemImgParent);
-            }
-        }
-
-        //switch (targetGrid.gridCategory)
-        //{
-        //    case GridCategory.STASH:
-        //        {
-
-
-        //        }
-
-        //        break;
-        //}
-
-
-        //switch (targetGrid)
-        //{
-        //    case var grid when grid == weaponGrid:
-        //        {
-        //            if (startGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
-        //            {
-        //                Debug.Log("StashToWeapon");
-        //                await ItemMoveOrChange(startGrid, targetGrid);
-        //                targetGrid.itemData.isEquip = (int)IsEquip.YES;
-        //                targetGrid.itemData.gridIdx = 0;
-
-        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
-
-
-        //                //ÀåÂø ¹«±â °»½Å
-        //            }
-        //        }
-        //        break;
-
-        //    case var grid when grid == shieldGrid:
-        //        {
-        //            if (startGrid.itemData.equipmentType == (int)EquipmentType.Shield)
-        //            {
-        //                Debug.Log("StashToArmor");
-
-        //                await ItemMoveOrChange(startGrid, targetGrid);
-        //                targetGrid.itemData.isEquip = (int)IsEquip.YES;
-        //                targetGrid.itemData.gridIdx = 0;
-
-        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Shield, IsEquip.YES);
-
-        //            }
-        //        }
-        //        break;
-
-        //    case var grid when accessoryGridList.Contains(grid):
-        //        {
-        //            if (accessoryGridList.Contains(startGrid))
-        //            {
-        //                Debug.Log("AccToAcc");
-        //                await ItemMoveOrChange(startGrid, targetGrid);
-
-        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
-        //            }
-
-        //            else if (startGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
-        //            {
-        //                Debug.Log("StashToAccessory");
-
-        //                int targetGridIdx = accessoryGridList.IndexOf(grid);
-
-        //                await ItemMoveOrChange(startGrid, targetGrid);
-        //                targetGrid.itemData.isEquip = (int)IsEquip.YES;
-        //                targetGrid.itemData.gridIdx = targetGridIdx;
-
-        //                await IngameSessionManager.Instance.RefreshPlayerStatus(targetGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
-
-        //            }
-        //        }
-        //        break;
-
-        //    default:
-        //        {
-        //            await ToStashMoveCheck(startGrid, targetGrid);
-
-        //            //int targetGridIdx = invenGridList.IndexOf(targetGrid);
-
-        //            //await ItemMoveOrChange(startGrid, targetGrid);
-
-
-
-        //        }
-        //        break;
-        //}
-
-
-        //Ç×»ó ÀåÂø ¾ÆÀÌÅÛ ¿©ºÎ È®ÀÎÇÏ°í °»½ÅÇØÁà¾ßÇÔ.
-
-        //async UniTask ToStashMoveCheck(InventoryGrid_000_Base startGrid, InventoryGrid_000_Base targetGrid)
-        //{
-        //    int targetGridIdx = targetGrid.gridIdx;
-
-        //    if (targetGrid.itemData != null)
-        //    {
-        //        switch (startGrid)
-        //        {
-        //            case var grid when grid == weaponGrid:
-        //                {
-        //                    if (targetGrid.itemData.equipmentType == (int)EquipmentType.Weapon)
-        //                    {
-        //                        Debug.Log("WeaponToStash");
-        //                        await ItemMoveOrChange(startGrid, targetGrid);
-
-        //                        //ÀåÂøÇÏ°í, ¾ÆÀÌÅÛµ¥ÀÌÅ¸ ¼­·Î ±³È¯ÇÏ°í, ÀÎ½ºÅÏ½Ã¿¡ÀÌÆ® ´Ù½ÃÇØ¼­ °¢°¢¿¡ Ã¤¿ö³Ö±â
-        //                        //startgrid¿¡ ÀÖ´Â isEquip = 1, targetGrid¿¡ ÀÖ´Â isEquip = 0;
-        //                        //startgrid.gridIdx = targetGrid.gridIdx, targetGrid.gridIdx = startgrid.gridIdx
-
-        //                        if (startGrid.itemData == null)
-        //                        {
-        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Weapon, IsEquip.NO);
-
-
-        //                            //¾ø¾îÁø°ÅÀÓ
-        //                        }
-        //                        else
-        //                        {
-        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Weapon, IsEquip.YES);
-
-
-        //                            //°»½Å ¤¡¤¡
-        //                        }
-
-
-        //                    }
-        //                }
-        //                break;
-
-        //            case var grid when grid == shieldGrid:
-        //                {
-        //                    if (targetGrid.itemData.equipmentType == (int)EquipmentType.Shield)
-        //                    {
-        //                        Debug.Log("ArmorToStash");
-        //                        await ItemMoveOrChange(startGrid, targetGrid);
-
-        //                        if (startGrid.itemData == null)
-        //                        {
-        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Shield, IsEquip.NO);
-
-
-        //                            //¾ø¾îÁø°ÅÀÓ
-        //                        }
-        //                        else
-        //                        {
-        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Shield, IsEquip.YES);
-        //                            //°»½Å ¤¡¤¡
-        //                        }
-
-
-
-        //                    }
-        //                }
-        //                break;
-
-        //            case var grid when accessoryGridList.Contains(grid):
-        //                {
-        //                    if (targetGrid.itemData.equipmentType == (int)EquipmentType.Accessory)
-        //                    {
-        //                        Debug.Log("AccessoryToStash");
-        //                        await ItemMoveOrChange(startGrid, targetGrid);
-
-        //                        if (startGrid.itemData == null)
-        //                        {
-        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(EquipmentType.Accessory, IsEquip.NO);
-
-
-        //                            //¾ø¾îÁø°ÅÀÓ
-        //                        }
-        //                        else
-        //                        {
-        //                            await IngameSessionManager.Instance.RefreshPlayerStatus(startGrid.itemData, EquipmentType.Accessory, IsEquip.YES);
-        //                            //°»½Å ¤¡¤¡
-        //                        }
-
-
-        //                    }
-        //                }
-        //                break;
-
-        //            default:
-        //                {
-        //                    Debug.Log("StashToStash");
-        //                    //stash to stash
-        //                    await ItemMoveOrChange(startGrid, targetGrid);
-        //                }
-        //                break;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        switch (startGrid)
-        //        {
-        //            case var grid when invenGridList.Contains(grid) || lootingGridList.Contains(grid):
-        //                {
-        //                    await ItemMoveOrChange(startGrid, targetGrid);
-        //                }
-        //                break;
-
-        //            default:
-        //                {
-        //                    await ItemMoveOrChange(startGrid, targetGrid);
-
-        //                    await IngameSessionManager.Instance.RefreshPlayerStatus((EquipmentType)targetGrid.itemData.equipmentType, IsEquip.NO);
-        //                }
-        //                break;
-        //        }
-        //        //targetgridÀº ¾ÆÀÌÅÛ ¾ø´Â ºó Ä­ stash¿¡¼­ Áö±Ý 
-        //    };
-
-        //    targetGrid.itemData.isEquip = (int)IsEquip.NO;
-        //    targetGrid.itemData.gridIdx = targetGridIdx;
-        //}
-
-
-
-    }
     public void SettingItemConfigWindow(ItemData itemData)
     {
         SettingItemSpecText(itemData);
@@ -699,7 +348,7 @@ public partial class Inventory_000_Base : MonoBehaviour
                 }
         }
 
-        options.Sort((a, b) => a.optionId.CompareTo(b.optionId));
+        options?.Sort((a, b) => a.optionId.CompareTo(b.optionId));
 
         StringBuilder builder = new();
 

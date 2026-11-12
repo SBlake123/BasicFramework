@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,113 +12,89 @@ public enum InventoryEmpty
 }
 
 
-public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler, IEndDragHandler, IBeginDragHandler, IPointerClickHandler
+public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler, IEndDragHandler, IBeginDragHandler, IPointerClickHandler, IInitializePotentialDragHandler
 {
     public RectTransform dragObject { get; set; }
 
-    public InventoryGrid_000_Base inventoryGrid_000_Base; //µ¥ÀÌÅÍ ºÒ·¯¿À±â
+    public InventoryGrid_000_Base inventoryGrid_000_Base; //ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+
+    private int dragVersion;
+    private bool dragging;
+
+    public void OnInitializePotentialDrag(PointerEventData eventData)
+    {
+        eventData.useDragThreshold = true;
+        EventSystem.current.pixelDragThreshold = Mathf.Max(25, EventSystem.current.pixelDragThreshold);
+    }
 
     public async void OnBeginDrag(PointerEventData eventData)
     {
-        EventSystem.current.pixelDragThreshold = 25;
-
-        switch (inventoryGrid_000_Base.itemData)
+        var owner = inventoryGrid_000_Base.Inventory_000_Base;
+        var item = inventoryGrid_000_Base.itemData;
+        if (item == null || owner == null || owner.IsMovingItem) return;
+        CancelDrag();
+        dragging = true;
+        int version = dragVersion;
+        try
         {
-            case not null:
-                {
-                    var instance = await ObjectPool.Instance.PopFromPool(string.Format(GScriptAddress.invenItem, inventoryGrid_000_Base.itemData.itemKey), IngameUIManager.Instance.hudCanvas.transform);
-
-                    dragObject = instance.GetComponent<RectTransform>();
-                    dragObject.SetAsLastSibling();
-
-                    CanvasGroup group;
-
-                    switch (instance.TryGetComponent<CanvasGroup>(out group))
-                    {
-                        case false:
-                            {
-                                group = instance.AddComponent<CanvasGroup>();
-                                break;
-                            }
-                    }
-
-                    group.blocksRaycasts = false;
-
-                    MoveDragObject(eventData);
-                    break;
-                }
-            default:
-                {
-
-                    break;
-                }
+            var instance = await ObjectPool.Instance.PopFromPool(
+                string.Format(GScriptAddress.invenItem, item.itemKey), owner.DragCanvas.transform);
+            if (this == null || !isActiveAndEnabled || !dragging || version != dragVersion)
+            {
+                ObjectPool.Instance.PushToPool(instance);
+                return;
+            }
+            dragObject = instance.GetComponent<RectTransform>();
+            dragObject.SetAsLastSibling();
+            if (!instance.TryGetComponent<CanvasGroup>(out var group))
+                group = instance.AddComponent<CanvasGroup>();
+            group.blocksRaycasts = false;
+            MoveDragObject(eventData);
+        }
+        catch (Exception error)
+        {
+            if (this != null && version == dragVersion) CancelDrag();
+            Debug.LogException(error);
         }
     }
+
     public void OnDrag(PointerEventData eventData)
     {
-        //¼³¸í ²ô±â
+        if (!dragging) return;
         inventoryGrid_000_Base.Inventory_000_Base.itemConfigWindow.gameObject.SetActive(false);
-
-        switch (inventoryGrid_000_Base.itemData)
-        {
-            case not null:
-                {
-                    
-                    MoveDragObject(eventData);
-                    break;
-                }
-            default:
-                {
-
-                    break;
-                }
-        }
+        MoveDragObject(eventData);
     }
+
     public void OnEndDrag(PointerEventData eventData)
     {
-        switch (dragObject)
-        {
-            case null:
-                return;
-        }
-
-        var hitObject = eventData.pointerCurrentRaycast.gameObject;
-
-        var targetGrid = hitObject != null
-            ? hitObject.GetComponentInParent<InventoryGrid_000_Base>()
-            : null;
-
-        switch (targetGrid)
-        {
-            case not null:
-                {
-
-                    switch (targetGrid == inventoryGrid_000_Base)
-                    {
-                        case false:
-                            MoveItem(targetGrid);
-                            break;
-                    }
-                    ObjectPool.Instance.PushToPool(dragObject.gameObject);
-                    dragObject = null;
-                    break;
-                }
-            default:
-                {
-                    ObjectPool.Instance.PushToPool(dragObject.gameObject);
-                    dragObject = null;
-                    break;
-                }
-        }
+        bool ready = dragObject != null && dragging;
+        var hit = eventData.pointerCurrentRaycast.gameObject;
+        var target = hit != null ? hit.GetComponentInParent<InventoryGrid_000_Base>() : null;
+        CancelDrag();
+        if (ready && target != null)
+            inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, target).Forget();
     }
+
+    public void CancelDrag()
+    {
+        dragging = false;
+        dragVersion++;
+        if (dragObject == null) return;
+        var instance = dragObject.gameObject;
+        dragObject = null;
+        ObjectPool.Instance.PushToPool(instance);
+    }
+
+    private void OnDisable() => CancelDrag();
+
     public void OnPointerClick(PointerEventData eventData)
     {
         switch (inventoryGrid_000_Base.itemData)
         {
             case not null:
                 {
-                    //¹«±â³ª ¾Æ¸Ó·ù¸é ´õºíÅ¬¸¯ÇÏ¸é ÀåÂø
-                    //¾Ç¼¼¼­¸®¸é ¾È µË´Ï´Ù.
+                    //ë¬´ê¸°ë‚˜ ì•„ë¨¸ë¥˜ë©´ ë”ë¸”í´ë¦­í•˜ë©´ ì¥ì°©
+                    //ì•…ì„¸ì„œë¦¬ë©´ ì•ˆ ë©ë‹ˆë‹¤.
                     break;
                 }
             default:
@@ -149,7 +127,7 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                         ? null
                         : canvas.worldCamera;
 
-                    // Grid Áß½ÉÀÌ È­¸é À§ÂÊÀÎÁö È®ÀÎ
+                    // Grid ì¤‘ì‹¬ì´ í™”ë©´ ìœ„ìª½ì¸ì§€ í™•ì¸
                     Vector3 gridCenter = gridRect.TransformPoint(gridRect.rect.center);
                     Vector2 screenPosition =
                         RectTransformUtility.WorldToScreenPoint(uiCamera, gridCenter);
@@ -159,16 +137,16 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
                     Vector3[] corners = new Vector3[4];
                     gridRect.GetWorldCorners(corners);
 
-                    // À§ÂÊ: Ã¢ÀÇ ¿À¸¥ÂÊ À§¸¦ ±âÁØÀ¸·Î ¾Æ·¡·Î ÆîÄ§
-                    // ¾Æ·¡ÂÊ: Ã¢ÀÇ ¿À¸¥ÂÊ ¾Æ·¡¸¦ ±âÁØÀ¸·Î À§·Î ÆîÄ§
+                    // ìœ„ìª½: ì°½ì˜ ì˜¤ë¥¸ìª½ ìœ„ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì•„ë˜ë¡œ í¼ì¹¨
+                    // ì•„ë˜ìª½: ì°½ì˜ ì˜¤ë¥¸ìª½ ì•„ë˜ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ìœ„ë¡œ í¼ì¹¨
                     windowRect.pivot = new Vector2(1f, isUpperHalf ? 1f : 0f);
 
                     window.gameObject.SetActive(true);
 
-                    // corners[1]: Grid ¿ŞÂÊ À§ / corners[0]: Grid ¿ŞÂÊ ¾Æ·¡
+                    // corners[1]: Grid ì™¼ìª½ ìœ„ / corners[0]: Grid ì™¼ìª½ ì•„ë˜
                     windowRect.position = isUpperHalf ? corners[1] : corners[0];
 
-                    // ¿ŞÂÊÀ¸·Î °£°İ, À§/¾Æ·¡·Î ¾à°£ ÀÌµ¿
+                    // ì™¼ìª½ìœ¼ë¡œ ê°„ê²©, ìœ„/ì•„ë˜ë¡œ ì•½ê°„ ì´ë™
                     windowRect.anchoredPosition += new Vector2(
                         -10f,
                         isUpperHalf ? -10f : 10f
@@ -205,11 +183,11 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
     {
         if (dragObject == null) return;
 
-        var canvasRect = (RectTransform)IngameUIManager.Instance.hudCanvas.transform;
+        var canvasRect = (RectTransform)inventoryGrid_000_Base.Inventory_000_Base.DragCanvas.transform;
 
-        var camera = IngameUIManager.Instance.hudCanvas.renderMode == RenderMode.ScreenSpaceOverlay
+        var camera = inventoryGrid_000_Base.Inventory_000_Base.DragCanvas.renderMode == RenderMode.ScreenSpaceOverlay
             ? null
-            : IngameUIManager.Instance.hudCanvas.worldCamera;
+            : inventoryGrid_000_Base.Inventory_000_Base.DragCanvas.worldCamera;
 
         RectTransformUtility.ScreenPointToWorldPointInRectangle(
             canvasRect,
@@ -222,6 +200,6 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
     }
     private void MoveItem(InventoryGrid_000_Base targetGrid)
     {
-        inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, targetGrid);
+        inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, targetGrid).Forget();
     }
 }

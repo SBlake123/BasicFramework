@@ -1,0 +1,556 @@
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Connection attempt to the License Client on channel: "LicenseClient-shake" failed because channel doesn't exist; code: "0x80000002"
+[Licensing::Module] Successfully launched the LicensingClient (PId: 23852)
+[Licensing::IpcConnector] Successfully connected to the License Client on channel: "LicenseClient-shake" at "2026-11-11T14:04:50.8848796Z"
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.15.0+66d4389
+  Session Id:              5beb5404d20340a6a5b760e19e197d5d
+  Correlation Id:          5b6bc4636b1a99011c236ff2f054bd89
+  External correlation Id: 6304609609460770849
+  Machine Id:              pT65kPvzJO1ItAfgH9wYcmRaeNw=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-shake" (connect: 0.53s, validation: 0.04s, handshake: 0.81s)
+[Licensing::IpcConnector] Successfully connected to the License Notification on channel: "LicenseClient-shake-notifications" at "2026-11-11T14:04:51.7418463Z"
+[Licensing::Module] Connected to LicensingClient (PId: 23852, launch time: 0.00, total connection time: 1.38s)
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Error: Code 500 while processing request (status: Unable to update licenses. Errors: No ULF license found.,Token not found in cache)
+[Licensing::Client] Error: Code 500 while updating license in client (status: Unable to update licenses. Errors: No ULF license found.,Token not found in cache)
+Built from '2022.3/release' branch; Version is '2022.3.20f1 (61c2feb0970d) revision 6406910'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 11  (10.0.26100) 64bit Core' Language: 'ko' Physical Memory: 31863 MB
+[Licensing::Client] Successfully resolved entitlements
+[Licensing::Module] Serial number assigned to: "14568887912964-UnityPersXXXX"
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2022.3.20f1\Editor\Unity.exe
+-batchmode
+-nographics
+-projectPath
+D:/UnityProject/BasicFramework
+-executeMethod
+LobbyStashSetup.Validate
+-quit
+-logFile
+D:/UnityProject/BasicFramework/stash-validation-2.log
+Successfully changed project path to: D:/UnityProject/BasicFramework
+D:/UnityProject/BasicFramework
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [20460] Host "[IP] 192.168.45.235 [Port] 55504 [Flags] 2 [Guid] 2904432028 [EditorId] 2904432028 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-COG72J1) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+
+Player connection [20460] Host "[IP] 192.168.45.235 [Port] 55504 [Flags] 2 [Guid] 2904432028 [EditorId] 2904432028 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-COG72J1) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+
+[Physics::Module] Initialized MultithreadedJobDispatcher with 15 workers.
+[Package Manager] UpmClient::Connect -- Connected to IPC stream "Upm-8352" after 0.2 seconds.
+[Licensing::Client] Successfully resolved entitlements
+[Package Manager] Restoring resolved packages state from cache
+[Licensing::Client] Successfully resolved entitlement details
+[Package Manager] Registered 61 packages:
+  Packages from [https://packages.unity.com]:
+    com.unity.addressables@1.21.21 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.addressables@1.21.21)
+    com.unity.ads@4.4.2 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.ads@4.4.2)
+    com.unity.ai.navigation@1.1.5 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.ai.navigation@1.1.5)
+    com.unity.analytics@3.8.1 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.analytics@3.8.1)
+    com.unity.collab-proxy@2.8.2 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.collab-proxy@2.8.2)
+    com.unity.device-simulator.devices@1.0.1 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.device-simulator.devices@1.0.1)
+    com.unity.ide.rider@3.0.27 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.ide.rider@3.0.27)
+    com.unity.ide.visualstudio@2.0.22 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.ide.visualstudio@2.0.22)
+    com.unity.ide.vscode@1.2.5 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.ide.vscode@1.2.5)
+    com.unity.inputsystem@1.7.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.inputsystem@1.7.0)
+    com.unity.test-framework@1.1.33 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.test-framework@1.1.33)
+    com.unity.textmeshpro@3.0.6 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.textmeshpro@3.0.6)
+    com.unity.timeline@1.7.6 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.timeline@1.7.6)
+    com.unity.visualscripting@1.9.1 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.visualscripting@1.9.1)
+    com.unity.xr.legacyinputhelpers@2.1.10 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.xr.legacyinputhelpers@2.1.10)
+    com.unity.ext.nunit@1.0.6 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.ext.nunit@1.0.6)
+    com.unity.editorcoroutines@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.editorcoroutines@1.0.0)
+    com.unity.performance.profile-analyzer@1.2.2 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.performance.profile-analyzer@1.2.2)
+    com.unity.testtools.codecoverage@1.2.5 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.testtools.codecoverage@1.2.5)
+    com.unity.services.analytics@5.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.services.analytics@5.0.0)
+    com.unity.scriptablebuildpipeline@1.21.23 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.scriptablebuildpipeline@1.21.23)
+    com.unity.settings-manager@2.0.1 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.settings-manager@2.0.1)
+    com.unity.services.core@1.12.2 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.services.core@1.12.2)
+    com.unity.nuget.newtonsoft-json@3.2.1 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1)
+  Built-in packages:
+    com.unity.2d.sprite@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.2d.sprite@1.0.0)
+    com.unity.2d.tilemap@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.2d.tilemap@1.0.0)
+    com.unity.feature.development@1.0.1 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.feature.development@1.0.1)
+    com.unity.ugui@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.ugui@1.0.0)
+    com.unity.modules.ai@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.ai@1.0.0)
+    com.unity.modules.androidjni@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.androidjni@1.0.0)
+    com.unity.modules.animation@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.animation@1.0.0)
+    com.unity.modules.assetbundle@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.assetbundle@1.0.0)
+    com.unity.modules.audio@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.audio@1.0.0)
+    com.unity.modules.cloth@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.cloth@1.0.0)
+    com.unity.modules.director@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.director@1.0.0)
+    com.unity.modules.imageconversion@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.imageconversion@1.0.0)
+    com.unity.modules.imgui@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.imgui@1.0.0)
+    com.unity.modules.jsonserialize@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.jsonserialize@1.0.0)
+    com.unity.modules.particlesystem@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.particlesystem@1.0.0)
+    com.unity.modules.physics@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.physics@1.0.0)
+    com.unity.modules.physics2d@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.physics2d@1.0.0)
+    com.unity.modules.screencapture@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.screencapture@1.0.0)
+    com.unity.modules.terrain@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.terrain@1.0.0)
+    com.unity.modules.terrainphysics@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.terrainphysics@1.0.0)
+    com.unity.modules.tilemap@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.tilemap@1.0.0)
+    com.unity.modules.ui@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.ui@1.0.0)
+    com.unity.modules.uielements@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.uielements@1.0.0)
+    com.unity.modules.umbra@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.umbra@1.0.0)
+    com.unity.modules.unityanalytics@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.unityanalytics@1.0.0)
+    com.unity.modules.unitywebrequest@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.unitywebrequest@1.0.0)
+    com.unity.modules.unitywebrequestassetbundle@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.unitywebrequestassetbundle@1.0.0)
+    com.unity.modules.unitywebrequestaudio@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.unitywebrequestaudio@1.0.0)
+    com.unity.modules.unitywebrequesttexture@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.unitywebrequesttexture@1.0.0)
+    com.unity.modules.unitywebrequestwww@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.unitywebrequestwww@1.0.0)
+    com.unity.modules.vehicles@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.vehicles@1.0.0)
+    com.unity.modules.video@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.video@1.0.0)
+    com.unity.modules.vr@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.vr@1.0.0)
+    com.unity.modules.wind@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.wind@1.0.0)
+    com.unity.modules.xr@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.xr@1.0.0)
+    com.unity.modules.subsystems@1.0.0 (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.unity.modules.subsystems@1.0.0)
+  Git packages:
+    com.cysharp.unitask@https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask (location: D:\UnityProject\BasicFramework\Library\PackageCache\com.cysharp.unitask@f213ff497e)
+[Subsystems] No new subsystems found in resolved package list.
+Package Manager log level set to [2]
+[Package Manager] Done registering packages in 0.10 seconds
+[Licensing::Client] Successfully resolved entitlements
+Refreshing native plugins compatible for Editor in 23.12 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2022.3.20f1 (61c2feb0970d)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/UnityProject/BasicFramework/Assets
+Forcing GfxDevice: Null
+GfxDevice: creating device client; threaded=0; jobified=0
+NullGfxDevice:
+    Version:  NULL 1.0 [1.0]
+    Renderer: Null Device
+    Vendor:   Unity Technologies
+[Licensing::Client] Successfully resolved entitlements
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56352
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+Using cacheserver namespaces - metadata:defaultmetadata, artifacts:defaultartifacts
+ImportWorker Server TCP listen port: 0
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+[Licensing::Client] Successfully resolved entitlements
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.034989 seconds.
+- Loaded All Assemblies, in  0.322 seconds
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Android Extension - Scanning For ADB Devices 198 ms
+Native extension for WebGL target not found
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.426 seconds
+Domain Reload Profiling: 745ms
+	BeginReloadAssembly (98ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (0ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (1ms)
+	RebuildCommonClasses (26ms)
+	RebuildNativeTypeToScriptingClass (7ms)
+	initialDomainReloadingComplete (79ms)
+	LoadAllAssembliesAndSetupDomain (108ms)
+		LoadAssemblies (100ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (101ms)
+			TypeCache.Refresh (100ms)
+				TypeCache.ScanAssembly (90ms)
+			ScanForSourceGeneratedMonoScriptInfo (0ms)
+			ResolveRequiredComponents (0ms)
+	FinalizeReload (427ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (392ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (280ms)
+			SetLoadedEditorAssemblies (2ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (1ms)
+			ProcessInitializeOnLoadAttributes (83ms)
+			ProcessInitializeOnLoadMethodAttributes (27ms)
+			AfterProcessingInitializeOnLoad (0ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (0ms)
+[Licensing::Client] Successfully resolved entitlements
+[Licensing::Client] Successfully resolved entitlements
+Application.AssetDatabase Initial Refresh Start
+[ScriptCompilation] Requested script compilation because: Assetdatabase observed changes in script compilation related files
+Starting: C:\Program Files\Unity\Hub\Editor\2022.3.20f1\Editor\Data\bee_backend.exe --dont-print-to-structured-log --ipc --defer-dag-verification --dagfile="Library/Bee/1300b0aE.dag" --continue-on-failure --profile="Library/Bee/backend1.traceevents" ScriptAssemblies
+WorkingDir: D:/UnityProject/BasicFramework
+DisplayProgressbar: Compiling Scripts
+ExitCode: 0 Duration: 0s553ms
+[800/806    0s] Csc Library/Bee/artifacts/1300b0aE.dag/Assembly-CSharp.dll (+2 others)
+Assets\@Scripts\000_Base\ObjectPool\PooledObject.cs(8,19): warning CS0108: 'PooledObject.name' hides inherited member 'Object.name'. Use the new keyword if hiding was intended.
+
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_001_IngameField.cs(10,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_004_Continue.cs(10,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_003_NewGame.cs(10,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_001_IngameField.cs(15,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_004_Continue.cs(15,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_003_NewGame.cs(15,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\000_Base\00_Singleton\Singleton.cs(62,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_002_Option.cs(26,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(100,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(105,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(110,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_003_Option.cs(26,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(128,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(129,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(131,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(25,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_004_Continue.cs(19,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(34,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_003_Option.cs(42,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_003_NewGame.cs(19,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_003_Option.cs(81,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(34,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_002_Option.cs(113,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(44,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\002_Ingame\Portal.cs(81,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(50,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(111,23): warning CS8321: The local function 'GroundRectPlay' is declared but never used
+
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(88,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(56,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(62,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(390,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(423,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+
+Assets\@Scripts\004_Item\001_Weapon\Ember_Branch.cs(12,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\004_Item\001_Weapon\Sword.cs(12,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(478,52): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(482,53): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\004_Item\002_Shield\Amethyst_Shield.cs(9,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\004_Item\099_Looting\LootingBox.cs(36,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+
+Assets\@Scripts\006_Monster\Monster_000_Base.cs(96,34): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\008_EquipmentEffect\EquipmentEffectBase.cs(31,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(9,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(13,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(18,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(9,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(23,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(13,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(28,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(18,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(23,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(28,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+
+Assets\@Scripts\002_Manager\SystemManager\Player\PlayerDataManager.cs(57,44): warning CS0067: The event 'PlayerDataManager.OnRaidChanged' is never used
+
+Assets\@Scripts\002_Manager\SceneManager\IngameSceneManager.cs(58,25): warning CS0067: The event 'IngameSceneManager.InventoryClosed' is never used
+
+Assets\@Scripts\002_Manager\SystemManager\Player\PlayerDataManager.cs(56,44): warning CS0067: The event 'PlayerDataManager.OnProfileChanged' is never used
+
+Assets\@Scripts\002_Manager\SystemManager\ResourceManager.cs(23,10): warning CS0414: The field 'ResourceManager.isAssetLoaded' is assigned but its value is never used
+
+Assets\@Assets\UI\Farm Game UI - Simple 2D UI\Script\CustomButton.cs(15,14): warning CS0414: The field 'CustomButton.isHeld' is assigned but its value is never used
+
+Assets\@Scripts\003_Player\Player_001_Input.cs(37,18): warning CS0414: The field 'Player.isAttackRequested' is assigned but its value is never used
+[801/806    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.pdb
+[802/806    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp.dll
+[803/806    0s] Csc Library/Bee/artifacts/1300b0aE.dag/Assembly-CSharp-Editor.dll (+2 others)
+[804/806    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.pdb
+[805/806    0s] CopyFiles Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+*** Tundra build success (0.53 seconds), 6 items updated, 806 evaluated
+Assets\@Scripts\000_Base\ObjectPool\PooledObject.cs(8,19): warning CS0108: 'PooledObject.name' hides inherited member 'Object.name'. Use the new keyword if hiding was intended.
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_001_IngameField.cs(10,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_004_Continue.cs(10,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_003_NewGame.cs(10,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_001_IngameField.cs(15,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_004_Continue.cs(15,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_003_NewGame.cs(15,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\000_Base\00_Singleton\Singleton.cs(62,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_002_Option.cs(26,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(100,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(105,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(110,37): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_003_Option.cs(26,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(128,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(129,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+Assets\@Scripts\000_Base\00_Singleton\MonoSingleton.cs(131,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(25,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_004_Continue.cs(19,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(34,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_003_Option.cs(42,38): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_003_NewGame.cs(19,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\002_Ingame\Pages\Ingame_003_Option.cs(81,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(34,26): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_002_Option.cs(113,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(44,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\002_Ingame\Portal.cs(81,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(50,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(111,23): warning CS8321: The local function 'GroundRectPlay' is declared but never used
+Assets\@Scripts\001_Scene\001_Title\Title_001_Main.cs(88,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(56,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\Ingame\IngameUIManager.cs(62,27): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(390,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(423,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+Assets\@Scripts\004_Item\001_Weapon\Ember_Branch.cs(12,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\004_Item\001_Weapon\Sword.cs(12,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(478,52): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\PopupManager.cs(482,53): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\004_Item\002_Shield\Amethyst_Shield.cs(9,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\004_Item\099_Looting\LootingBox.cs(36,9): warning CS4014: Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the 'await' operator to the result of the call.
+Assets\@Scripts\006_Monster\Monster_000_Base.cs(96,34): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\008_EquipmentEffect\EquipmentEffectBase.cs(31,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(9,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(13,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(18,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(9,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(23,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(13,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinFallen.cs(28,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(18,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(23,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\100_Skin\MonsterSkinSkeleton.cs(28,35): warning CS1998: This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+Assets\@Scripts\002_Manager\SystemManager\Player\PlayerDataManager.cs(57,44): warning CS0067: The event 'PlayerDataManager.OnRaidChanged' is never used
+Assets\@Scripts\002_Manager\SceneManager\IngameSceneManager.cs(58,25): warning CS0067: The event 'IngameSceneManager.InventoryClosed' is never used
+Assets\@Scripts\002_Manager\SystemManager\Player\PlayerDataManager.cs(56,44): warning CS0067: The event 'PlayerDataManager.OnProfileChanged' is never used
+Assets\@Scripts\002_Manager\SystemManager\ResourceManager.cs(23,10): warning CS0414: The field 'ResourceManager.isAssetLoaded' is assigned but its value is never used
+Assets\@Assets\UI\Farm Game UI - Simple 2D UI\Script\CustomButton.cs(15,14): warning CS0414: The field 'CustomButton.isHeld' is assigned but its value is never used
+Assets\@Scripts\003_Player\Player_001_Input.cs(37,18): warning CS0414: The field 'Player.isAttackRequested' is assigned but its value is never used
+AssetDatabase: script compilation time: 0.944618s
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.668 seconds
+Refreshing native plugins compatible for Editor in 10.57 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Start importing Assets/Editor/LobbyStashSetup.cs using Guid(d8e22be95f40a33479e90c3d116d56f3) Importer(-1,00000000000000000000000000000000)  -> (artifact id: '1a297a6a1b0609ec9412463e6aa782ab') in 0.010585 seconds
+Start importing Assets/@Scripts/002_Manager/SceneManager/LobbySceneManager.cs using Guid(3f6571e24175df746b6e818b47924273) Importer(-1,00000000000000000000000000000000)  -> (artifact id: '06e51c6ae0c7e4a4235c2fe444b45780') in 0.001744 seconds
+Refreshing native plugins compatible for Editor in 9.58 ms, found 3 plugins.
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Native extension for WebGL target not found
+GPGSUpgrader start
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+GooglePlayGames.Editor.GPGSUpgrader:.cctor () (at Assets/GooglePlayGames/com.google.play.games/Editor/GPGSUpgrader.cs:38)
+System.Runtime.CompilerServices.RuntimeHelpers:RunClassConstructor (System.RuntimeTypeHandle)
+UnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.Type[])
+
+(Filename: Assets/GooglePlayGames/com.google.play.games/Editor/GPGSUpgrader.cs Line: 38)
+
+GPGSUpgrader done
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:Log (UnityEngine.LogType,object)
+UnityEngine.Debug:Log (object)
+GooglePlayGames.Editor.GPGSUpgrader:.cctor () (at Assets/GooglePlayGames/com.google.play.games/Editor/GPGSUpgrader.cs:57)
+System.Runtime.CompilerServices.RuntimeHelpers:RunClassConstructor (System.RuntimeTypeHandle)
+UnityEditor.EditorAssemblies:ProcessInitializeOnLoadAttributes (System.Type[])
+
+(Filename: Assets/GooglePlayGames/com.google.play.games/Editor/GPGSUpgrader.cs Line: 57)
+
+Mono: successfully reloaded assembly
+- Finished resetting the current domain, in  0.895 seconds
+Domain Reload Profiling: 1558ms
+	BeginReloadAssembly (125ms)
+		ExecutionOrderSort (0ms)
+		DisableScriptedObjects (3ms)
+		BackupInstance (0ms)
+		ReleaseScriptingObjects (0ms)
+		CreateAndSetChildDomain (18ms)
+	RebuildCommonClasses (26ms)
+	RebuildNativeTypeToScriptingClass (8ms)
+	initialDomainReloadingComplete (41ms)
+	LoadAllAssembliesAndSetupDomain (462ms)
+		LoadAssemblies (351ms)
+		RebuildTransferFunctionScriptingTraits (0ms)
+		AnalyzeDomain (189ms)
+			TypeCache.Refresh (167ms)
+				TypeCache.ScanAssembly (152ms)
+			ScanForSourceGeneratedMonoScriptInfo (16ms)
+			ResolveRequiredComponents (4ms)
+	FinalizeReload (896ms)
+		ReleaseScriptCaches (0ms)
+		RebuildScriptCaches (0ms)
+		SetupLoadedEditorAssemblies (805ms)
+			LogAssemblyErrors (0ms)
+			InitializePlatformSupportModulesInManaged (31ms)
+			SetLoadedEditorAssemblies (2ms)
+			RefreshPlugins (0ms)
+			BeforeProcessingInitializeOnLoad (56ms)
+			ProcessInitializeOnLoadAttributes (653ms)
+			ProcessInitializeOnLoadMethodAttributes (50ms)
+			AfterProcessingInitializeOnLoad (13ms)
+			EditorAssembliesLoaded (0ms)
+		ExecutionOrderSort2 (0ms)
+		AwakeInstancesAfterBackupRestoration (5ms)
+Refreshing native plugins compatible for Editor in 9.86 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Asset Pipeline Refresh (id=0bf9163ccddab2647bb17d3e8e628df1): Total: 4.089 seconds - Initiated by InitialRefreshV2(ForceSynchronousImport)
+	Summary:
+		Imports: total=26 (actual=2, local cache=24, cache server=0)
+		Asset DB Process Time: managed=1 ms, native=1376 ms
+		Asset DB Callback time: managed=51 ms, native=12 ms
+		Scripting: domain reloads=1, domain reload time=1651 ms, compile time=945 ms, other=50 ms
+		Project Asset Count: scripts=6606, non-scripts=8945
+		Asset File Changes: new=0, changed=2, moved=0, deleted=0
+		Scan Filter Count: 0
+	InvokeBeforeRefreshCallbacks: 0.335ms
+	ApplyChangesToAssetFolders: 0.047ms
+	Scan: 55.441ms
+	OnSourceAssetsModified: 1.638ms
+	GetAllGuidsForCategorization: 1.651ms
+	CategorizeAssets: 165.018ms
+	ImportOutOfDateAssets: 968.718ms (-22.528ms without children)
+		ImportManagerImport: 17.670ms (4.820ms without children)
+			ImportInProcess: 12.846ms
+			UpdateCategorizedAssets: 0.003ms
+		CompileScripts: 944.705ms
+		ReloadNativeAssets: 0.016ms
+		UnloadImportedAssets: 25.645ms
+		ReloadImportedAssets: 0.000ms
+		EnsureUptoDateAssetsAreRegisteredWithGuidPM: 2.212ms
+		InitializingProgressBar: 0.000ms
+		PostProcessAllAssetNotificationsAddChangedAssets: 0.000ms
+		OnDemandSchedulerStart: 0.999ms
+	PostProcessAllAssets: 51.722ms
+	Hotreload: 10.178ms
+	GatherAllCurrentPrimaryArtifactRevisions: 0.000ms
+	UnloadStreamsBegin: 0.725ms
+	PersistCurrentRevisions: 0.512ms
+	UnloadStreamsEnd: 0.020ms
+	GenerateScriptTypeHashes: 1.371ms
+	Untracked: 2832.669ms
+Application.AssetDatabase Initial Refresh End
+Scanning for USB devices : 18.099ms
+Initializing Unity extensions:
+[Licensing::Client] Successfully resolved entitlements
+[MODES] ModeService[none].Initialize
+[MODES] ModeService[none].LoadModes
+[MODES] Loading mode Default (0) for mode-current-id-BasicFramework
+CreateAssetMenu attribute on ItemData will be ignored as ItemData is not derived from ScriptableObject.
+UnityEngine.StackTraceUtility:ExtractStackTrace ()
+UnityEngine.DebugLogHandler:LogFormat (UnityEngine.LogType,UnityEngine.Object,string,object[])
+UnityEngine.Logger:LogFormat (UnityEngine.LogType,string,object[])
+UnityEngine.Debug:LogWarningFormat (string,object[])
+UnityEditor.AttributeHelper:ExtractCreateAssetMenuItems ()
+
+ProgressiveSceneManager::Cancel()
+Unloading 7 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 199 unused Assets / (0.5 MB). Loaded Objects now: 5907.
+Memory consumption went from 163.4 MB to 162.9 MB.
+Total: 13.582300 ms (FindLiveObjects: 0.352400 ms CreateObjectMapping: 0.081800 ms MarkObjects: 12.820500 ms  DeleteObjects: 0.327000 ms)
+
+Opening scene 'Assets/@Scenes/02_Ingame_Lobby.unity'
+Unloading 30 Unused Serialized files (Serialized files now loaded: 0)
+Loaded scene 'Assets/@Scenes/02_Ingame_Lobby.unity'
+	Deserialize:            131.643 ms
+	Integration:            60.593 ms
+	Integration of assets:  8.080 ms
+	Thread Wait Time:       0.001 ms
+	Total Operation Time:   200.317 ms
+Unloading 2 unused Assets / (1.0 KB). Loaded Objects now: 7066.
+Memory consumption went from 212.5 MB to 212.5 MB.
+Total: 11.115600 ms (FindLiveObjects: 0.376500 ms CreateObjectMapping: 0.087100 ms MarkObjects: 10.638700 ms  DeleteObjects: 0.013000 ms)
+
+InvalidOperationException: Stash validation failed: Equipped weapon directly to storage
+  at LobbyStashSetup.Check (System.Boolean condition, System.String message) [0x00014] in D:\UnityProject\BasicFramework\Assets\Editor\LobbyStashSetup.cs:140 
+  at LobbyStashSetup.Validate () [0x00431] in D:\UnityProject\BasicFramework\Assets\Editor\LobbyStashSetup.cs:121 
+
+(Filename: Assets/Editor/LobbyStashSetup.cs Line: 140)
+
+executeMethod method LobbyStashSetup.Validate threw exception.
+0x00007ff7e17c5cfd (Unity) StackWalker::GetCurrentCallstack
+0x00007ff7e17cadc9 (Unity) StackWalker::ShowCallstack
+0x00007ff7e27a3ad1 (Unity) GetStacktrace
+0x00007ff7e2e5bc4e (Unity) DebugStringToFile
+0x00007ff7e14eea80 (Unity) CheckBatchModeErrorString
+0x00007ff7e232764c (Unity) Application::ParseARGVCommands
+0x00007ff7e231c663 (Unity) Application::FinishLoadingProject
+0x00007ff7e27ae2e9 (Unity) WinMain
+0x00007ff7e3b8e0ae (Unity) __scrt_common_main_seh
+0x00007ffb2ba7e8d7 (KERNEL32) BaseThreadInitThunk
+0x00007ffb2c71c34c (ntdll) RtlUserThreadStart
+
+Exiting without the bug reporter. Application will terminate with return code 1

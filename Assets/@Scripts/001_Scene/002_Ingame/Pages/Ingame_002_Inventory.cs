@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class Ingame_002_Inventory : StateBasePage
 {
     private IngameSceneManager IngameSceneManager;
+    public Func<UniTask> CloseRequested { get; set; }
+    private IngameSessionManager subscribedSession;
     public Inventory_000_Base Inventory_000_Base;
     public Button inventoryBackDropButton;
     protected override UniTask OnFirstSetting()
@@ -15,9 +17,10 @@ public class Ingame_002_Inventory : StateBasePage
         IngameSceneManager = stateBaseSceneManager as IngameSceneManager;
         inventoryBackDropButton.onClick.AddListener(async () =>
         {
-            if (stateBaseSceneManager is LobbySceneManager lobby)
+            if (Inventory_000_Base.IsMovingItem) return;
+            if (CloseRequested != null)
             {
-                await lobby.CloseInventory();
+                await CloseRequested();
                 return;
             }
 
@@ -25,9 +28,16 @@ public class Ingame_002_Inventory : StateBasePage
             await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME);
         });
 
-        IngameSessionManager.Instance.playerStatsChanged += Inventory_000_Base.SetInventoryStatusVal;
+        subscribedSession = IngameSessionManager.Instance;
+        subscribedSession.playerStatsChanged += Inventory_000_Base.SetInventoryStatusVal;
 
         return UniTask.CompletedTask;
+    }
+
+    private void OnDestroy()
+    {
+        if (subscribedSession != null)
+            subscribedSession.playerStatsChanged -= Inventory_000_Base.SetInventoryStatusVal;
     }
 
     protected override async UniTask OnAfterFirstSetting()

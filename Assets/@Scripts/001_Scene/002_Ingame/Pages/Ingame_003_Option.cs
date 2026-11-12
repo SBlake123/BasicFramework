@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class Ingame_003_Option : StateBasePage
 {
     private IngameSceneManager IngameSceneManager;
+    public Func<UniTask> CloseRequested { get; set; }
+    public Func<UniTask> QuitRequested { get; set; }
     public Button optionBackDropButton;
     public Button quitBtn;
 
@@ -26,8 +28,8 @@ public class Ingame_003_Option : StateBasePage
         IngameSceneManager = stateBaseSceneManager as IngameSceneManager;
         optionBackDropButton.onClick.AddListener(async () =>
         {
-            if (stateBaseSceneManager is LobbySceneManager lobby)
-                await lobby.ChangeState((int)LobbySceneState.EXPLORE);
+            if (CloseRequested != null)
+                await CloseRequested();
             else
                 await IngameSceneManager.ChangeState((int)IngameSceneState.INGAME);
         });
@@ -81,8 +83,8 @@ public class Ingame_003_Option : StateBasePage
         PopupManager.Instance.setPopUpCode(false, LanguageManager.Instance.GetLangScript(10004), LanguageManager.Instance.GetLangScript(10002));
         PopupManager.Instance.AddMethodToBtn(async () =>
         {
-            if (stateBaseSceneManager is LobbySceneManager lobby)
-                await lobby.ChangeState((int)LobbySceneState.GO_TO_TITLE);
+            if (QuitRequested != null)
+                await QuitRequested();
             else
                 await IngameSceneManager.ChangeState((int)IngameSceneState.GO_TO_TITLE);
         });

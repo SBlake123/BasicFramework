@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,24 @@ public class ItemData
 
     public string itemExplanation = "";
 
+    // Per-instance progress. Raw item definitions can omit these fields.
+    public int scrollAttemptCount = 0;
+    public int scrollSuccessCount = 0;
+
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include, NullValueHandling = NullValueHandling.Ignore)]
+    public List<ScrollStatBonus> scrollBonuses = new List<ScrollStatBonus>();
+
+    protected List<ScrollStatBonus> CopyScrollBonuses()
+    {
+        return scrollBonuses == null
+            ? new List<ScrollStatBonus>()
+            : scrollBonuses.ConvertAll(bonus => bonus == null ? null : new ScrollStatBonus
+            {
+                statType = bonus.statType,
+                value = bonus.value
+            });
+    }
+
     public virtual ItemData DeepCopy()
     {
         return new ItemData
@@ -49,7 +68,10 @@ public class ItemData
             canStack = canStack,
             maxStackAmount = maxStackAmount,
             healAmount = healAmount,
-            itemExplanation = itemExplanation
+            itemExplanation = itemExplanation,
+            scrollAttemptCount = scrollAttemptCount,
+            scrollSuccessCount = scrollSuccessCount,
+            scrollBonuses = CopyScrollBonuses()
         };
     }
 
@@ -73,3 +95,10 @@ public class ItemData
     //}
 }
 
+
+[Serializable]
+public class ScrollStatBonus
+{
+    public StatType statType;
+    public float value;
+}

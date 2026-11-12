@@ -31,6 +31,10 @@ public class ShieldData : ItemData
             canStack = canStack,
             maxStackAmount = maxStackAmount,
             healAmount = healAmount,
+            itemExplanation = itemExplanation,
+            scrollAttemptCount = scrollAttemptCount,
+            scrollSuccessCount = scrollSuccessCount,
+            scrollBonuses = CopyScrollBonuses(),
 
             defense = defense,
 

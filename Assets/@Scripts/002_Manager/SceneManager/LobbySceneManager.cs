@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -19,7 +19,8 @@ public enum LobbySceneState
     UPGRADE,
     OPTION,
     ENTERING_GAME,
-    GO_TO_TITLE
+    GO_TO_TITLE,
+    STASH
 }
 
 public class LobbySceneManager : StateBaseSceneManager
@@ -34,6 +35,7 @@ public class LobbySceneManager : StateBaseSceneManager
     [SerializeField] private TMP_FontAsset lobbyFont;
     [SerializeField] private Transform portal;
     [SerializeField] private SpriteRenderer blacksmith;
+    [SerializeField] private SpriteRenderer stash;
 
     private const float PortalRadius = 1.3f;
     private const float NpcInteractionDistance = 2.35f;
@@ -58,6 +60,10 @@ public class LobbySceneManager : StateBaseSceneManager
     public override void SceneAllocate()
     {
         inventoryPage.stateBaseSceneManager = this;
+        inventoryPage.CloseRequested = CloseInventory;
+        inventoryPage.Inventory_000_Base.ConfigureLobbyInventory();
+        optionPage.CloseRequested = () => ChangeState((int)LobbySceneState.EXPLORE);
+        optionPage.QuitRequested = () => ChangeState((int)LobbySceneState.GO_TO_TITLE);
         optionPage.stateBaseSceneManager = this;
         inventoryPage.pageMain.SetActive(false);
         optionPage.pageMain.SetActive(false);
@@ -80,6 +86,8 @@ public class LobbySceneManager : StateBaseSceneManager
             return;
         }
 
+        if (state != LobbySceneState.STASH)
+            inventoryPage.Inventory_000_Base.CloseStorage();
         bool exploring = state == LobbySceneState.EXPLORE;
         session.player.SetInputBlocked(!exploring);
         hud.InputUISetActive(exploring);
@@ -91,6 +99,7 @@ public class LobbySceneManager : StateBaseSceneManager
 
         switch (state)
         {
+            case LobbySceneState.STASH:
             case LobbySceneState.INVENTORY:
             case LobbySceneState.UPGRADE:
                 inventoryPage.pageMain.SetActive(true);
@@ -192,8 +201,9 @@ public class LobbySceneManager : StateBaseSceneManager
         Vector2 position = session.player.transform.position;
         bool nearNpc = Vector2.Distance(position, blacksmith.transform.position) <= NpcInteractionDistance;
         bool onPortal = Vector2.Distance(position, portal.position) <= PortalRadius;
+        bool nearStash = stash != null && Vector2.Distance(position, stash.transform.position) <= NpcInteractionDistance;
         hint.text = saveError ?? (onPortal ? "포탈 입장: 공격 버튼 또는 Z" :
-            nearNpc ? "대장장이를 눌러 대화" : string.Empty);
+            nearStash ? "스태쉬를 눌러 보관함 열기" : nearNpc ? "대장장이를 눌러 대화" : string.Empty);
 
         if (onPortal && Input.GetKeyDown(KeyCode.Z))
         {
@@ -201,9 +211,21 @@ public class LobbySceneManager : StateBaseSceneManager
             return;
         }
 
-        if (nearNpc && TryGetPointer(out Vector2 pointer))
+        if ((nearNpc || nearStash) && TryGetPointer(out Vector2 pointer))
         {
             Ray ray = roomCamera.ScreenPointToRay(pointer);
+            if (HitsHudControl(pointer)) return;
+            if (nearStash)
+            {
+                Bounds stashBounds = stash.bounds;
+                stashBounds.Expand(new Vector3(0.4f, 0.4f, 0.2f));
+                if (stashBounds.IntersectRay(ray))
+                {
+                    OpenStash().Forget();
+                    return;
+                }
+            }
+            if (!nearNpc) return;
             Bounds target = blacksmith.bounds;
             target.Expand(new Vector3(0.5f, 0.5f, 0.2f));
             if (target.IntersectRay(ray) && !HitsHudControl(pointer))
@@ -287,16 +309,48 @@ public class LobbySceneManager : StateBaseSceneManager
         }
     }
 
+    private async UniTask OpenStash()
+    {
+        if (busy || state != LobbySceneState.EXPLORE) return;
+        busy = true;
+        screenGuard.SetActive(true);
+        session.player.SetInputBlocked(true);
+        hud.InputUISetActive(false);
+        bool opened = false;
+        try
+        {
+            await inventoryPage.Inventory_000_Base.OpenStorage();
+            opened = true;
+        }
+        catch (Exception exception)
+        {
+            Debug.LogException(exception, this);
+            saveError = "스태쉬를 열지 못했습니다. 다시 시도해 주세요.";
+        }
+        finally
+        {
+            if (this != null) { screenGuard.SetActive(false); busy = false; }
+        }
+        if (this == null) return;
+        if (opened) await ChangeState((int)LobbySceneState.STASH);
+        else { session.player.SetInputBlocked(false); hud.InputUISetActive(true); }
+    }
+
     public async UniTask CloseInventory()
     {
-        if (busy || (state != LobbySceneState.INVENTORY && state != LobbySceneState.UPGRADE)) return;
+        if (busy || inventoryPage.Inventory_000_Base.IsMovingItem ||
+            (state != LobbySceneState.INVENTORY && state != LobbySceneState.UPGRADE && state != LobbySceneState.STASH)) return;
 
         busy = true;
         screenGuard.SetActive(true);
         try
         {
             await inventoryPage.Inventory_000_Base.InventoryClosed();
-            SaveProfile();
+            if (!SaveProfile())
+            {
+                popup.setPopUpCode(true, "저장하지 못했습니다. 다시 시도해 주세요.", "확인");
+                return;
+            }
         }
         finally
         {
@@ -374,6 +428,7 @@ public class LobbySceneManager : StateBaseSceneManager
                     popup.setPopUpClose();
                     await ChangeState((int)LobbySceneState.EXPLORE);
                     break;
+                case LobbySceneState.STASH:
                 case LobbySceneState.INVENTORY:
                 case LobbySceneState.UPGRADE:
                     await CloseInventory();
@@ -385,6 +440,12 @@ public class LobbySceneManager : StateBaseSceneManager
     private void BuildPanels()
     {
         Transform screen = screenGuard.transform.parent;
+        Transform storage = inventoryPage.Inventory_000_Base.lootingStash;
+        var storageTitle = CreateLabel(storage, "Stash Title", "스태쉬", 48f);
+        Place(storageTitle.rectTransform, new Vector2(0.5f, 1f), new Vector2(0, -85), new Vector2(680, 70));
+        var storageDescription = CreateLabel(storage, "Stash Description", "보관한 아이템은 사망해도 유지됩니다.", 27f);
+        Place(storageDescription.rectTransform, new Vector2(0.5f, 1f), new Vector2(0, -150), new Vector2(700, 60));
+        AddButton(storage, "닫기", new Vector2(0.5f, 0f), new Vector2(0, 85), () => CloseInventory().Forget());
         hint = CreateLabel(screen, "Interaction Hint", string.Empty, 34f);
         Place(hint.rectTransform, new Vector2(0.5f, 0.88f), Vector2.zero, new Vector2(900, 58));
 
@@ -483,6 +544,14 @@ public class LobbySceneManager : StateBaseSceneManager
         rect.anchorMin = Vector2.zero;
         rect.anchorMax = Vector2.one;
         rect.offsetMin = rect.offsetMax = Vector2.zero;
+    }
+
+    private void OnDestroy()
+    {
+        if (hud == null) return;
+        hud.InventoryRequested -= OpenInventory;
+        hud.OptionRequested -= OpenOptions;
+        hud.ConsumeAttackInput = null;
     }
 
 }
