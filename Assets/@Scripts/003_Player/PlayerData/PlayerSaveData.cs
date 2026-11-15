@@ -8,6 +8,7 @@ public class PlayerSaveData
     public int playCnt = 0;
     // Permanent storage is independent of the profile taken into a raid.
     public List<ItemData> stashItems = new List<ItemData>();
+    public CraftingStock craftingStock = new CraftingStock();
     public PlayerProfileData profileData;
 }
 

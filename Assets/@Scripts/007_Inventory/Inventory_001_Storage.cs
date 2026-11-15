@@ -8,6 +8,12 @@ public partial class Inventory_000_Base
     public bool IsLobbyInventory { get; private set; }
     public bool IsMovingItem { get; private set; }
     public bool IsStorageOpen { get; private set; }
+    public bool IsCraftingOpen { get; set; }
+    public event Action<InventoryGrid_000_Base> CraftingSelectionRequested;
+    public void SelectForCrafting(InventoryGrid_000_Base grid)
+    {
+        if (IsCraftingOpen && !IsMovingItem && OwnsSlot(grid)) CraftingSelectionRequested?.Invoke(grid);
+    }
     public Canvas DragCanvas => hudCanvas != null ? hudCanvas : GetComponentInParent<Canvas>().rootCanvas;
     private bool storageLoaded;
 
@@ -64,6 +70,140 @@ public partial class Inventory_000_Base
     private bool IsEquipmentSlot(InventoryGrid_000_Base grid) =>
         grid == weaponGrid || grid == shieldGrid || accessoryGridList.Contains(grid);
 
+    public List<InventoryGrid_000_Base> CraftingSlots()
+    {
+        var slots = new List<InventoryGrid_000_Base> { weaponGrid, shieldGrid };
+        slots.AddRange(accessoryGridList);
+        slots.AddRange(invenGridList);
+        if (storageLoaded) slots.AddRange(lootingGridList);
+        slots.RemoveAll(grid => grid == null || grid.itemData == null ||
+            !(grid.itemData is WeaponData || grid.itemData is ShieldData || grid.itemData is AccessoryData));
+        return slots;
+    }
+
+    public async UniTask<CraftOutcome> CraftItem(InventoryGrid_000_Base grid, ItemData expected,
+        int materialId, float destructionProbability, InventoryGrid_000_Base scrollGrid = null, ItemData expectedScroll = null)
+    {
+        if (!IsLobbyInventory || !IsCraftingOpen || IsMovingItem || !OwnsSlot(grid) ||
+            !ReferenceEquals(grid.itemData, expected) || expected == null)
+            throw new InvalidOperationException("장비가 변경되었습니다. 다시 선택해 주세요.");
+
+        bool usesScroll = ScrollDummyRawData.Find(materialId) != null;
+        if (usesScroll && (!CanSelectCraftingSource(scrollGrid) || scrollGrid == grid || expectedScroll == null ||
+            !ReferenceEquals(scrollGrid.itemData, expectedScroll) || expectedScroll.itemId != materialId ||
+            expectedScroll.equipmentType != (int)EquipmentType.None))
+            throw new InvalidOperationException("인벤토리의 주문서 1개를 등록해 주세요.");
+
+        IsMovingItem = true;
+        CancelDrags();
+        var original = grid.itemData.DeepCopy();
+        var originalScroll = usesScroll ? scrollGrid.itemData.DeepCopy() : null;
+        var session = IngameSessionManager.Instance;
+        float hp = session.playerStats.currentHp;
+        float stamina = session.playerStats.currentStamina;
+        bool committed = false;
+        try
+        {
+            var stock = PlayerDataManager.Instance.GetCraftingStock();
+            if (usesScroll) stock = new CraftingStock { counts = new Dictionary<int, int> { { materialId, 1 } } };
+            var result = EquipmentCrafting.Execute(original, materialId, stock, destructionProbability, () => UnityEngine.Random.value);
+            grid.itemData = result.item;
+            if (usesScroll) scrollGrid.itemData = null;
+            SetSlotMetadata(grid);
+            // Persist the roll before rendering. A view failure must not refund or reroll a paid attempt.
+            session.playerIngameData.invenItems = ExtractingInvenItems();
+            if (!PlayerDataManager.Instance.SaveLobbyProfile(session.playerIngameData,
+                    storageLoaded ? ExtractStorageItems() : null, usesScroll ? null : result.stock))
+                throw new InvalidOperationException("저장하지 못해 재료와 장비 변경을 취소했습니다.");
+            committed = true;
+            SyncCraftedEquipmentData(grid);
+            if (usesScroll) await RenderSlot(scrollGrid);
+            if (result.item == null) await RenderSlot(grid);
+            if (IsEquipmentSlot(grid)) await session.RefreshPlayerStatus();
+            return result.outcome;
+        }
+        catch
+        {
+            if (!committed)
+            {
+                grid.itemData = original;
+                if (usesScroll) scrollGrid.itemData = originalScroll;
+                session.playerIngameData.invenItems = ExtractingInvenItems();
+                session.playerStats.currentHp = hp;
+                session.playerStats.currentStamina = stamina;
+            }
+            else
+            {
+                // Keep equipped data correct even if an asynchronous icon/prefab load fails.
+                SyncCraftedEquipmentData(grid);
+                try { if (IsEquipmentSlot(grid)) await session.RefreshPlayerStatus(); }
+                catch (Exception error) { Debug.LogException(error, this); }
+                throw new InvalidOperationException("결과는 저장됐지만 화면 갱신에 실패했습니다. 로비에 다시 입장해 주세요.");
+            }
+            throw;
+        }
+        finally { IsMovingItem = false; }
+    }
+
+    public bool CanSelectCraftingSource(InventoryGrid_000_Base grid) => IsLobbyInventory && IsCraftingOpen &&
+        !IsMovingItem && OwnsSlot(grid) && grid.itemData != null && grid.gameObject.activeInHierarchy;
+
+    public async UniTask AddDummyScroll(int id)
+    {
+        if (!IsLobbyInventory || !IsCraftingOpen || IsMovingItem)
+            throw new InvalidOperationException("로비 강화창에서 생성해 주세요.");
+        var grid = invenGridList.Find(slot => slot.itemData == null);
+        if (grid == null) throw new InvalidOperationException("인벤토리에 빈 칸이 없습니다.");
+        var item = ScrollDummyRawData.CreateItem(id);
+        IsMovingItem = true;
+        bool saved = false;
+        var session = IngameSessionManager.Instance;
+        try
+        {
+            grid.itemData = item;
+            SetSlotMetadata(grid);
+            session.playerIngameData.invenItems = ExtractingInvenItems();
+            if (!PlayerDataManager.Instance.SaveLobbyProfile(session.playerIngameData))
+                throw new InvalidOperationException("주문서 생성을 저장하지 못했습니다.");
+            saved = true;
+            await RenderSlot(grid);
+        }
+        catch
+        {
+            if (!saved) { grid.itemData = null; session.playerIngameData.invenItems = ExtractingInvenItems(); }
+            throw;
+        }
+        finally { IsMovingItem = false; }
+    }
+
+    private void SyncCraftedEquipmentData(InventoryGrid_000_Base grid)
+    {
+        var session = IngameSessionManager.Instance;
+        if (grid == weaponGrid)
+        {
+            session.currentWeaponData = grid.itemData?.DeepCopy() as WeaponData;
+            if (session.player.currentWeapon != null)
+            {
+                if (grid.itemData == null) { ObjectPool.Instance.PushToPool(session.player.currentWeapon.gameObject); session.player.currentWeapon = null; }
+                else session.player.currentWeapon.weaponData = session.currentWeaponData;
+            }
+        }
+        else if (grid == shieldGrid)
+        {
+            session.currentShieldData = grid.itemData?.DeepCopy() as ShieldData;
+            if (session.player.currentShield != null)
+            {
+                if (grid.itemData == null) { ObjectPool.Instance.PushToPool(session.player.currentShield.gameObject); session.player.currentShield = null; }
+                else session.player.currentShield.shieldData = session.currentShieldData;
+            }
+        }
+        else
+        {
+            int index = accessoryGridList.IndexOf(grid);
+            if (index >= 0) session.currentAccessoryDataArr[index] = grid.itemData?.DeepCopy();
+        }
+    }
+
     public bool CanTransfer(InventoryGrid_000_Base source, InventoryGrid_000_Base target)
     {
         if (IsMovingItem || !OwnsSlot(source) || !OwnsSlot(target) || source == target || source.itemData == null)
@@ -101,7 +241,7 @@ public partial class Inventory_000_Base
     private async UniTask RenderSlot(InventoryGrid_000_Base grid)
     {
         while (grid.itemImgParent.childCount > 0)
-            ObjectPool.Instance.PushToPool(grid.itemImgParent.GetChild(0).gameObject);
+            ScrollDummyItemView.Release(grid.itemImgParent.GetChild(0).gameObject);
         if (grid.itemData != null)
             await MakeInvenItem(string.Format(GScriptAddress.invenItem, grid.itemData.itemKey), grid.itemImgParent);
     }

@@ -170,14 +170,14 @@ public partial class Inventory_000_Base : MonoBehaviour
         {
             weaponGrid.itemData = null;
 
-            ObjectPool.Instance.PushToPool(weaponGrid.itemImgParent.GetChild(0).gameObject);
+            ScrollDummyItemView.Release(weaponGrid.itemImgParent.GetChild(0).gameObject);
             //Destroy(weaponGrid.itemImgParent.GetChild(0).gameObject);
         }
 
         if (shieldGrid.itemData != null)
         {
             shieldGrid.itemData = null;
-            ObjectPool.Instance.PushToPool(shieldGrid.itemImgParent.GetChild(0).gameObject);
+            ScrollDummyItemView.Release(shieldGrid.itemImgParent.GetChild(0).gameObject);
 
             //Destroy(ArmorGrid.itemImgParent.GetChild(0).gameObject);
         }
@@ -187,7 +187,7 @@ public partial class Inventory_000_Base : MonoBehaviour
             if (invenGridList[i].itemData != null)
             {
                 invenGridList[i].itemData = null;
-                ObjectPool.Instance.PushToPool(invenGridList[i].itemImgParent.GetChild(0).gameObject);
+                ScrollDummyItemView.Release(invenGridList[i].itemImgParent.GetChild(0).gameObject);
 
                 //Destroy(invenGridList[i].itemImgParent.GetChild(0).gameObject);
             }
@@ -199,7 +199,7 @@ public partial class Inventory_000_Base : MonoBehaviour
             if (accessoryGridList[i].itemData != null)
             {
                 accessoryGridList[i].itemData = null;
-                ObjectPool.Instance.PushToPool(accessoryGridList[i].itemImgParent.GetChild(0).gameObject);
+                ScrollDummyItemView.Release(accessoryGridList[i].itemImgParent.GetChild(0).gameObject);
 
                 //Destroy(AccessoryGridList[i].itemImgParent.GetChild(0).gameObject);
             }
@@ -212,7 +212,7 @@ public partial class Inventory_000_Base : MonoBehaviour
             if (lootingGridList[i].itemData != null)
             {
                 lootingGridList[i].itemData = null;
-                ObjectPool.Instance.PushToPool(lootingGridList[i].itemImgParent.GetChild(0).gameObject);
+                ScrollDummyItemView.Release(lootingGridList[i].itemImgParent.GetChild(0).gameObject);
 
                 //Destroy(invenGridList[i].itemImgParent.GetChild(0).gameObject);
             }
@@ -241,7 +241,7 @@ public partial class Inventory_000_Base : MonoBehaviour
     }
     public async UniTask MakeInvenItem(string ItemName, RectTransform itemRect)
     {
-        GameObject obj = await ObjectPool.Instance.PopFromPool(ItemName, itemRect);
+        GameObject obj = await ScrollDummyItemView.Create(ItemName, itemRect);
         var group = obj.GetComponent<CanvasGroup>();
         if (group != null) { group.blocksRaycasts = true; group.alpha = 1f; }
         obj.transform.localPosition = Vector3.zero;
@@ -258,6 +258,15 @@ public partial class Inventory_000_Base : MonoBehaviour
 
     public void SettingItemConfigWindow(ItemData itemData)
     {
+        if (ScrollDummyRawData.Find(itemData.itemId) != null && itemData.equipmentType == (int)EquipmentType.None)
+        {
+            itemConfigWindow.itemName.text = itemData.itemName;
+            itemConfigWindow.itemExplanation.text = itemData.itemExplanation;
+            itemConfigWindow.itemSpec.gameObject.SetActive(false);
+            itemConfigWindow.itemAdditionalOption.text = "";
+            itemConfigWindow.itemAdditionalOption.gameObject.SetActive(false);
+            return;
+        }
         SettingItemSpecText(itemData);
         SettingItemAdditionalOptionText(itemData);
         LanguageManager.Instance.GetLangScript(itemData.itemId + 100000, LanguageManager.Instance.languageScriptDic, itemConfigWindow.itemExplanation);
@@ -306,6 +315,16 @@ public partial class Inventory_000_Base : MonoBehaviour
 
                 }
                 break;
+        }
+
+        if (itemData.scrollAttemptCount > 0)
+        {
+            builder.Append($"\n주문서 시도 {itemData.scrollAttemptCount}회 / 성공 {itemData.scrollSuccessCount}회");
+            if (itemData.scrollBonuses != null)
+                foreach (var bonus in itemData.scrollBonuses)
+                    if (bonus != null) builder.Append($"\n강화 {CraftingDummyData.StatName(bonus.statType)} +{bonus.value:0.##}");
+            itemConfigWindow.itemSpec.gameObject.SetActive(true);
+            itemConfigWindow.itemSpec.text = builder.ToString();
         }
 
         void AddStat(string label, float value, string suffix = "")

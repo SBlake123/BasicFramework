@@ -89,6 +89,7 @@ public class LobbySceneManager : StateBaseSceneManager
         if (state != LobbySceneState.STASH)
             inventoryPage.Inventory_000_Base.CloseStorage();
         bool exploring = state == LobbySceneState.EXPLORE;
+        inventoryPage.Inventory_000_Base.IsCraftingOpen = state == LobbySceneState.UPGRADE;
         session.player.SetInputBlocked(!exploring);
         hud.InputUISetActive(exploring);
         dialogue.SetActive(state == LobbySceneState.DIALOGUE);
@@ -336,6 +337,28 @@ public class LobbySceneManager : StateBaseSceneManager
         else { session.player.SetInputBlocked(false); hud.InputUISetActive(true); }
     }
 
+    private async UniTask OpenUpgrade()
+    {
+        if (busy || state != LobbySceneState.DIALOGUE) return;
+        busy = true;
+        screenGuard.SetActive(true);
+        bool ready = false;
+        try
+        {
+            // Load storage into the same inventory owner, without displaying its separate window.
+            await inventoryPage.Inventory_000_Base.OpenStorage();
+            inventoryPage.Inventory_000_Base.CloseStorage();
+            ready = true;
+        }
+        catch (Exception error)
+        {
+            Debug.LogException(error, this);
+            popup.setPopUpCode(true, "제작 장비 목록을 불러오지 못했습니다.", "확인");
+        }
+        finally { busy = false; screenGuard.SetActive(false); }
+        if (ready) await ChangeState((int)LobbySceneState.UPGRADE);
+    }
+
     public async UniTask CloseInventory()
     {
         if (busy || inventoryPage.Inventory_000_Base.IsMovingItem ||
@@ -474,21 +497,15 @@ public class LobbySceneManager : StateBaseSceneManager
         ApplyTooltipFrame(choices, tooltipFrame);
         Place(choices.rectTransform, new Vector2(1f, 1f), new Vector2(-180, 58), new Vector2(360, 100));
         AddButton(choices.transform, "강화", new Vector2(0.27f, 0.5f), Vector2.zero, () =>
-            ChangeState((int)LobbySceneState.UPGRADE).Forget());
+            OpenUpgrade().Forget());
         AddButton(choices.transform, "취소", new Vector2(0.73f, 0.5f), Vector2.zero, ReturnToExplore);
         dialogue.SetActive(false);
 
         Image upgrade = CreatePanel(inventoryPage.pageMain.transform, "Upgrade Panel", PanelColor);
-        Place(upgrade.rectTransform, new Vector2(1f, 0.5f), new Vector2(-1070, 0), new Vector2(500, 540));
+        Place(upgrade.rectTransform, new Vector2(1f, 0.5f), new Vector2(-1190, 0), new Vector2(680, 930));
         upgradePanel = upgrade.gameObject;
-        var heading = CreateLabel(upgrade.transform, "Title", "장비 강화", 52f);
-        Place(heading.rectTransform, new Vector2(0.5f, 0.84f), Vector2.zero, new Vector2(430, 70));
-        Image slot = CreatePanel(upgrade.transform, "Equipment Slot", ButtonColor);
-        Place(slot.rectTransform, new Vector2(0.5f, 0.57f), Vector2.zero, new Vector2(165, 165));
-        Stretch(CreateLabel(slot.transform, "Slot Label", "대상 장비", 26f).rectTransform);
-        var apply = AddButton(upgrade.transform, "강화", new Vector2(0.32f, 0.17f), Vector2.zero, null);
-        apply.interactable = false;
-        AddButton(upgrade.transform, "닫기", new Vector2(0.68f, 0.17f), Vector2.zero, () => CloseInventory().Forget());
+        upgrade.gameObject.AddComponent<LobbyCraftingUI>().Initialize(inventoryPage.Inventory_000_Base,
+            lobbyFont != null ? lobbyFont : hud.hpTmp.font, CloseInventory);
         upgradePanel.SetActive(false);
     }
 

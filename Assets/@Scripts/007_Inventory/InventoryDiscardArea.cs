@@ -20,7 +20,7 @@ public class InventoryDiscardArea : MonoBehaviour, IDropHandler
         PopupManager.Instance.setPopUpCode(true, LanguageManager.Instance.GetLangScript(10011), LanguageManager.Instance.GetLangScript(10012),
                                                     LanguageManager.Instance.GetLangScript(10013));
         PopupManager.Instance.AddMethodToBtn(() => {
-            ObjectPool.Instance.PushToPool(handler.inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject);
+            ScrollDummyItemView.Release(handler.inventoryGrid_000_Base.itemImgParent.GetChild(0).gameObject);
             handler.inventoryGrid_000_Base.itemData = null;
         }, () => { }, () => { });
 

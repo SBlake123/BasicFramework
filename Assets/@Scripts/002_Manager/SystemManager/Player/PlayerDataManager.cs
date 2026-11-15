@@ -36,7 +36,20 @@ public class SavedItemDataConverter : JsonConverter
 }
 public class PlayerDataManager : Singleton<PlayerDataManager>
 {
-    private string SavePath => Path.Combine(Application.persistentDataPath, GScriptAddress.localSaveDataName);
+#if UNITY_EDITOR
+    // Editor validation redirects writes to a temporary file; never included in player builds.
+    private string validationSavePath;
+#endif
+    private string SavePath
+    {
+        get
+        {
+#if UNITY_EDITOR
+            if (!string.IsNullOrEmpty(validationSavePath)) return validationSavePath;
+#endif
+            return Path.Combine(Application.persistentDataPath, GScriptAddress.localSaveDataName);
+        }
+    }
 
     private readonly JsonSerializerSettings saveSettings = new()
     {
@@ -46,6 +59,12 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
 
     private PlayerSaveData saveData;
     public PlayerProfileData Profile => saveData.profileData;
+
+    public CraftingStock GetCraftingStock()
+    {
+        PlayerLoad();
+        return (saveData.craftingStock ?? new CraftingStock()).DeepCopy();
+    }
 
     public List<ItemData> GetStashItems()
     {
@@ -112,12 +131,13 @@ public class PlayerDataManager : Singleton<PlayerDataManager>
         }
     }
 
-    public bool SaveLobbyProfile(PlayerProfileData profile, List<ItemData> stashItems = null)
+    public bool SaveLobbyProfile(PlayerProfileData profile, List<ItemData> stashItems = null, CraftingStock craftingStock = null)
     {
         PlayerLoad();
         var updatedSave = new PlayerSaveData
         {
             playCnt = saveData.playCnt,
+            craftingStock = (craftingStock ?? saveData.craftingStock ?? new CraftingStock()).DeepCopy(),
             stashItems = (stashItems ?? saveData.stashItems ?? new List<ItemData>()).ConvertAll(item => item.DeepCopy()),
             profileData = new PlayerProfileData
             {

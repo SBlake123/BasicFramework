@@ -37,11 +37,11 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
         int version = dragVersion;
         try
         {
-            var instance = await ObjectPool.Instance.PopFromPool(
+            var instance = await ScrollDummyItemView.Create(
                 string.Format(GScriptAddress.invenItem, item.itemKey), owner.DragCanvas.transform);
             if (this == null || !isActiveAndEnabled || !dragging || version != dragVersion)
             {
-                ObjectPool.Instance.PushToPool(instance);
+                ScrollDummyItemView.Release(instance);
                 return;
             }
             dragObject = instance.GetComponent<RectTransform>();
@@ -70,7 +70,9 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
         bool ready = dragObject != null && dragging;
         var hit = eventData.pointerCurrentRaycast.gameObject;
         var target = hit != null ? hit.GetComponentInParent<InventoryGrid_000_Base>() : null;
+        var crafting = hit != null ? hit.GetComponentInParent<CraftingDropSlot>() : null;
         CancelDrag();
+        if (ready && crafting != null) { crafting.Accept(inventoryGrid_000_Base); return; }
         if (ready && target != null)
             inventoryGrid_000_Base.Inventory_000_Base.ItemMoveCheck(inventoryGrid_000_Base, target).Forget();
     }
@@ -82,7 +84,7 @@ public class InvenSpacePointerHandler : MonoBehaviour, IPointerDownHandler, IDra
         if (dragObject == null) return;
         var instance = dragObject.gameObject;
         dragObject = null;
-        ObjectPool.Instance.PushToPool(instance);
+        ScrollDummyItemView.Release(instance);
     }
 
     private void OnDisable() => CancelDrag();

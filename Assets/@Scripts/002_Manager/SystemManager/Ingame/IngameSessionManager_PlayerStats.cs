@@ -162,6 +162,10 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
     {
         playerStats.ResetEquipmentBonus();
 
+        ApplyScrollBonuses(currentWeaponData);
+        ApplyScrollBonuses(currentShieldData);
+        foreach (var accessory in currentAccessoryDataArr) ApplyScrollBonuses(accessory);
+
         foreach (var item in specialAttributeList)
         {
             item.Release();
@@ -276,6 +280,21 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
         }
     }
 
+    private void ApplyScrollBonuses(ItemData item)
+    {
+        if (item?.scrollBonuses == null) return;
+        foreach (var bonus in item.scrollBonuses)
+        {
+            if (bonus == null) continue;
+            switch (bonus.statType)
+            {
+                case StatType.ADDITIONAL_DAMAGE: playerStats.attackFlatBonus += bonus.value; break;
+                case StatType.ADDITIONAL_DEFENSE: playerStats.defenseFlatBonus += bonus.value; break;
+                case StatType.ADDITIONAL_HEALTH: playerStats.hpFlatBonus += bonus.value; break;
+            }
+        }
+    }
+
     public void SetHpAndStamina()
     {
         playerStats.currentHp = playerStats.maxHp;
@@ -340,6 +359,7 @@ public partial class IngameSessionManager : MonoSingleton<IngameSessionManager>
                                 //Instantiate(await ResourceManager.Instance.LoadAsset<GameObject>(string.Format(GScriptAddress.equipItem, currentShieldData.itemKey)), player.playerSkinBase.shieldTrf);
 
                                 player.currentShield = player.playerSkinBase.shieldTrf.GetChild(0).GetComponent<ShieldBase>();
+                                player.currentShield.shieldData = this.currentShieldData;
 
                                 //Destroy(player.playerSkinBase.shieldTrf.GetChild(0).gameObject);
                             }
